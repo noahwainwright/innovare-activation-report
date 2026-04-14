@@ -1,0 +1,314 @@
+:root {
+  --bg: #FFFFFF;
+  --card-bg: #FAFAFA;
+  --card-border: rgba(0, 0, 0, 0.06);
+  --text-primary: #000000CC;
+  --text-secondary: #00000099;
+  --text-muted: #00000066;
+  --accent-up: #2D6A4F;
+  --accent-down: #C1121F;
+  --radius-card: 24px;
+  --radius-pill: 8px;
+  --radius-metric: 16px;
+  --padding-page: 96px;
+  --padding-card: 48px;
+  --transition-expand: 300ms ease-out;
+  --transition-fade: 200ms ease;
+  --font: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  font-family: var(--font);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--padding-page) 24px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+  width: 100%;
+  max-width: 720px;
+}
+
+/* ── Hero Card ────────────────────────────── */
+
+.hero-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--card-border);
+  padding: var(--padding-card);
+  margin-bottom: 32px;
+}
+
+.sparkline-wrap {
+  width: 100%;
+  height: 160px;
+  margin-bottom: 32px;
+}
+
+.sparkline-wrap svg {
+  width: 100%;
+  height: 100%;
+}
+
+.metric-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.metric-value {
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.metric-delta {
+  font-size: 14px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.metric-delta .arrow {
+  font-size: 12px;
+}
+
+.metric-delta .arrow.up { color: var(--accent-up); }
+.metric-delta .arrow.down { color: var(--accent-down); }
+
+.metric-sub {
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+/* ── Bottom Bar ───────────────────────────── */
+
+.bottom-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.bottom-bar span {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ── Pill ─────────────────────────────────── */
+
+.pill-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.pill {
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: none;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: var(--radius-pill);
+  padding: 8px 24px;
+  cursor: pointer;
+  transition: background 150ms ease, border-color 150ms ease;
+  user-select: none;
+}
+
+.pill:hover {
+  background: var(--card-bg);
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+.pill:active {
+  background: #F0F0F0;
+}
+
+/* ── Expanded Panel ───────────────────────── */
+
+.expanded-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--transition-expand);
+}
+
+.expanded-panel.open {
+  max-height: 900px;
+}
+
+.section {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity var(--transition-fade), transform var(--transition-fade);
+  margin-bottom: 32px;
+}
+
+.expanded-panel.open .section { opacity: 1; transform: translateY(0); }
+.expanded-panel.open .section:nth-child(1) { transition-delay: 0ms; }
+.expanded-panel.open .section:nth-child(2) { transition-delay: 50ms; }
+.expanded-panel.open .section:nth-child(3) { transition-delay: 100ms; }
+
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+/* ── Funnel ───────────────────────────────── */
+
+.funnel-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.funnel-row:last-child { margin-bottom: 0; }
+
+.funnel-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  width: 120px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.funnel-bar-track {
+  flex: 1;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.funnel-bar {
+  height: 100%;
+  background: var(--text-primary);
+  border-radius: 4px;
+  transition: width 400ms ease-out;
+}
+
+.funnel-pct {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  width: 40px;
+  flex-shrink: 0;
+}
+
+/* ── Cohorts ──────────────────────────────── */
+
+.cohort-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.cohort-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-metric);
+  padding: 24px;
+}
+
+.cohort-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+.cohort-rate {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.cohort-count {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* ── Signals ──────────────────────────────── */
+
+.signal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.signal-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-metric);
+  padding: 24px;
+}
+
+.signal-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.signal-label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ── Responsive ───────────────────────────── */
+
+@media (max-width: 600px) {
+  :root {
+    --padding-page: 48px;
+    --padding-card: 32px;
+  }
+
+  .metric-value { font-size: 40px; }
+  .cohort-grid { grid-template-columns: 1fr; }
+  .funnel-label { width: 90px; font-size: 12px; }
+}
+
+@media (max-width: 400px) {
+  :root {
+    --padding-page: 24px;
+    --padding-card: 24px;
+  }
+
+  .metric-value { font-size: 36px; }
+  .signal-grid { grid-template-columns: 1fr; }
+}

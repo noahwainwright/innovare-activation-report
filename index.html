@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CIWP Activation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="hero-card">
+      <div class="sparkline-wrap">
+        <svg id="sparkline" viewBox="0 0 624 160" preserveAspectRatio="none"></svg>
+      </div>
+      <div class="metric-row">
+        <span class="metric-value" id="metric-value">--</span>
+        <span class="metric-delta">
+          <span class="arrow" id="delta-arrow"></span>
+          <span id="delta-value"></span>
+        </span>
+      </div>
+      <div class="metric-sub" id="accounts"></div>
+    </div>
+
+    <div class="bottom-bar">
+      <span id="client-name">INNOVARE</span>
+      <span><span id="report-date"></span> &middot; <span id="report-product">CIWP Activation</span></span>
+    </div>
+
+    <div class="pill-wrap">
+      <button class="pill" id="pill">See more</button>
+    </div>
+
+    <div class="expanded-panel" id="expanded-panel">
+
+      <div class="section">
+        <div class="section-label">Funnel</div>
+        <div id="funnel"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Cohorts</div>
+        <div class="cohort-grid" id="cohorts"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Signals</div>
+        <div class="signal-grid" id="signals"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
