@@ -237,6 +237,27 @@ function renderCiwpTestingView() {
 
   // Scroll-driven blur/parallax on sentence
   bindTestingScroll();
+
+  // Cowboy hat easter egg
+  const howdy = document.querySelector('.howdy-trigger');
+  if (howdy) {
+    let hatCooldown = false;
+    howdy.addEventListener('mouseenter', () => {
+      if (hatCooldown) return;
+      hatCooldown = true;
+      const hat = document.createElement('span');
+      hat.className = 'cowboy-hat';
+      hat.textContent = '\uD83E\uDD20';
+      howdy.appendChild(hat);
+      setTimeout(() => {
+        hat.classList.add('cowboy-hat-out');
+        hat.addEventListener('animationend', () => {
+          hat.remove();
+          hatCooldown = false;
+        });
+      }, 2000);
+    });
+  }
 }
 
 function bindTestingScroll() {
@@ -284,7 +305,7 @@ function buildTestingSummaryHTML(summary) {
     joined += parts[i];
   }
 
-  return `<div class="testing-summary-sentence"><span class="summary-clause" style="animation-delay: 200ms">Howdy.\u00A0We\u00A0have ${joined}.</span></div>`;
+  return `<div class="testing-summary-sentence"><span class="summary-clause" style="animation-delay: 200ms"><span class="howdy-trigger">Howdy.</span>\u00A0We\u00A0have ${joined}.</span></div>`;
 }
 
 function buildTestingSheetHTML(data) {

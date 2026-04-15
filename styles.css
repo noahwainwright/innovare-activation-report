@@ -233,6 +233,37 @@ body {
 .summary-count.status-dev     { color: #00A6FF; }
 .summary-count.status-complete { color: var(--accent-up); }
 
+.howdy-trigger {
+  position: relative;
+  cursor: default;
+}
+
+.cowboy-hat {
+  position: absolute;
+  top: -0.8em;
+  left: 50%;
+  font-size: 1.1em;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 10;
+  animation: hatPop 0.4s var(--ease-spring) 0.05s forwards;
+}
+
+.cowboy-hat-out {
+  animation: hatFade 0.5s var(--ease-smooth) forwards !important;
+}
+
+@keyframes hatPop {
+  0%   { opacity: 0; transform: translateX(-50%) scale(0) translateY(8px); }
+  60%  { opacity: 1; transform: translateX(-50%) scale(1.2) translateY(-4px); }
+  100% { opacity: 1; transform: translateX(-50%) scale(1) translateY(0); }
+}
+
+@keyframes hatFade {
+  0%   { opacity: 1; transform: translateX(-50%) scale(1) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) scale(0.8) translateY(-16px); }
+}
+
 @keyframes clauseReveal {
   0%   { opacity: 0; filter: blur(4px); transform: translateY(8px); }
   100% { opacity: 1; filter: blur(0px); transform: translateY(0); }
