@@ -125,6 +125,7 @@ function renderRange(range, skipChartAnimation) {
   renderChart(d.chart, skipChartAnimation);
   renderFunnel(d.funnel);
   renderCohorts(d.cohorts);
+  renderHealth(d.health);
   renderSignals(d.signals);
 }
 
@@ -300,6 +301,28 @@ function renderCohorts(cohorts) {
       </div>
     </div>`)
     .join('');
+}
+
+function renderHealth(health) {
+  const el = document.getElementById('account-health');
+  const groups = [
+    { key: 'active', label: 'Active', dot: 'active', items: health.active },
+    { key: 'atRisk', label: 'At Risk', dot: 'at-risk', items: health.atRisk },
+    { key: 'dormant', label: 'Dormant', dot: 'dormant', items: health.dormant }
+  ];
+
+  el.innerHTML = groups.map(g => `
+    <div class="health-group">
+      <div class="health-group-header">
+        <span class="health-dot ${g.dot}"></span>
+        <span class="health-group-label">${g.label}</span>
+        <span class="health-group-count">${g.items.length}</span>
+      </div>
+      <div class="health-accounts">
+        ${g.items.map(name => `<span class="health-tag">${name}</span>`).join('')}
+      </div>
+    </div>
+  `).join('');
 }
 
 function renderSignals(signals) {
