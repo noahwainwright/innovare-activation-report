@@ -129,6 +129,13 @@ body {
   border-radius: 24px;
   overflow: hidden;
   background: var(--card-bg);
+  transition: filter 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: filter, opacity;
+}
+
+.sparkline-wrap.transitioning {
+  filter: blur(12px);
+  opacity: 0.4;
 }
 
 .sparkline-wrap svg {
@@ -242,15 +249,15 @@ body {
 .metric-overlay .metric-value,
 .metric-overlay .metric-delta,
 .metric-overlay .metric-sub {
-  transition: opacity 0.4s ease, filter 0.4s ease;
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: opacity, filter;
 }
 
 .metric-overlay.blur-out .metric-value,
 .metric-overlay.blur-out .metric-delta,
 .metric-overlay.blur-out .metric-sub {
-  opacity: 0.3;
-  filter: blur(6px);
+  opacity: 0.2;
+  filter: blur(8px);
 }
 
 .metric-row {

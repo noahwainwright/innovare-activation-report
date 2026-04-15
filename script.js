@@ -9,39 +9,40 @@ document.addEventListener('DOMContentLoaded', async () => {
   bindSheet();
 });
 
+let isTransitioning = false;
+
 function bindTimeSelector() {
   document.querySelectorAll('.time-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       const range = btn.dataset.range;
-      if (range === currentRange) return;
+      if (range === currentRange || isTransitioning) return;
+
+      isTransitioning = true;
 
       document.querySelector('.time-btn.active').classList.remove('active');
       btn.classList.add('active');
       currentRange = range;
 
+      const wrap = document.querySelector('.sparkline-wrap');
       const overlay = document.querySelector('.metric-overlay');
 
-      // Phase 1: blur out current content (metric + chart lines)
+      // Single smooth blur: chart + metric blur out together
+      wrap.classList.add('transitioning');
       overlay.classList.add('blur-out');
-      blurChartOut();
 
-      // Phase 2: update data while blurred, then blur back in
+      // Wait for blur to fully settle, swap content, then resolve
       setTimeout(() => {
-        // Clear old hover elements
         document.querySelectorAll('.hover-line, .hover-dot, .sparkline-tooltip').forEach(el => el.remove());
+        renderRange(range, true);
 
-        renderRange(range);
-        overlay.classList.remove('blur-out');
-      }, 350);
+        // Small pause at peak blur for the swap to feel intentional
+        setTimeout(() => {
+          wrap.classList.remove('transitioning');
+          overlay.classList.remove('blur-out');
+          isTransitioning = false;
+        }, 80);
+      }, 450);
     });
-  });
-}
-
-function blurChartOut() {
-  const svg = document.getElementById('sparkline');
-  svg.querySelectorAll('.chart-line, .chart-area').forEach((el) => {
-    el.style.transition = 'opacity 0.3s ease';
-    el.style.opacity = '0.15';
   });
 }
 
@@ -72,7 +73,7 @@ function bindSheet() {
   backdrop.addEventListener('click', closeSheet);
 }
 
-function renderRange(range) {
+function renderRange(range, skipChartAnimation) {
   const d = currentData.ranges[range];
 
   const dateEl = document.getElementById('report-date');
@@ -89,13 +90,13 @@ function renderRange(range) {
 
   document.getElementById('accounts').textContent = d.accounts.total + ' ' + d.accounts.label;
 
-  renderChart(d.chart);
+  renderChart(d.chart, skipChartAnimation);
   renderFunnel(d.funnel);
   renderCohorts(d.cohorts);
   renderSignals(d.signals);
 }
 
-function renderChart(chart) {
+function renderChart(chart, skipAnimation) {
   const svg = document.getElementById('sparkline');
   const wrap = document.querySelector('.sparkline-wrap');
   const w = 960;
@@ -167,18 +168,26 @@ function renderChart(chart) {
     <path d="${genPath}" fill="none" stroke="#AC5CCC" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6 4" class="chart-line"/>
   `;
 
-  // Augen-style fade-in animation
-  svg.querySelectorAll('.chart-line, .chart-area').forEach((el, i) => {
-    el.style.opacity = '0';
-    el.style.transition = 'none';
-    requestAnimationFrame(() => {
+  // Animate chart paths in
+  if (skipAnimation) {
+    // Range switch: paths appear instantly, container blur handles the transition
+    svg.querySelectorAll('.chart-line, .chart-area').forEach((el) => {
+      el.style.opacity = '1';
+    });
+  } else {
+    // Initial load: staggered fade-in
+    svg.querySelectorAll('.chart-line, .chart-area').forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.transition = 'none';
       requestAnimationFrame(() => {
-        const delay = 50 + i * 60;
-        el.style.transition = `opacity 0.5s ease ${delay}ms`;
-        el.style.opacity = '1';
+        requestAnimationFrame(() => {
+          const delay = 50 + i * 60;
+          el.style.transition = `opacity 0.5s ease ${delay}ms`;
+          el.style.opacity = '1';
+        });
       });
     });
-  });
+  }
 
   // Hover system
   const line = document.createElement('div');
