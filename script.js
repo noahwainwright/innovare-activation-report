@@ -167,7 +167,7 @@ function bindSheet() {
     if (!sheet.classList.contains('open')) return;
     const sections = sheet.querySelectorAll('.sheet-section');
     const sheetH = sheet.clientHeight;
-    const fadeZone = sheetH * 0.18;
+    const fadeZone = sheetH * 0.05;
 
     sections.forEach(sec => {
       const rect = sec.getBoundingClientRect();
@@ -181,15 +181,15 @@ function bindSheet() {
       // Fading out at top edge
       if (relTop < fadeZone) {
         const progress = Math.max(0, 1 - relTop / fadeZone);
-        blur = progress * 6;
-        opacity = 1 - progress * 0.4;
+        blur = progress * 4;
+        opacity = 1 - progress * 0.3;
       }
 
       // Fading in at bottom edge
       if (relBottom > sheetH - fadeZone) {
         const progress = Math.max(0, (relBottom - (sheetH - fadeZone)) / fadeZone);
-        blur = Math.max(blur, progress * 4);
-        opacity = Math.min(opacity, 1 - progress * 0.3);
+        blur = Math.max(blur, progress * 3);
+        opacity = Math.min(opacity, 1 - progress * 0.2);
       }
 
       sec.style.filter = blur > 0.1 ? `blur(${blur}px)` : '';
