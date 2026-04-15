@@ -404,12 +404,47 @@ function renderSignals(signals) {
 function renderPerAccount(accounts) {
   const el = document.getElementById('per-account');
   if (!el || !accounts) return;
-  el.innerHTML = accounts.map((a) => `
+
+  const rows = accounts.map((a) => `
     <div class="per-account-row">
       <span class="per-account-name">${a.account}</span>
       <span class="per-account-tier">${a.tier}</span>
       <span class="per-account-count${a.ciwpsCreated > 0 ? ' has-ciwp' : ''}">${a.ciwpsCreated} plan${a.ciwpsCreated !== 1 ? 's' : ''}</span>
     </div>`).join('');
+
+  el.innerHTML = `
+    <div class="per-account-accordion">
+      <button class="per-account-header">
+        <span class="per-account-summary-label">All accounts</span>
+        <span class="per-account-summary-count">${accounts.length}</span>
+        <span class="health-chevron"></span>
+      </button>
+      <div class="per-account-body">
+        <div class="per-account-body-inner">
+          <div class="per-account-list">${rows}</div>
+        </div>
+      </div>
+    </div>`;
+
+  const btn = el.querySelector('.per-account-header');
+  const accordion = el.querySelector('.per-account-accordion');
+  const body = el.querySelector('.per-account-body');
+  const inner = el.querySelector('.per-account-body-inner');
+
+  btn.addEventListener('click', () => {
+    const isOpen = accordion.classList.contains('expanded');
+    if (isOpen) {
+      body.style.height = body.scrollHeight + 'px';
+      requestAnimationFrame(() => { body.style.height = '0'; });
+      accordion.classList.remove('expanded');
+    } else {
+      body.style.height = inner.scrollHeight + 'px';
+      accordion.classList.add('expanded');
+      body.addEventListener('transitionend', () => {
+        if (accordion.classList.contains('expanded')) body.style.height = 'auto';
+      }, { once: true });
+    }
+  });
 }
 
 function formatDate(dateStr) {
