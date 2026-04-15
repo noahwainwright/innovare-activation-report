@@ -242,7 +242,7 @@ body {
 /* ── Metric Overlay ───────────────────────── */
 
 .metric-overlay {
-  padding: 28px 8px 0;
+  padding: 28px 0 0;
   transition: none;
 }
 
@@ -292,7 +292,7 @@ body {
 .metric-sub {
   font-size: 15px;
   color: var(--text-secondary);
-  padding-left: 8px;
+  padding-left: 0;
 }
 
 /* ── Bottom Bar (hidden) ──────────────────── */
@@ -545,7 +545,14 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 12px;
+  width: 100%;
+  padding: 12px 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--card-border);
+  cursor: pointer;
+  font-family: var(--font);
+  -webkit-tap-highlight-color: transparent;
 }
 
 .health-dot {
@@ -560,15 +567,52 @@ body {
 .health-dot.dormant { background: var(--accent-down); }
 
 .health-group-label {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-primary);
 }
 
 .health-group-count {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-muted);
   margin-left: auto;
+}
+
+.health-chevron {
+  width: 16px;
+  height: 16px;
+  position: relative;
+  flex-shrink: 0;
+  margin-left: 8px;
+  transition: transform 0.3s var(--ease-smooth);
+}
+
+.health-chevron::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid var(--text-muted);
+  border-bottom: 2px solid var(--text-muted);
+  transform: translate(-50%, -65%) rotate(45deg);
+}
+
+.health-group.expanded .health-chevron {
+  transform: rotate(180deg);
+}
+
+.health-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s var(--ease-smooth), padding 0.4s var(--ease-smooth);
+  padding: 0;
+}
+
+.health-group.expanded .health-body {
+  max-height: 600px;
+  padding: 16px 0;
 }
 
 .health-accounts {

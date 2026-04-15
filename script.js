@@ -60,6 +60,8 @@ function bindSheet() {
   }
 
   function closeSheet() {
+    sheet.style.transition = '';
+    sheet.style.transform = '';
     sheet.classList.remove('open');
     backdrop.classList.remove('visible');
     container.classList.remove('receded');
@@ -95,11 +97,13 @@ function bindSheet() {
     if (!isDragging) return;
     isDragging = false;
     sheet.style.transition = '';
-    if (touchDeltaY > 120) {
+    if (touchDeltaY > 80) {
       closeSheet();
     } else {
-      sheet.style.transform = '';
-      sheet.classList.add('open');
+      sheet.style.transform = 'translateY(0)';
+      requestAnimationFrame(() => {
+        sheet.style.transform = '';
+      });
     }
     touchDeltaY = 0;
   });
@@ -297,8 +301,9 @@ function renderChart(chart, skipAnimation) {
   }, { passive: true });
 
   wrap.addEventListener('touchmove', (e) => {
+    e.preventDefault();
     updateHover(e.touches[0].clientX);
-  }, { passive: true });
+  }, { passive: false });
 
   wrap.addEventListener('touchend', () => {
     setTimeout(hideHover, 1500);
@@ -342,16 +347,25 @@ function renderHealth(health) {
 
   el.innerHTML = groups.map(g => `
     <div class="health-group">
-      <div class="health-group-header">
+      <button class="health-group-header" data-accordion>
         <span class="health-dot ${g.dot}"></span>
         <span class="health-group-label">${g.label}</span>
         <span class="health-group-count">${g.items.length}</span>
-      </div>
-      <div class="health-accounts">
-        ${g.items.map(name => `<span class="health-tag">${name}</span>`).join('')}
+        <span class="health-chevron"></span>
+      </button>
+      <div class="health-body">
+        <div class="health-accounts">
+          ${g.items.map(name => `<span class="health-tag">${name}</span>`).join('')}
+        </div>
       </div>
     </div>
   `).join('');
+
+  el.querySelectorAll('[data-accordion]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.parentElement.classList.toggle('expanded');
+    });
+  });
 }
 
 function renderSignals(signals) {
