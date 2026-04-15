@@ -180,9 +180,10 @@ body {
 .sparkline-wrap.testing-summary-mode {
   cursor: default;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  padding-top: 18%;
+  height: 28vh;
+  min-height: 160px;
   background: var(--card-bg);
   overflow: hidden;
 }
@@ -195,8 +196,8 @@ body {
 /* Animated sentence */
 
 .testing-summary-sentence {
-  padding: 32px 48px;
-  font-size: 28px;
+  padding: 24px 48px;
+  font-size: 36px;
   font-weight: 500;
   color: var(--text-secondary);
   line-height: 1.6;
@@ -216,7 +217,7 @@ body {
 
 .summary-count {
   font-weight: 600;
-  font-size: 32px;
+  font-size: 42px;
   color: var(--text-primary);
   letter-spacing: -0.02em;
 }
@@ -236,18 +237,18 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 28px;
 }
 
 .testing-category-label {
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 600;
   color: var(--text-primary);
   letter-spacing: 0.02em;
 }
 
 .testing-category-count {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text-muted);
   margin-left: auto;
 }
@@ -261,8 +262,8 @@ body {
 .testing-ticket-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 0;
+  gap: 14px;
+  padding: 18px 0;
   border-bottom: 1px solid var(--card-border);
 }
 
@@ -280,12 +281,12 @@ body {
 .testing-status-dot.status-complete  { background: var(--accent-up); }
 
 .testing-ticket-id {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--text-muted);
   letter-spacing: 0.04em;
   flex-shrink: 0;
-  min-width: 64px;
+  min-width: 72px;
 }
 
 a.testing-ticket-link {
@@ -300,13 +301,13 @@ a.testing-ticket-link:hover {
 
 .testing-ticket-title {
   flex: 1;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
   color: var(--text-primary);
 }
 
 .testing-ticket-status {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text-secondary);
   flex-shrink: 0;
