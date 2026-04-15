@@ -63,7 +63,7 @@ body {
 .hero {
   position: relative;
   width: 100%;
-  margin-bottom: 24px;
+  margin-bottom: 40px;
 }
 
 /* ── Chart Header ─────────────────────────── */
@@ -72,7 +72,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 }
 
 .chart-title {
@@ -123,7 +123,8 @@ body {
 .sparkline-wrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 960 / 400;
+  height: 50vh;
+  min-height: 280px;
   cursor: crosshair;
 }
 
@@ -231,7 +232,22 @@ body {
 /* ── Metric Overlay ───────────────────────── */
 
 .metric-overlay {
-  padding: 16px 8px 0;
+  padding: 28px 8px 0;
+  transition: none;
+}
+
+.metric-overlay .metric-value,
+.metric-overlay .metric-delta,
+.metric-overlay .metric-sub {
+  transition: opacity 0.4s ease, filter 0.4s ease;
+  will-change: opacity, filter;
+}
+
+.metric-overlay.blur-out .metric-value,
+.metric-overlay.blur-out .metric-delta,
+.metric-overlay.blur-out .metric-sub {
+  opacity: 0.3;
+  filter: blur(6px);
 }
 
 .metric-row {
@@ -269,13 +285,6 @@ body {
   padding-left: 8px;
 }
 
-/* ── Transition state for chart changes ───── */
-
-.metric-overlay.changing {
-  opacity: 0;
-  filter: blur(6px);
-}
-
 /* ── Bottom Bar (hidden) ──────────────────── */
 
 .bottom-bar { display: none; }
@@ -285,6 +294,7 @@ body {
 .pill-wrap {
   display: flex;
   justify-content: center;
+  margin-top: 32px;
 }
 
 .pill {

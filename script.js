@@ -19,18 +19,29 @@ function bindTimeSelector() {
       btn.classList.add('active');
       currentRange = range;
 
-      // Augen-style blur transition on metric
       const overlay = document.querySelector('.metric-overlay');
-      overlay.classList.add('changing');
 
-      // Clear old hover elements
-      document.querySelectorAll('.hover-line, .hover-dot, .sparkline-tooltip').forEach(el => el.remove());
+      // Phase 1: blur out current content (metric + chart lines)
+      overlay.classList.add('blur-out');
+      blurChartOut();
 
+      // Phase 2: update data while blurred, then blur back in
       setTimeout(() => {
+        // Clear old hover elements
+        document.querySelectorAll('.hover-line, .hover-dot, .sparkline-tooltip').forEach(el => el.remove());
+
         renderRange(range);
-        overlay.classList.remove('changing');
-      }, 300);
+        overlay.classList.remove('blur-out');
+      }, 350);
     });
+  });
+}
+
+function blurChartOut() {
+  const svg = document.getElementById('sparkline');
+  svg.querySelectorAll('.chart-line, .chart-area').forEach((el) => {
+    el.style.transition = 'opacity 0.3s ease';
+    el.style.opacity = '0.15';
   });
 }
 
@@ -88,7 +99,7 @@ function renderChart(chart) {
   const svg = document.getElementById('sparkline');
   const wrap = document.querySelector('.sparkline-wrap');
   const w = 960;
-  const h = 400;
+  const h = 480;
   const padX = 8;
   const padTop = 40;
   const padBottom = 40;
@@ -156,14 +167,14 @@ function renderChart(chart) {
     <path d="${genPath}" fill="none" stroke="#AC5CCC" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6 4" class="chart-line"/>
   `;
 
-  // Augen-style fade animation
+  // Augen-style fade-in animation
   svg.querySelectorAll('.chart-line, .chart-area').forEach((el, i) => {
     el.style.opacity = '0';
     el.style.transition = 'none';
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        const delay = i * 80;
-        el.style.transition = `opacity 0.6s ease ${delay}ms`;
+        const delay = 50 + i * 60;
+        el.style.transition = `opacity 0.5s ease ${delay}ms`;
         el.style.opacity = '1';
       });
     });
