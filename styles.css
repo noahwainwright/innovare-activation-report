@@ -366,11 +366,11 @@ body {
   height: 4px;
   background: rgba(0, 0, 0, 0.12);
   border-radius: 2px;
-  margin: 10px auto 0;
+  margin: 12px auto 0;
 }
 
 .sheet-content {
-  padding: 36px 40px 64px;
+  padding: 40px 48px 72px;
   max-width: 720px;
   margin: 0 auto;
 }
@@ -385,7 +385,7 @@ body {
     opacity 0.5s var(--ease-smooth),
     transform 0.5s var(--ease-smooth),
     filter 0.5s var(--ease-smooth);
-  margin-bottom: 40px;
+  margin-bottom: 56px;
   will-change: transform, opacity, filter;
 }
 
@@ -407,7 +407,7 @@ body {
   color: var(--text-primary);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 /* ── Funnel ───────────────────────────────── */
@@ -416,7 +416,7 @@ body {
   display: flex;
   align-items: center;
   gap: 20px;
-  margin-bottom: 18px;
+  margin-bottom: 22px;
 }
 
 .funnel-row:last-child { margin-bottom: 0; }
@@ -464,7 +464,7 @@ body {
 
 .cohort-grid {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
@@ -506,7 +506,7 @@ body {
 
 .signal-grid {
   display: flex;
-  gap: 10px;
+  gap: 14px;
   flex-wrap: wrap;
 }
 
@@ -536,17 +536,15 @@ body {
 /* ── Account Health ────────────────────────── */
 
 .health-group {
-  margin-bottom: 24px;
+  margin-bottom: 0;
 }
-
-.health-group:last-child { margin-bottom: 0; }
 
 .health-group-header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   width: 100%;
-  padding: 12px 0;
+  padding: 16px 0;
   background: none;
   border: none;
   border-bottom: 1px solid var(--card-border);
@@ -616,7 +614,7 @@ body {
 .health-accounts {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
 }
 
 .health-tag {
@@ -626,7 +624,7 @@ body {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--radius-pill);
-  padding: 6px 14px;
+  padding: 8px 16px;
 }
 
 /* ── Responsive ───────────────────────────── */
