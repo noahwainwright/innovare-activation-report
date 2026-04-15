@@ -241,9 +241,9 @@ function renderChart(chart, skipAnimation) {
   `;
   wrap.appendChild(tooltip);
 
-  wrap.addEventListener('mousemove', (e) => {
+  function updateHover(clientX) {
     const rect = wrap.getBoundingClientRect();
-    const mouseX = ((e.clientX - rect.left) / rect.width) * w;
+    const mouseX = ((clientX - rect.left) / rect.width) * w;
 
     let nearest = 0;
     let nearestDist = Infinity;
@@ -273,6 +273,35 @@ function renderChart(chart, skipAnimation) {
     const xShift = pctX > 75 ? '-90%' : pctX < 25 ? '-10%' : '-50%';
     const yShift = atPeak ? '0%' : '-100%';
     tooltip.style.transform = `translate(${xShift}, ${yShift})`;
+  }
+
+  function showHover() {
+    line.style.opacity = '1';
+    dot.style.opacity = '1';
+    tooltip.style.opacity = '1';
+  }
+
+  function hideHover() {
+    line.style.opacity = '';
+    dot.style.opacity = '';
+    tooltip.style.opacity = '';
+  }
+
+  // Desktop hover
+  wrap.addEventListener('mousemove', (e) => updateHover(e.clientX));
+
+  // Mobile touch
+  wrap.addEventListener('touchstart', (e) => {
+    showHover();
+    updateHover(e.touches[0].clientX);
+  }, { passive: true });
+
+  wrap.addEventListener('touchmove', (e) => {
+    updateHover(e.touches[0].clientX);
+  }, { passive: true });
+
+  wrap.addEventListener('touchend', () => {
+    setTimeout(hideHover, 1500);
   });
 }
 
