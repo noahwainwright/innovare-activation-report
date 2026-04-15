@@ -64,7 +64,8 @@ function bindSheet() {
 function renderRange(range) {
   const d = currentData.ranges[range];
 
-  document.getElementById('report-date').textContent = formatDate(currentData.date);
+  const dateEl = document.getElementById('report-date');
+  if (dateEl) dateEl.textContent = formatDate(currentData.date);
   document.getElementById('metric-value').textContent = d.primary.value + d.primary.unit;
 
   const arrow = document.getElementById('delta-arrow');
@@ -86,11 +87,11 @@ function renderRange(range) {
 function renderChart(chart) {
   const svg = document.getElementById('sparkline');
   const wrap = document.querySelector('.sparkline-wrap');
-  const w = 720;
-  const h = 480;
+  const w = 960;
+  const h = 400;
   const padX = 8;
   const padTop = 40;
-  const padBottom = 100;
+  const padBottom = 40;
 
   // Find global max across all series
   const allVals = [...chart.logins, ...chart.visits, ...chart.generated];
@@ -129,53 +130,41 @@ function renderChart(chart) {
   svg.innerHTML = `
     <defs>
       <linearGradient id="fill-logins" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#000000" stop-opacity="0.12"/>
+        <stop offset="100%" stop-color="#000000" stop-opacity="0.01"/>
+      </linearGradient>
+      <linearGradient id="fill-visits" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%" stop-color="#000000" stop-opacity="0.06"/>
         <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
       </linearGradient>
-      <linearGradient id="fill-visits" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#000000" stop-opacity="0.03"/>
-        <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
-      </linearGradient>
       <linearGradient id="fill-generated" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#AC5CCC" stop-opacity="0.1"/>
-        <stop offset="100%" stop-color="#AC5CCC" stop-opacity="0"/>
+        <stop offset="0%" stop-color="#AC5CCC" stop-opacity="0.18"/>
+        <stop offset="100%" stop-color="#AC5CCC" stop-opacity="0.02"/>
       </linearGradient>
     </defs>
 
     <!-- Visits layer (back) -->
     <path d="${buildArea(visitPath, visitCoords)}" fill="url(#fill-visits)" class="chart-area"/>
-    <path d="${visitPath}" fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="1.5" stroke-linecap="round" class="chart-line"/>
+    <path d="${visitPath}" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="2" stroke-linecap="round" class="chart-line"/>
 
     <!-- Logins layer (middle) -->
     <path d="${buildArea(loginPath, loginCoords)}" fill="url(#fill-logins)" class="chart-area"/>
-    <path d="${loginPath}" fill="none" stroke="#000000CC" stroke-width="2.5" stroke-linecap="round" class="chart-line"/>
+    <path d="${loginPath}" fill="none" stroke="#000000CC" stroke-width="3" stroke-linecap="round" class="chart-line"/>
 
     <!-- Generated layer (front) -->
     <path d="${buildArea(genPath, genCoords)}" fill="url(#fill-generated)" class="chart-area"/>
-    <path d="${genPath}" fill="none" stroke="#AC5CCC" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 4" class="chart-line"/>
+    <path d="${genPath}" fill="none" stroke="#AC5CCC" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6 4" class="chart-line"/>
   `;
 
-  // Animate paths in (augen-style)
-  svg.querySelectorAll('.chart-line').forEach((path) => {
-    const length = path.getTotalLength();
-    path.style.strokeDasharray = length;
-    path.style.strokeDashoffset = length;
-    path.style.transition = 'none';
+  // Augen-style fade animation
+  svg.querySelectorAll('.chart-line, .chart-area').forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transition = 'none';
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        path.style.transition = 'stroke-dashoffset 1s cubic-bezier(0.25, 0.1, 0.25, 1)';
-        path.style.strokeDashoffset = '0';
-      });
-    });
-  });
-
-  svg.querySelectorAll('.chart-area').forEach((area) => {
-    area.style.opacity = '0';
-    area.style.transition = 'none';
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        area.style.transition = 'opacity 0.8s ease 0.3s';
-        area.style.opacity = '1';
+        const delay = i * 80;
+        el.style.transition = `opacity 0.6s ease ${delay}ms`;
+        el.style.opacity = '1';
       });
     });
   });

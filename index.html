@@ -11,18 +11,16 @@
   <div class="container">
 
     <div class="hero">
-      <div class="time-selector">
-        <button class="time-btn active" data-range="1D">1D</button>
-        <button class="time-btn" data-range="1W">1W</button>
-        <button class="time-btn" data-range="1M">1M</button>
+      <div class="chart-header">
+        <span class="chart-title">CIWP Activation</span>
+        <div class="time-selector">
+          <button class="time-btn active" data-range="1D">1D</button>
+          <button class="time-btn" data-range="1W">1W</button>
+          <button class="time-btn" data-range="1M">1M</button>
+        </div>
       </div>
       <div class="sparkline-wrap">
-        <svg id="sparkline" viewBox="0 0 720 480" preserveAspectRatio="none"></svg>
-        <div class="chart-legend">
-          <span class="legend-item"><span class="legend-dot legend-logins"></span>Logins</span>
-          <span class="legend-item"><span class="legend-dot legend-visits"></span>Visits</span>
-          <span class="legend-item"><span class="legend-dot legend-generated"></span>Generated</span>
-        </div>
+        <svg id="sparkline" viewBox="0 0 960 400" preserveAspectRatio="none"></svg>
       </div>
       <div class="metric-overlay">
         <div class="metric-row">
@@ -34,11 +32,6 @@
         </div>
         <div class="metric-sub" id="accounts"></div>
       </div>
-    </div>
-
-    <div class="bottom-bar">
-      <span id="bar-left">CIWP Activation</span>
-      <span id="report-date"></span>
     </div>
 
     <div class="pill-wrap">
