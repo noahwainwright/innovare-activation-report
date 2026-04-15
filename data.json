@@ -2,6 +2,44 @@
   "date": "2026-04-15",
   "client": "INNOVARE",
   "product": "CIWP Activation",
+  "perAccount": [
+    { "account": "Bass Elementary", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Beidler Elementary", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Bowen High School", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Brown Elementary", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Cather Elementary", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Chopin Elementary", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Davis Elementary", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Deneen", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Doolittle", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Englewood High School", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Esmond Elementary", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Fairfield Elementary", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Henderson Elementary", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Joplin Elementary", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Kellman Elementary", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Laura S. Ward Elementary", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Lawndale Elementary", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Mollison", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Nash", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "O'Toole Elementary", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Pershing Elementary", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Roosevelt High School", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Sherman Elementary", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Stowe Elementary", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Tilton Elementary", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Wadsworth Elementary", "tier": "Premium", "ciwpsCreated": 0 },
+    { "account": "Avalon Park Elementary", "tier": "Basic", "ciwpsCreated": 0 },
+    { "account": "Bradwell School of Excellence", "tier": "Basic", "ciwpsCreated": 0 },
+    { "account": "Chalmers", "tier": "Basic", "ciwpsCreated": 0 },
+    { "account": "Graham Elementary", "tier": "Basic", "ciwpsCreated": 0 },
+    { "account": "Jesse Owens Elementary", "tier": "Basic", "ciwpsCreated": 0 },
+    { "account": "Powell Elementary", "tier": "Basic", "ciwpsCreated": 0 },
+    { "account": "Wells HS", "tier": "Basic", "ciwpsCreated": 0 },
+    { "account": "Westcott Elementary", "tier": "Basic", "ciwpsCreated": 0 },
+    { "account": "Woodson Elementary", "tier": "Basic", "ciwpsCreated": 0 },
+    { "account": "Amethod Public Schools", "tier": "Starter", "ciwpsCreated": 0 }
+  ],
   "ranges": {
     "1D": {
       "primary": { "label": "Activated", "value": 3.8, "unit": "%", "delta": 1.3, "direction": "up" },
@@ -28,10 +66,12 @@
         "dormant": ["Bass Elementary", "Beidler Elementary", "Brown Elementary", "Cather Elementary", "Chopin Elementary", "Davis Elementary", "Deneen", "Doolittle", "Englewood High School", "Esmond Elementary", "Fairfield Elementary", "Graham Elementary School", "Henderson Elementary", "Jesse Owens", "Joplin Elementary", "Kellman Elementary", "Mollison", "Nash", "O'Toole Elementary", "Pershing Elementary", "Powell Elementary", "Roosevelt High School", "Sherman Elementary", "Stowe Elementary", "Tilton Elementary", "Wadsworth Elementary", "Bradwell School of Excellence", "Chalmers", "Woodson Elementary"]
       },
       "signals": [
-        { "value": "25", "unit": "", "label": "unique logins" },
-        { "value": "4", "unit": "", "label": "CIWPs generated" },
-        { "value": "14", "unit": "", "label": "dashboard visits" },
-        { "value": "5", "unit": "", "label": "active accounts" }
+        { "value": "--", "unit": "", "label": "unique CIWP page viewers" },
+        { "value": "--", "unit": "", "label": "goal generation — new" },
+        { "value": "--", "unit": "", "label": "goal generation — improve" },
+        { "value": "4",  "unit": "", "label": "CIWP generation — new" },
+        { "value": "--", "unit": "", "label": "CIWP generation — improve" },
+        { "value": "0",  "unit": "", "label": "manual CIWPs created" }
       ]
     },
     "1W": {
@@ -59,10 +99,12 @@
         "dormant": ["Bass Elementary", "Beidler Elementary", "Brown Elementary", "Cather Elementary", "Davis Elementary", "Deneen", "Doolittle", "Englewood High School", "Esmond Elementary", "Fairfield Elementary", "Graham Elementary School", "Henderson Elementary", "Jesse Owens", "Joplin Elementary", "Kellman Elementary", "Mollison", "Nash", "O'Toole Elementary", "Pershing Elementary", "Powell Elementary", "Sherman Elementary", "Stowe Elementary", "Wadsworth Elementary", "Bradwell School of Excellence", "Chalmers", "Woodson Elementary"]
       },
       "signals": [
-        { "value": "56", "unit": "", "label": "unique logins" },
-        { "value": "6", "unit": "", "label": "CIWPs generated" },
-        { "value": "29", "unit": "", "label": "dashboard visits" },
-        { "value": "8", "unit": "", "label": "active accounts" }
+        { "value": "--", "unit": "", "label": "unique CIWP page viewers" },
+        { "value": "--", "unit": "", "label": "goal generation — new" },
+        { "value": "--", "unit": "", "label": "goal generation — improve" },
+        { "value": "6",  "unit": "", "label": "CIWP generation — new" },
+        { "value": "--", "unit": "", "label": "CIWP generation — improve" },
+        { "value": "0",  "unit": "", "label": "manual CIWPs created" }
       ]
     },
     "1M": {
@@ -90,10 +132,12 @@
         "dormant": ["Bass Elementary", "Beidler Elementary", "Cather Elementary", "Davis Elementary", "Deneen", "Doolittle", "Englewood High School", "Esmond Elementary", "Graham Elementary School", "Henderson Elementary", "Jesse Owens", "Joplin Elementary", "Kellman Elementary", "Mollison", "O'Toole Elementary", "Pershing Elementary", "Powell Elementary", "Sherman Elementary", "Stowe Elementary", "Wadsworth Elementary", "Bradwell School of Excellence", "Chalmers", "Woodson Elementary"]
       },
       "signals": [
-        { "value": "156", "unit": "", "label": "unique logins" },
-        { "value": "6", "unit": "", "label": "CIWPs generated" },
-        { "value": "104", "unit": "", "label": "dashboard visits" },
-        { "value": "12", "unit": "", "label": "active accounts" }
+        { "value": "--", "unit": "", "label": "unique CIWP page viewers" },
+        { "value": "--", "unit": "", "label": "goal generation — new" },
+        { "value": "--", "unit": "", "label": "goal generation — improve" },
+        { "value": "6",  "unit": "", "label": "CIWP generation — new" },
+        { "value": "--", "unit": "", "label": "CIWP generation — improve" },
+        { "value": "0",  "unit": "", "label": "manual CIWPs created" }
       ]
     }
   }

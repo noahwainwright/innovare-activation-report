@@ -131,6 +131,7 @@ function renderRange(range, skipChartAnimation) {
   renderCohorts(d.cohorts);
   renderHealth(d.health);
   renderSignals(d.signals);
+  renderPerAccount(currentData.perAccount);
 }
 
 function renderChart(chart, skipAnimation) {
@@ -398,6 +399,17 @@ function renderSignals(signals) {
       <div class="signal-label">${s.label}</div>
     </div>`)
     .join('');
+}
+
+function renderPerAccount(accounts) {
+  const el = document.getElementById('per-account');
+  if (!el || !accounts) return;
+  el.innerHTML = accounts.map((a) => `
+    <div class="per-account-row">
+      <span class="per-account-name">${a.account}</span>
+      <span class="per-account-tier">${a.tier}</span>
+      <span class="per-account-count${a.ciwpsCreated > 0 ? ' has-ciwp' : ''}">${a.ciwpsCreated} plan${a.ciwpsCreated !== 1 ? 's' : ''}</span>
+    </div>`).join('');
 }
 
 function formatDate(dateStr) {
