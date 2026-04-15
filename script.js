@@ -178,26 +178,35 @@ function bindSheet() {
       const relTop = rect.top - sheetRect.top;
       const relBottom = rect.bottom - sheetRect.top;
 
+      const secH = rect.height;
+
+      // Skip blur on sections taller than half the viewport (expanded accordions)
+      if (secH > sheetH * 0.5) {
+        sec.style.filter = 'blur(0px)';
+        sec.style.opacity = '1';
+        return;
+      }
+
       let blur = 0;
       let opacity = 1;
 
-      // Only apply blur when section is near edges
-      if (relTop < fadeZone && relTop < sheetH) {
-        const progress = Math.max(0, Math.min(1, 1 - relTop / fadeZone));
+      // Only blur when the section's midpoint is near an edge
+      const mid = relTop + secH / 2;
+
+      if (mid < fadeZone) {
+        const progress = Math.max(0, Math.min(1, 1 - mid / fadeZone));
         blur = progress * 4;
         opacity = 1 - progress * 0.25;
       }
 
-      if (relBottom > sheetH - fadeZone && relBottom > 0) {
-        const progress = Math.max(0, Math.min(1, (relBottom - (sheetH - fadeZone)) / fadeZone));
+      if (mid > sheetH - fadeZone) {
+        const progress = Math.max(0, Math.min(1, (mid - (sheetH - fadeZone)) / fadeZone));
         blur = Math.max(blur, progress * 3);
         opacity = Math.min(opacity, 1 - progress * 0.2);
       }
 
-      // Clamp -- never fully hide
       opacity = Math.max(0.75, opacity);
 
-      // Always set explicit values, never clear to empty
       sec.style.filter = `blur(${blur}px)`;
       sec.style.opacity = String(opacity);
     });
