@@ -604,15 +604,13 @@ body {
 }
 
 .health-body {
-  max-height: 0;
+  height: 0;
   overflow: hidden;
-  transition: max-height 0.4s var(--ease-smooth), padding 0.4s var(--ease-smooth);
-  padding: 0;
+  transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.health-group.expanded .health-body {
-  max-height: 600px;
-  padding: 16px 0;
+.health-body-inner {
+  padding: 12px 0 16px;
 }
 
 .health-accounts {

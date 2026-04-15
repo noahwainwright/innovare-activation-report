@@ -354,8 +354,10 @@ function renderHealth(health) {
         <span class="health-chevron"></span>
       </button>
       <div class="health-body">
-        <div class="health-accounts">
-          ${g.items.map(name => `<span class="health-tag">${name}</span>`).join('')}
+        <div class="health-body-inner">
+          <div class="health-accounts">
+            ${g.items.map(name => `<span class="health-tag">${name}</span>`).join('')}
+          </div>
         </div>
       </div>
     </div>
@@ -363,7 +365,27 @@ function renderHealth(health) {
 
   el.querySelectorAll('[data-accordion]').forEach(btn => {
     btn.addEventListener('click', () => {
-      btn.parentElement.classList.toggle('expanded');
+      const group = btn.parentElement;
+      const body = group.querySelector('.health-body');
+      const inner = group.querySelector('.health-body-inner');
+      const isOpen = group.classList.contains('expanded');
+
+      if (isOpen) {
+        body.style.height = body.scrollHeight + 'px';
+        requestAnimationFrame(() => {
+          body.style.height = '0';
+        });
+        group.classList.remove('expanded');
+      } else {
+        const targetHeight = inner.scrollHeight;
+        body.style.height = targetHeight + 'px';
+        group.classList.add('expanded');
+        body.addEventListener('transitionend', () => {
+          if (group.classList.contains('expanded')) {
+            body.style.height = 'auto';
+          }
+        }, { once: true });
+      }
     });
   });
 }
