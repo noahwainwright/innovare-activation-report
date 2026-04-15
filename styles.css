@@ -164,7 +164,7 @@ body {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #000000CC;
+  background: #666666;
   border: 2px solid #FFFFFF;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   pointer-events: none;

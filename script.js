@@ -56,14 +56,14 @@ function bindSheet() {
     container.classList.add('receded');
     sheet.classList.add('open');
     backdrop.classList.add('visible');
-    pill.textContent = 'See less';
+    pill.textContent = 'Close';
   }
 
   function closeSheet() {
     sheet.classList.remove('open');
     backdrop.classList.remove('visible');
     container.classList.remove('receded');
-    pill.textContent = 'See more';
+    pill.textContent = 'Details';
   }
 
   pill.addEventListener('click', () => {
@@ -142,8 +142,8 @@ function renderChart(chart, skipAnimation) {
   svg.innerHTML = `
     <defs>
       <linearGradient id="fill-logins" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#000000" stop-opacity="0.12"/>
-        <stop offset="100%" stop-color="#000000" stop-opacity="0.01"/>
+        <stop offset="0%" stop-color="#666666" stop-opacity="0.12"/>
+        <stop offset="100%" stop-color="#666666" stop-opacity="0.01"/>
       </linearGradient>
       <linearGradient id="fill-visits" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%" stop-color="#00A6FF" stop-opacity="0.1"/>
@@ -161,7 +161,7 @@ function renderChart(chart, skipAnimation) {
 
     <!-- Logins layer (middle) -->
     <path d="${buildArea(loginPath, loginCoords)}" fill="url(#fill-logins)" class="chart-area"/>
-    <path d="${loginPath}" fill="none" stroke="#000000CC" stroke-width="3" stroke-linecap="round" class="chart-line"/>
+    <path d="${loginPath}" fill="none" stroke="#666666" stroke-width="3" stroke-linecap="round" class="chart-line"/>
 
     <!-- Generated layer (front) -->
     <path d="${buildArea(genPath, genCoords)}" fill="url(#fill-generated)" class="chart-area"/>
@@ -202,7 +202,7 @@ function renderChart(chart, skipAnimation) {
   tooltip.className = 'sparkline-tooltip';
   tooltip.innerHTML = `
     <div class="tooltip-date"></div>
-    <div class="tooltip-row"><span class="t-dot" style="background:#000000CC"></span><span class="t-label">Logins</span><span class="t-val t-logins"></span></div>
+    <div class="tooltip-row"><span class="t-dot" style="background:#666666"></span><span class="t-label">Logins</span><span class="t-val t-logins"></span></div>
     <div class="tooltip-row"><span class="t-dot" style="background:#00A6FF"></span><span class="t-label">Visits</span><span class="t-val t-visits"></span></div>
     <div class="tooltip-row"><span class="t-dot" style="background:#AC5CCC"></span><span class="t-label">Generated</span><span class="t-val t-gen"></span></div>
   `;
