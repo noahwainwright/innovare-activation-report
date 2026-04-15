@@ -718,11 +718,6 @@ a.testing-ticket-link:hover {
 
 .sheet-section:last-child { margin-bottom: 0; }
 
-.sheet.open .sheet-section[style*="filter"] {
-  transition:
-    filter 0.08s linear,
-    opacity 0.08s linear;
-}
 
 .sheet.open .sheet-section {
   opacity: 1;

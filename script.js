@@ -163,38 +163,55 @@ function bindSheet() {
   });
 
   // Scroll-driven depth blur on sheet sections
-  sheet.addEventListener('scroll', () => {
+  let sheetRafId = null;
+
+  function updateSheetBlur() {
+    sheetRafId = null;
     if (!sheet.classList.contains('open')) return;
     const sections = sheet.querySelectorAll('.sheet-section');
+    const sheetRect = sheet.getBoundingClientRect();
     const sheetH = sheet.clientHeight;
     const fadeZone = sheetH * 0.05;
 
     sections.forEach(sec => {
       const rect = sec.getBoundingClientRect();
-      const sheetTop = sheet.getBoundingClientRect().top;
-      const relTop = rect.top - sheetTop;
-      const relBottom = rect.bottom - sheetTop;
+      const relTop = rect.top - sheetRect.top;
+      const relBottom = rect.bottom - sheetRect.top;
+
+      // Skip sections fully outside viewport
+      if (relBottom < -50 || relTop > sheetH + 50) {
+        sec.style.filter = '';
+        sec.style.opacity = '';
+        return;
+      }
 
       let blur = 0;
       let opacity = 1;
 
       // Fading out at top edge
       if (relTop < fadeZone) {
-        const progress = Math.max(0, 1 - relTop / fadeZone);
+        const progress = Math.max(0, Math.min(1, 1 - relTop / fadeZone));
         blur = progress * 4;
-        opacity = 1 - progress * 0.3;
+        opacity = 1 - progress * 0.25;
       }
 
       // Fading in at bottom edge
       if (relBottom > sheetH - fadeZone) {
-        const progress = Math.max(0, (relBottom - (sheetH - fadeZone)) / fadeZone);
+        const progress = Math.max(0, Math.min(1, (relBottom - (sheetH - fadeZone)) / fadeZone));
         blur = Math.max(blur, progress * 3);
         opacity = Math.min(opacity, 1 - progress * 0.2);
       }
 
+      // Clamp -- never fully hide
+      opacity = Math.max(0.7, opacity);
+
       sec.style.filter = blur > 0.1 ? `blur(${blur}px)` : '';
       sec.style.opacity = opacity < 0.99 ? opacity : '';
     });
+  }
+
+  sheet.addEventListener('scroll', () => {
+    if (!sheetRafId) sheetRafId = requestAnimationFrame(updateSheetBlur);
   }, { passive: true });
 
   backdrop.addEventListener('click', closeSheet);
