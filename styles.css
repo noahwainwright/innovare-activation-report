@@ -426,7 +426,7 @@ body {
   color: var(--text-secondary);
   width: 140px;
   flex-shrink: 0;
-  text-align: right;
+  text-align: left;
 }
 
 .funnel-bar-track {

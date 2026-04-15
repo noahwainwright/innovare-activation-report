@@ -71,6 +71,38 @@ function bindSheet() {
   });
 
   backdrop.addEventListener('click', closeSheet);
+
+  // Swipe-to-dismiss
+  let touchStartY = 0;
+  let touchDeltaY = 0;
+  let isDragging = false;
+
+  sheet.addEventListener('touchstart', (e) => {
+    if (sheet.scrollTop > 0) return;
+    touchStartY = e.touches[0].clientY;
+    isDragging = true;
+    sheet.style.transition = 'none';
+  }, { passive: true });
+
+  sheet.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    touchDeltaY = e.touches[0].clientY - touchStartY;
+    if (touchDeltaY < 0) { touchDeltaY = 0; return; }
+    sheet.style.transform = `translateY(${touchDeltaY}px)`;
+  }, { passive: true });
+
+  sheet.addEventListener('touchend', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    sheet.style.transition = '';
+    if (touchDeltaY > 120) {
+      closeSheet();
+    } else {
+      sheet.style.transform = '';
+      sheet.classList.add('open');
+    }
+    touchDeltaY = 0;
+  });
 }
 
 function renderRange(range, skipChartAnimation) {
@@ -233,13 +265,13 @@ function renderChart(chart, skipAnimation) {
     tooltip.querySelector('.t-gen').textContent = chart.generated[nearest];
 
     const tooltipX = pctX > 75 ? pctX - 2 : pctX < 25 ? pctX + 2 : pctX;
+    const atPeak = pctY < 30;
     tooltip.style.left = tooltipX + '%';
-    tooltip.style.top = Math.max(pctY - 12, 4) + '%';
-    tooltip.style.transform = pctX > 75
-      ? 'translate(-90%, -100%)'
-      : pctX < 25
-        ? 'translate(-10%, -100%)'
-        : 'translate(-50%, -100%)';
+    tooltip.style.top = atPeak ? (pctY + 8) + '%' : Math.max(pctY - 8, 4) + '%';
+
+    const xShift = pctX > 75 ? '-90%' : pctX < 25 ? '-10%' : '-50%';
+    const yShift = atPeak ? '0%' : '-100%';
+    tooltip.style.transform = `translate(${xShift}, ${yShift})`;
   });
 }
 
