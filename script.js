@@ -72,14 +72,17 @@ function switchView(view) {
   currentView = view;
   const timeSelector = document.querySelector('.time-selector');
 
-  if (view === 'cgro-testing') {
+  if (view === 'ciwp-testing') {
     timeSelector.style.opacity = '0';
     timeSelector.style.pointerEvents = 'none';
-    renderCgroView();
+    renderCiwpTestingView();
   } else {
     timeSelector.style.opacity = '';
     timeSelector.style.pointerEvents = '';
-    // Restore activation sheet and re-render
+    // Restore sparkline SVG and activation sheet
+    const sparkWrap = document.querySelector('.sparkline-wrap');
+    sparkWrap.classList.remove('testing-summary-mode');
+    sparkWrap.innerHTML = '<svg id="sparkline" viewBox="0 0 960 480" preserveAspectRatio="none"></svg>';
     document.querySelector('.sheet-content').innerHTML = ACTIVATION_SHEET_HTML;
     renderRange(currentRange);
   }
@@ -203,111 +206,114 @@ function renderRange(range, skipChartAnimation) {
   renderPerAccount(currentData.perAccount);
 }
 
-// ── CGRO Testing View ─────────────────────────
+// ── CIWP Testing View ─────────────────────────
 
-function renderCgroView() {
-  const cgro = currentData.cgroTesting;
+function renderCiwpTestingView() {
+  const data = currentData.ciwpTesting;
 
   // Update hero metric
-  document.getElementById('metric-value').textContent = cgro.primary.value + cgro.primary.unit;
+  document.getElementById('metric-value').textContent = data.primary.value + data.primary.unit;
   document.getElementById('delta-arrow').textContent = '';
-  document.getElementById('delta-value').textContent = cgro.primary.label;
-  document.getElementById('accounts').textContent = cgro.primary.sub;
+  document.getElementById('delta-value').textContent = data.primary.label;
+  document.getElementById('accounts').textContent = data.primary.sub;
+
+  // Replace sparkline with summary sentence
+  const sparkWrap = document.querySelector('.sparkline-wrap');
+  sparkWrap.innerHTML = buildTestingSummaryHTML(data.summary);
+  sparkWrap.classList.add('testing-summary-mode');
 
   // Replace sheet content
-  document.querySelector('.sheet-content').innerHTML = buildCgroSheetHTML(cgro);
-  bindCgroAccordions();
+  document.querySelector('.sheet-content').innerHTML = buildTestingSheetHTML(data);
+
+  // Scroll-driven blur/parallax on sentence
+  bindTestingScroll();
 }
 
-function buildCgroSheetHTML(cgro) {
-  const ticketGroups = [
-    { key: 'inProgress', label: 'In Progress', dot: 'active',  items: cgro.tickets.inProgress },
-    { key: 'toDo',       label: 'To Do',       dot: 'dormant', items: cgro.tickets.toDo },
-    { key: 'done',       label: 'Done',         dot: 'at-risk', items: cgro.tickets.done }
-  ].filter(g => g.items.length > 0);
+function bindTestingScroll() {
+  const sentence = document.querySelector('.testing-summary-sentence');
+  if (!sentence) return;
 
-  const ticketsHTML = ticketGroups.map(g => `
-    <div class="health-group cgro-ticket-group">
-      <button class="health-group-header" data-cgro-accordion>
-        <span class="health-dot ${g.dot}"></span>
-        <span class="health-group-label">${g.label}</span>
-        <span class="health-group-count">${g.items.length}</span>
-        <span class="health-chevron"></span>
-      </button>
-      <div class="health-body">
-        <div class="health-body-inner">
-          ${g.items.map(t => `
-            <div class="cgro-ticket-row">
-              <span class="cgro-ticket-id">${t.id}</span>
-              <span class="cgro-ticket-title">${t.title}</span>
-              <span class="cgro-ticket-meta">${t.assignee} · ${t.points}pt</span>
-            </div>`).join('')}
-        </div>
-      </div>
-    </div>`).join('');
+  function onScroll() {
+    if (currentView !== 'ciwp-testing') {
+      window.removeEventListener('scroll', onScroll);
+      return;
+    }
+    const rect = sentence.getBoundingClientRect();
+    const viewH = window.innerHeight;
+    // Progress: 0 when sentence is centered, 1 when scrolled well past
+    const center = rect.top + rect.height / 2;
+    const progress = Math.max(0, Math.min(1, (viewH * 0.4 - center) / (viewH * 0.5)));
 
-  const statusOrder = ['live', 'in-progress', 'pending', 'not-instrumented'];
-  const statusLabel = { 'live': 'Live', 'in-progress': 'In Progress', 'pending': 'Pending', 'not-instrumented': 'Not Instrumented' };
-  const grouped = {};
-  statusOrder.forEach(s => { grouped[s] = []; });
-  cgro.eventStatus.forEach(e => {
-    if (grouped[e.status]) grouped[e.status].push(e.event);
-  });
+    const blur = progress * 8;
+    const yShift = progress * -16;
+    const opacity = 1 - progress * 0.6;
 
-  const eventsHTML = statusOrder.filter(s => grouped[s].length).map(s => `
-    <div class="cgro-event-group">
-      <div class="cgro-event-status-label">
-        <span class="cgro-event-dot ${s}"></span>
-        ${statusLabel[s]} <span class="cgro-event-count">${grouped[s].length}</span>
-      </div>
-      <div class="health-accounts" style="margin-top:10px">
-        ${grouped[s].map(ev => `<span class="health-tag cgro-event-tag">${ev}</span>`).join('')}
-      </div>
-    </div>`).join('');
+    sentence.style.transform = `translateY(${yShift}px)`;
+    sentence.style.filter = `blur(${blur}px)`;
+    sentence.style.opacity = opacity;
+  }
 
-  const blockersHTML = cgro.blockers.map(b => `
-    <div class="cgro-blocker-row">
-      <span class="cgro-blocker-dot severity-${b.severity}"></span>
-      <span class="cgro-blocker-title">${b.title}</span>
-      <span class="cgro-blocker-owner">${b.owner}</span>
-    </div>`).join('');
-
-  return `
-    <div class="sheet-section" data-delay="0">
-      <div class="sheet-label">Sprint — ${cgro.sprint}</div>
-      ${ticketsHTML}
-    </div>
-    <div class="sheet-section" data-delay="1">
-      <div class="sheet-label">Mixpanel Events</div>
-      ${eventsHTML}
-    </div>
-    <div class="sheet-section" data-delay="2">
-      <div class="sheet-label">Blockers</div>
-      <div class="cgro-blockers-list">${blockersHTML}</div>
-    </div>`;
+  window.addEventListener('scroll', onScroll, { passive: true });
 }
 
-function bindCgroAccordions() {
-  document.querySelectorAll('[data-cgro-accordion]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const group = btn.parentElement;
-      const body = group.querySelector('.health-body');
-      const inner = group.querySelector('.health-body-inner');
-      const isOpen = group.classList.contains('expanded');
+function buildTestingSummaryHTML(summary) {
+  const dotClass = {
+    'review': 'status-review',
+    'dev': 'status-dev',
+    'complete': 'status-complete'
+  };
 
-      if (isOpen) {
-        body.style.height = body.scrollHeight + 'px';
-        requestAnimationFrame(() => { body.style.height = '0'; });
-        group.classList.remove('expanded');
-      } else {
-        body.style.height = inner.scrollHeight + 'px';
-        group.classList.add('expanded');
-        body.addEventListener('transitionend', () => {
-          if (group.classList.contains('expanded')) body.style.height = 'auto';
-        }, { once: true });
-      }
-    });
+  const parts = summary.map(s => {
+    return `<span class="summary-count ${dotClass[s.dot] || ''}">${s.count}</span>\u00A0${s.label}`;
   });
+
+  // Join with commas and "and" before the last item
+  let joined = parts[0];
+  for (let i = 1; i < parts.length; i++) {
+    joined += i === parts.length - 1 ? ' and\u00A0' : ',\u00A0';
+    joined += parts[i];
+  }
+
+  return `<div class="testing-summary-sentence"><span class="summary-clause" style="animation-delay: 200ms">Howdy.\u00A0We\u00A0have ${joined}.</span></div>`;
+}
+
+function buildTestingSheetHTML(data) {
+  const statusDotClass = {
+    'under-review': 'status-review',
+    'dev-review': 'status-dev',
+    'complete': 'status-complete'
+  };
+
+  const statusLabel = {
+    'under-review': 'Under Review',
+    'dev-review': 'Dev Review',
+    'complete': 'Complete'
+  };
+
+  const jiraBase = data.jiraBase || '';
+
+  return data.categories.map((cat, i) => `
+    <div class="sheet-section" data-delay="${i}">
+      <div class="testing-category-header">
+        <span class="testing-category-label">${cat.label}</span>
+        <span class="testing-category-count">${cat.tickets.length}</span>
+      </div>
+      <div class="testing-ticket-list">
+        ${cat.tickets.map(t => {
+          const isLinked = jiraBase && t.id !== '--';
+          const idHTML = isLinked
+            ? `<a class="testing-ticket-id testing-ticket-link" href="${jiraBase}${t.id}" target="_blank" rel="noopener">${t.id}</a>`
+            : `<span class="testing-ticket-id">${t.id}</span>`;
+          return `
+          <div class="testing-ticket-row">
+            <span class="testing-status-dot ${statusDotClass[t.status] || ''}"></span>
+            ${idHTML}
+            <span class="testing-ticket-title">${t.title}</span>
+            <span class="testing-ticket-status">${statusLabel[t.status] || t.status}</span>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`).join('');
 }
 
 // ── Activation sheet renderers ────────────────
