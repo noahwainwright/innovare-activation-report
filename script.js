@@ -70,22 +70,32 @@ function bindViewSelector() {
 
 function switchView(view) {
   currentView = view;
+  const hero = document.querySelector('.hero');
   const timeSelector = document.querySelector('.time-selector');
 
-  if (view === 'ciwp-testing') {
-    timeSelector.style.opacity = '0';
-    timeSelector.style.pointerEvents = 'none';
-    renderCiwpTestingView();
-  } else {
-    timeSelector.style.opacity = '';
-    timeSelector.style.pointerEvents = '';
-    // Restore sparkline SVG and activation sheet
-    const sparkWrap = document.querySelector('.sparkline-wrap');
-    sparkWrap.classList.remove('testing-summary-mode');
-    sparkWrap.innerHTML = '<svg id="sparkline" viewBox="0 0 960 480" preserveAspectRatio="none"></svg>';
-    document.querySelector('.sheet-content').innerHTML = ACTIVATION_SHEET_HTML;
-    renderRange(currentRange);
-  }
+  // Blur out
+  hero.classList.add('view-transitioning');
+
+  setTimeout(() => {
+    if (view === 'ciwp-testing') {
+      timeSelector.style.opacity = '0';
+      timeSelector.style.pointerEvents = 'none';
+      renderCiwpTestingView();
+    } else {
+      timeSelector.style.opacity = '';
+      timeSelector.style.pointerEvents = '';
+      const sparkWrap = document.querySelector('.sparkline-wrap');
+      sparkWrap.classList.remove('testing-summary-mode');
+      sparkWrap.innerHTML = '<svg id="sparkline" viewBox="0 0 960 480" preserveAspectRatio="none"></svg>';
+      document.querySelector('.sheet-content').innerHTML = ACTIVATION_SHEET_HTML;
+      renderRange(currentRange);
+    }
+
+    // Blur in
+    requestAnimationFrame(() => {
+      hero.classList.remove('view-transitioning');
+    });
+  }, 300);
 }
 
 function bindTimeSelector() {

@@ -64,6 +64,13 @@ body {
   position: relative;
   width: 100%;
   margin-bottom: 40px;
+  transition: filter 0.3s var(--ease-smooth), opacity 0.3s var(--ease-smooth);
+  will-change: filter, opacity;
+}
+
+.hero.view-transitioning {
+  filter: blur(8px);
+  opacity: 0.3;
 }
 
 /* ── Chart Header ─────────────────────────── */
