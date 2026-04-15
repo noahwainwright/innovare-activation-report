@@ -1,5 +1,28 @@
 let currentData = null;
 let currentRange = '1D';
+let currentView = 'activation';
+
+const ACTIVATION_SHEET_HTML = `
+  <div class="sheet-section" data-delay="0">
+    <div class="sheet-label">Activation</div>
+    <div id="funnel"></div>
+  </div>
+  <div class="sheet-section" data-delay="1">
+    <div class="sheet-label">Cohorts</div>
+    <div class="cohort-grid" id="cohorts"></div>
+  </div>
+  <div class="sheet-section" data-delay="2">
+    <div class="sheet-label">Account Health</div>
+    <div id="account-health"></div>
+  </div>
+  <div class="sheet-section" data-delay="3">
+    <div class="sheet-label">Per Account</div>
+    <div class="per-account-list" id="per-account"></div>
+  </div>
+  <div class="sheet-section" data-delay="4">
+    <div class="sheet-label">Usage</div>
+    <div class="signal-grid" id="signals"></div>
+  </div>`;
 
 document.addEventListener('DOMContentLoaded', async () => {
   const res = await fetch('./data.json');
@@ -7,13 +30,65 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderRange('1D');
   bindTimeSelector();
   bindSheet();
+  bindViewSelector();
 });
 
 let isTransitioning = false;
 
+function bindViewSelector() {
+  const selector = document.getElementById('view-selector');
+  const btn = document.getElementById('view-title-btn');
+  const dropdown = document.getElementById('view-dropdown');
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = selector.classList.contains('open');
+    if (isOpen) {
+      closeDropdown();
+    } else {
+      selector.classList.add('open');
+      document.addEventListener('click', closeDropdown, { once: true });
+    }
+  });
+
+  function closeDropdown() {
+    selector.classList.remove('open');
+  }
+
+  dropdown.querySelectorAll('.view-option').forEach((opt) => {
+    opt.addEventListener('click', () => {
+      const view = opt.dataset.view;
+      if (view === currentView) { closeDropdown(); return; }
+      dropdown.querySelectorAll('.view-option').forEach(o => o.classList.remove('active'));
+      opt.classList.add('active');
+      document.getElementById('view-label').textContent = opt.textContent;
+      closeDropdown();
+      switchView(view);
+    });
+  });
+}
+
+function switchView(view) {
+  currentView = view;
+  const timeSelector = document.querySelector('.time-selector');
+
+  if (view === 'cgro-testing') {
+    timeSelector.style.opacity = '0';
+    timeSelector.style.pointerEvents = 'none';
+    renderCgroView();
+  } else {
+    timeSelector.style.opacity = '';
+    timeSelector.style.pointerEvents = '';
+    // Restore activation sheet and re-render
+    document.querySelector('.sheet-content').innerHTML = ACTIVATION_SHEET_HTML;
+    renderRange(currentRange);
+  }
+}
+
 function bindTimeSelector() {
   document.querySelectorAll('.time-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
+      if (currentView !== 'activation') return;
       const range = btn.dataset.range;
       if (range === currentRange || isTransitioning) return;
 
@@ -26,16 +101,13 @@ function bindTimeSelector() {
       const wrap = document.querySelector('.sparkline-wrap');
       const overlay = document.querySelector('.metric-overlay');
 
-      // Single smooth blur: chart + metric blur out together
       wrap.classList.add('transitioning');
       overlay.classList.add('blur-out');
 
-      // Wait for blur to fully settle, swap content, then resolve
       setTimeout(() => {
         document.querySelectorAll('.hover-line, .hover-dot, .sparkline-tooltip').forEach(el => el.remove());
         renderRange(range, true);
 
-        // Small pause at peak blur for the swap to feel intentional
         setTimeout(() => {
           wrap.classList.remove('transitioning');
           overlay.classList.remove('blur-out');
@@ -74,7 +146,6 @@ function bindSheet() {
 
   backdrop.addEventListener('click', closeSheet);
 
-  // Swipe-to-dismiss
   let touchStartY = 0;
   let touchDeltaY = 0;
   let isDragging = false;
@@ -101,9 +172,7 @@ function bindSheet() {
       closeSheet();
     } else {
       sheet.style.transform = 'translateY(0)';
-      requestAnimationFrame(() => {
-        sheet.style.transform = '';
-      });
+      requestAnimationFrame(() => { sheet.style.transform = ''; });
     }
     touchDeltaY = 0;
   });
@@ -134,6 +203,115 @@ function renderRange(range, skipChartAnimation) {
   renderPerAccount(currentData.perAccount);
 }
 
+// ── CGRO Testing View ─────────────────────────
+
+function renderCgroView() {
+  const cgro = currentData.cgroTesting;
+
+  // Update hero metric
+  document.getElementById('metric-value').textContent = cgro.primary.value + cgro.primary.unit;
+  document.getElementById('delta-arrow').textContent = '';
+  document.getElementById('delta-value').textContent = cgro.primary.label;
+  document.getElementById('accounts').textContent = cgro.primary.sub;
+
+  // Replace sheet content
+  document.querySelector('.sheet-content').innerHTML = buildCgroSheetHTML(cgro);
+  bindCgroAccordions();
+}
+
+function buildCgroSheetHTML(cgro) {
+  const ticketGroups = [
+    { key: 'inProgress', label: 'In Progress', dot: 'active',  items: cgro.tickets.inProgress },
+    { key: 'toDo',       label: 'To Do',       dot: 'dormant', items: cgro.tickets.toDo },
+    { key: 'done',       label: 'Done',         dot: 'at-risk', items: cgro.tickets.done }
+  ].filter(g => g.items.length > 0);
+
+  const ticketsHTML = ticketGroups.map(g => `
+    <div class="health-group cgro-ticket-group">
+      <button class="health-group-header" data-cgro-accordion>
+        <span class="health-dot ${g.dot}"></span>
+        <span class="health-group-label">${g.label}</span>
+        <span class="health-group-count">${g.items.length}</span>
+        <span class="health-chevron"></span>
+      </button>
+      <div class="health-body">
+        <div class="health-body-inner">
+          ${g.items.map(t => `
+            <div class="cgro-ticket-row">
+              <span class="cgro-ticket-id">${t.id}</span>
+              <span class="cgro-ticket-title">${t.title}</span>
+              <span class="cgro-ticket-meta">${t.assignee} · ${t.points}pt</span>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>`).join('');
+
+  const statusOrder = ['live', 'in-progress', 'pending', 'not-instrumented'];
+  const statusLabel = { 'live': 'Live', 'in-progress': 'In Progress', 'pending': 'Pending', 'not-instrumented': 'Not Instrumented' };
+  const grouped = {};
+  statusOrder.forEach(s => { grouped[s] = []; });
+  cgro.eventStatus.forEach(e => {
+    if (grouped[e.status]) grouped[e.status].push(e.event);
+  });
+
+  const eventsHTML = statusOrder.filter(s => grouped[s].length).map(s => `
+    <div class="cgro-event-group">
+      <div class="cgro-event-status-label">
+        <span class="cgro-event-dot ${s}"></span>
+        ${statusLabel[s]} <span class="cgro-event-count">${grouped[s].length}</span>
+      </div>
+      <div class="health-accounts" style="margin-top:10px">
+        ${grouped[s].map(ev => `<span class="health-tag cgro-event-tag">${ev}</span>`).join('')}
+      </div>
+    </div>`).join('');
+
+  const blockersHTML = cgro.blockers.map(b => `
+    <div class="cgro-blocker-row">
+      <span class="cgro-blocker-dot severity-${b.severity}"></span>
+      <span class="cgro-blocker-title">${b.title}</span>
+      <span class="cgro-blocker-owner">${b.owner}</span>
+    </div>`).join('');
+
+  return `
+    <div class="sheet-section" data-delay="0">
+      <div class="sheet-label">Sprint — ${cgro.sprint}</div>
+      ${ticketsHTML}
+    </div>
+    <div class="sheet-section" data-delay="1">
+      <div class="sheet-label">Mixpanel Events</div>
+      ${eventsHTML}
+    </div>
+    <div class="sheet-section" data-delay="2">
+      <div class="sheet-label">Blockers</div>
+      <div class="cgro-blockers-list">${blockersHTML}</div>
+    </div>`;
+}
+
+function bindCgroAccordions() {
+  document.querySelectorAll('[data-cgro-accordion]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const group = btn.parentElement;
+      const body = group.querySelector('.health-body');
+      const inner = group.querySelector('.health-body-inner');
+      const isOpen = group.classList.contains('expanded');
+
+      if (isOpen) {
+        body.style.height = body.scrollHeight + 'px';
+        requestAnimationFrame(() => { body.style.height = '0'; });
+        group.classList.remove('expanded');
+      } else {
+        body.style.height = inner.scrollHeight + 'px';
+        group.classList.add('expanded');
+        body.addEventListener('transitionend', () => {
+          if (group.classList.contains('expanded')) body.style.height = 'auto';
+        }, { once: true });
+      }
+    });
+  });
+}
+
+// ── Activation sheet renderers ────────────────
+
 function renderChart(chart, skipAnimation) {
   const svg = document.getElementById('sparkline');
   const wrap = document.querySelector('.sparkline-wrap');
@@ -143,7 +321,6 @@ function renderChart(chart, skipAnimation) {
   const padTop = 40;
   const padBottom = 40;
 
-  // Find global max across all series
   const allVals = [...chart.logins, ...chart.visits, ...chart.generated];
   const maxVal = Math.max(...allVals, 1);
 
@@ -192,42 +369,29 @@ function renderChart(chart, skipAnimation) {
         <stop offset="100%" stop-color="#AC5CCC" stop-opacity="0.02"/>
       </linearGradient>
     </defs>
-
-    <!-- Visits layer (back) -->
     <path d="${buildArea(visitPath, visitCoords)}" fill="url(#fill-visits)" class="chart-area"/>
     <path d="${visitPath}" fill="none" stroke="#00A6FF" stroke-width="2" stroke-linecap="round" class="chart-line"/>
-
-    <!-- Logins layer (middle) -->
     <path d="${buildArea(loginPath, loginCoords)}" fill="url(#fill-logins)" class="chart-area"/>
     <path d="${loginPath}" fill="none" stroke="#666666" stroke-width="3" stroke-linecap="round" class="chart-line"/>
-
-    <!-- Generated layer (front) -->
     <path d="${buildArea(genPath, genCoords)}" fill="url(#fill-generated)" class="chart-area"/>
     <path d="${genPath}" fill="none" stroke="#AC5CCC" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6 4" class="chart-line"/>
   `;
 
-  // Animate chart paths in
   if (skipAnimation) {
-    // Range switch: paths appear instantly, container blur handles the transition
-    svg.querySelectorAll('.chart-line, .chart-area').forEach((el) => {
-      el.style.opacity = '1';
-    });
+    svg.querySelectorAll('.chart-line, .chart-area').forEach((el) => { el.style.opacity = '1'; });
   } else {
-    // Initial load: staggered fade-in
     svg.querySelectorAll('.chart-line, .chart-area').forEach((el, i) => {
       el.style.opacity = '0';
       el.style.transition = 'none';
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          const delay = 50 + i * 60;
-          el.style.transition = `opacity 0.5s ease ${delay}ms`;
+          el.style.transition = `opacity 0.5s ease ${50 + i * 60}ms`;
           el.style.opacity = '1';
         });
       });
     });
   }
 
-  // Hover system
   const line = document.createElement('div');
   line.className = 'hover-line';
   wrap.appendChild(line);
@@ -274,41 +438,17 @@ function renderChart(chart, skipAnimation) {
     const atPeak = pctY < 30;
     tooltip.style.left = tooltipX + '%';
     tooltip.style.top = atPeak ? (pctY + 8) + '%' : Math.max(pctY - 8, 4) + '%';
-
-    const xShift = pctX > 75 ? '-90%' : pctX < 25 ? '-10%' : '-50%';
-    const yShift = atPeak ? '0%' : '-100%';
-    tooltip.style.transform = `translate(${xShift}, ${yShift})`;
+    tooltip.style.transform = `translate(${pctX > 75 ? '-90%' : pctX < 25 ? '-10%' : '-50%'}, ${atPeak ? '0%' : '-100%'})`;
   }
 
-  function showHover() {
-    line.style.opacity = '1';
-    dot.style.opacity = '1';
-    tooltip.style.opacity = '1';
-  }
-
-  function hideHover() {
+  wrap.addEventListener('mousemove', (e) => updateHover(e.clientX));
+  wrap.addEventListener('touchstart', (e) => { updateHover(e.touches[0].clientX); }, { passive: true });
+  wrap.addEventListener('touchmove', (e) => { e.preventDefault(); updateHover(e.touches[0].clientX); }, { passive: false });
+  wrap.addEventListener('touchend', () => { setTimeout(() => {
     line.style.opacity = '';
     dot.style.opacity = '';
     tooltip.style.opacity = '';
-  }
-
-  // Desktop hover
-  wrap.addEventListener('mousemove', (e) => updateHover(e.clientX));
-
-  // Mobile touch
-  wrap.addEventListener('touchstart', (e) => {
-    showHover();
-    updateHover(e.touches[0].clientX);
-  }, { passive: true });
-
-  wrap.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    updateHover(e.touches[0].clientX);
-  }, { passive: false });
-
-  wrap.addEventListener('touchend', () => {
-    setTimeout(hideHover, 1500);
-  });
+  }, 1500); });
 }
 
 function renderFunnel(funnel) {
@@ -320,8 +460,7 @@ function renderFunnel(funnel) {
         <div class="funnel-bar ${i === 0 ? 'bar-login' : 'bar-default'}" style="width: ${step.value}%; opacity: ${0.4 + step.value * 0.006}"></div>
       </div>
       <span class="funnel-pct">${step.value}%</span>
-    </div>`)
-    .join('');
+    </div>`).join('');
 }
 
 function renderCohorts(cohorts) {
@@ -334,16 +473,15 @@ function renderCohorts(cohorts) {
         <span>${c.accounts} accounts</span>
         <span>${c.ciwps} CIWPs</span>
       </div>
-    </div>`)
-    .join('');
+    </div>`).join('');
 }
 
 function renderHealth(health) {
   const el = document.getElementById('account-health');
   const groups = [
-    { key: 'active', label: 'Active', dot: 'active', items: health.active },
-    { key: 'atRisk', label: 'At Risk', dot: 'at-risk', items: health.atRisk },
-    { key: 'dormant', label: 'Dormant', dot: 'dormant', items: health.dormant }
+    { key: 'active',  label: 'Active',   dot: 'active',   items: health.active },
+    { key: 'atRisk',  label: 'At Risk',  dot: 'at-risk',  items: health.atRisk },
+    { key: 'dormant', label: 'Dormant',  dot: 'dormant',  items: health.dormant }
   ];
 
   el.innerHTML = groups.map(g => `
@@ -361,8 +499,7 @@ function renderHealth(health) {
           </div>
         </div>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 
   el.querySelectorAll('[data-accordion]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -373,18 +510,13 @@ function renderHealth(health) {
 
       if (isOpen) {
         body.style.height = body.scrollHeight + 'px';
-        requestAnimationFrame(() => {
-          body.style.height = '0';
-        });
+        requestAnimationFrame(() => { body.style.height = '0'; });
         group.classList.remove('expanded');
       } else {
-        const targetHeight = inner.scrollHeight;
-        body.style.height = targetHeight + 'px';
+        body.style.height = inner.scrollHeight + 'px';
         group.classList.add('expanded');
         body.addEventListener('transitionend', () => {
-          if (group.classList.contains('expanded')) {
-            body.style.height = 'auto';
-          }
+          if (group.classList.contains('expanded')) body.style.height = 'auto';
         }, { once: true });
       }
     });
@@ -397,8 +529,7 @@ function renderSignals(signals) {
     <div class="signal-card">
       <div class="signal-value">${s.value}${s.unit ? (s.unit === '%' ? '' : ' ') + s.unit : ''}</div>
       <div class="signal-label">${s.label}</div>
-    </div>`)
-    .join('');
+    </div>`).join('');
 }
 
 function renderPerAccount(accounts) {

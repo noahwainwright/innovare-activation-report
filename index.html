@@ -15,7 +15,16 @@
 
     <div class="hero">
       <div class="chart-header">
-        <span class="chart-title">CIWP Activation</span>
+        <div class="view-selector" id="view-selector">
+          <button class="view-title-btn" id="view-title-btn">
+            <span id="view-label">CIWP Activation</span>
+            <span class="view-chevron-icon"></span>
+          </button>
+          <div class="view-dropdown" id="view-dropdown">
+            <button class="view-option active" data-view="activation">CIWP Activation</button>
+            <button class="view-option" data-view="cgro-testing">CIWP CGRO Testing</button>
+          </div>
+        </div>
         <div class="time-selector">
           <button class="time-btn active" data-range="1D">1D</button>
           <button class="time-btn" data-range="1W">1W</button>

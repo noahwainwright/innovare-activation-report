@@ -40,6 +40,51 @@
     { "account": "Woodson Elementary", "tier": "Basic", "ciwpsCreated": 0 },
     { "account": "Amethod Public Schools", "tier": "Starter", "ciwpsCreated": 0 }
   ],
+  "cgroTesting": {
+    "sprint": "Squirtle",
+    "epic": "IW-6345",
+    "primary": { "label": "Story Progress", "value": 17, "unit": "%", "sub": "Squirtle sprint · IW-6345 · 6 stories" },
+    "tickets": {
+      "inProgress": [
+        { "id": "IW-6351", "title": "SIP Goal Tracking (Events 16-20)", "assignee": "Mingxing Li", "points": 5 }
+      ],
+      "toDo": [
+        { "id": "IW-6346", "title": "Identity Layer — Super Properties", "assignee": "Antonio Massaro", "points": 3 },
+        { "id": "IW-6347", "title": "Document Upload Events (1-3)", "assignee": "—", "points": 2 },
+        { "id": "IW-6348", "title": "AI Processing Events (4-9)", "assignee": "—", "points": 3 },
+        { "id": "IW-6349", "title": "Lifecycle & Sharing Events (10-14)", "assignee": "—", "points": 3 },
+        { "id": "IW-6350", "title": "AI Adoption Signal — Event 15", "assignee": "—", "points": 2 }
+      ],
+      "done": []
+    },
+    "eventStatus": [
+      { "event": "ciwp_generated", "status": "live" },
+      { "event": "ciwp_ai_analysis_completed", "status": "live" },
+      { "event": "ciwp_viewed", "status": "live" },
+      { "event": "ciwp_creation_started", "status": "pending" },
+      { "event": "ciwp_document_upload_completed", "status": "pending" },
+      { "event": "ciwp_document_upload_failed", "status": "pending" },
+      { "event": "ciwp_ai_analysis_failed", "status": "pending" },
+      { "event": "ciwp_goal_recommendations_viewed", "status": "pending" },
+      { "event": "ciwp_recommended_goals_edited", "status": "pending" },
+      { "event": "ciwp_recommended_goals_selected", "status": "pending" },
+      { "event": "ciwp_invite_sent", "status": "not-instrumented" },
+      { "event": "ciwp_published", "status": "not-instrumented" },
+      { "event": "ciwp_recommended_goal_adopted", "status": "not-instrumented" },
+      { "event": "goal_created", "status": "in-progress" },
+      { "event": "goal_progress_updated", "status": "in-progress" },
+      { "event": "goal_card_viewed", "status": "in-progress" },
+      { "event": "goal_edited", "status": "in-progress" },
+      { "event": "goal_deleted", "status": "in-progress" }
+    ],
+    "blockers": [
+      { "title": "goal_created vs intervention_created naming conflict", "owner": "Mingxing Li", "severity": "high" },
+      { "title": "ciwp_recommendations_generated rename unconfirmed", "owner": "Mingxing Li", "severity": "high" },
+      { "title": "ciwp_goal_recommendations_viewed canonical name", "owner": "Mingxing Li", "severity": "medium" },
+      { "title": "Premium tier = Custom/Enterprise mapping", "owner": "Fernando DeLeon", "severity": "medium" },
+      { "title": "12 unclassified accounts need tier assignment", "owner": "Amanda Szramiak", "severity": "low" }
+    ]
+  },
   "ranges": {
     "1D": {
       "primary": { "label": "Activated", "value": 3.8, "unit": "%", "delta": 1.3, "direction": "up" },
