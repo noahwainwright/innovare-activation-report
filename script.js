@@ -145,8 +145,8 @@ function renderChart(chart) {
         <stop offset="100%" stop-color="#000000" stop-opacity="0.01"/>
       </linearGradient>
       <linearGradient id="fill-visits" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#000000" stop-opacity="0.06"/>
-        <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+        <stop offset="0%" stop-color="#00A6FF" stop-opacity="0.1"/>
+        <stop offset="100%" stop-color="#00A6FF" stop-opacity="0.01"/>
       </linearGradient>
       <linearGradient id="fill-generated" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%" stop-color="#AC5CCC" stop-opacity="0.18"/>
@@ -156,7 +156,7 @@ function renderChart(chart) {
 
     <!-- Visits layer (back) -->
     <path d="${buildArea(visitPath, visitCoords)}" fill="url(#fill-visits)" class="chart-area"/>
-    <path d="${visitPath}" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="2" stroke-linecap="round" class="chart-line"/>
+    <path d="${visitPath}" fill="none" stroke="#00A6FF" stroke-width="2" stroke-linecap="round" class="chart-line"/>
 
     <!-- Logins layer (middle) -->
     <path d="${buildArea(loginPath, loginCoords)}" fill="url(#fill-logins)" class="chart-area"/>
@@ -194,7 +194,7 @@ function renderChart(chart) {
   tooltip.innerHTML = `
     <div class="tooltip-date"></div>
     <div class="tooltip-row"><span class="t-dot" style="background:#000000CC"></span><span class="t-label">Logins</span><span class="t-val t-logins"></span></div>
-    <div class="tooltip-row"><span class="t-dot" style="background:rgba(0,0,0,0.15)"></span><span class="t-label">Visits</span><span class="t-val t-visits"></span></div>
+    <div class="tooltip-row"><span class="t-dot" style="background:#00A6FF"></span><span class="t-label">Visits</span><span class="t-val t-visits"></span></div>
     <div class="tooltip-row"><span class="t-dot" style="background:#AC5CCC"></span><span class="t-label">Generated</span><span class="t-val t-gen"></span></div>
   `;
   wrap.appendChild(tooltip);

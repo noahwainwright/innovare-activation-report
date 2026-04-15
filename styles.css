@@ -126,6 +126,9 @@ body {
   height: 58vh;
   min-height: 300px;
   cursor: crosshair;
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--card-bg);
 }
 
 .sparkline-wrap svg {
