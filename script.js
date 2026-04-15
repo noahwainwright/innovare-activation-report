@@ -151,10 +151,10 @@ function bindSheet() {
     backdrop.classList.remove('visible');
     container.classList.remove('receded');
     pill.textContent = 'Details';
-    // Clear scroll blur styles
+    // Reset scroll blur -- remove inline styles so CSS cascade takes over
+    sheet.scrollTo(0, 0);
     sheet.querySelectorAll('.sheet-section').forEach(sec => {
-      sec.style.filter = '';
-      sec.style.opacity = '';
+      sec.removeAttribute('style');
     });
   }
 
@@ -178,35 +178,28 @@ function bindSheet() {
       const relTop = rect.top - sheetRect.top;
       const relBottom = rect.bottom - sheetRect.top;
 
-      // Skip sections fully outside viewport
-      if (relBottom < -50 || relTop > sheetH + 50) {
-        sec.style.filter = '';
-        sec.style.opacity = '';
-        return;
-      }
-
       let blur = 0;
       let opacity = 1;
 
-      // Fading out at top edge
-      if (relTop < fadeZone) {
+      // Only apply blur when section is near edges
+      if (relTop < fadeZone && relTop < sheetH) {
         const progress = Math.max(0, Math.min(1, 1 - relTop / fadeZone));
         blur = progress * 4;
         opacity = 1 - progress * 0.25;
       }
 
-      // Fading in at bottom edge
-      if (relBottom > sheetH - fadeZone) {
+      if (relBottom > sheetH - fadeZone && relBottom > 0) {
         const progress = Math.max(0, Math.min(1, (relBottom - (sheetH - fadeZone)) / fadeZone));
         blur = Math.max(blur, progress * 3);
         opacity = Math.min(opacity, 1 - progress * 0.2);
       }
 
       // Clamp -- never fully hide
-      opacity = Math.max(0.7, opacity);
+      opacity = Math.max(0.75, opacity);
 
-      sec.style.filter = blur > 0.1 ? `blur(${blur}px)` : '';
-      sec.style.opacity = opacity < 0.99 ? opacity : '';
+      // Always set explicit values, never clear to empty
+      sec.style.filter = `blur(${blur}px)`;
+      sec.style.opacity = String(opacity);
     });
   }
 
@@ -215,6 +208,12 @@ function bindSheet() {
   }, { passive: true });
 
   backdrop.addEventListener('click', closeSheet);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && sheet.classList.contains('open')) {
+      closeSheet();
+    }
+  });
 
   let touchStartY = 0;
   let touchDeltaY = 0;
