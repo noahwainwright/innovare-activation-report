@@ -167,49 +167,50 @@ function bindSheet() {
 
   function updateSheetBlur() {
     sheetRafId = null;
-    if (!sheet.classList.contains('open')) return;
+    if (!sheet.classList.contains('open') || isDragging) return;
     const sections = sheet.querySelectorAll('.sheet-section');
-    const sheetRect = sheet.getBoundingClientRect();
+    const sheetTop = sheet.getBoundingClientRect().top;
     const sheetH = sheet.clientHeight;
     const fadeZone = sheetH * 0.05;
+    const bottomEdge = sheetH - fadeZone;
 
-    sections.forEach(sec => {
+    for (let i = 0; i < sections.length; i++) {
+      const sec = sections[i];
       const rect = sec.getBoundingClientRect();
-      const relTop = rect.top - sheetRect.top;
-      const relBottom = rect.bottom - sheetRect.top;
-
+      const relTop = rect.top - sheetTop;
       const secH = rect.height;
 
-      // Skip blur on sections taller than half the viewport (expanded accordions)
+      // Skip sections fully off-screen (no layout thrash)
+      if (relTop > sheetH + 100 || relTop + secH < -100) continue;
+
+      // Skip blur on tall sections (expanded accordions)
       if (secH > sheetH * 0.5) {
-        sec.style.filter = 'blur(0px)';
-        sec.style.opacity = '1';
-        return;
+        if (sec.style.filter) { sec.style.filter = ''; sec.style.opacity = ''; }
+        continue;
       }
 
+      const mid = relTop + secH * 0.5;
       let blur = 0;
       let opacity = 1;
 
-      // Only blur when the section's midpoint is near an edge
-      const mid = relTop + secH / 2;
-
       if (mid < fadeZone) {
-        const progress = Math.max(0, Math.min(1, 1 - mid / fadeZone));
-        blur = progress * 4;
-        opacity = 1 - progress * 0.25;
+        const p = 1 - mid / fadeZone;
+        blur = p * 4;
+        opacity = 1 - p * 0.25;
+      } else if (mid > bottomEdge) {
+        const p = (mid - bottomEdge) / fadeZone;
+        blur = p * 3;
+        opacity = 1 - p * 0.2;
       }
 
-      if (mid > sheetH - fadeZone) {
-        const progress = Math.max(0, Math.min(1, (mid - (sheetH - fadeZone)) / fadeZone));
-        blur = Math.max(blur, progress * 3);
-        opacity = Math.min(opacity, 1 - progress * 0.2);
+      if (blur < 0.1) {
+        if (sec.style.filter) { sec.style.filter = ''; sec.style.opacity = ''; }
+      } else {
+        opacity = Math.max(0.75, opacity);
+        sec.style.filter = `blur(${blur}px)`;
+        sec.style.opacity = String(opacity);
       }
-
-      opacity = Math.max(0.75, opacity);
-
-      sec.style.filter = `blur(${blur}px)`;
-      sec.style.opacity = String(opacity);
-    });
+    }
   }
 
   sheet.addEventListener('scroll', () => {
@@ -329,24 +330,35 @@ function bindTestingScroll() {
   const sentence = document.querySelector('.testing-summary-sentence');
   if (!sentence) return;
 
-  function onScroll() {
+  let heroRafId = null;
+
+  function updateHeroBlur() {
+    heroRafId = null;
     if (currentView !== 'ciwp-testing') {
       window.removeEventListener('scroll', onScroll);
+      sentence.style.transform = '';
+      sentence.style.filter = '';
+      sentence.style.opacity = '';
       return;
     }
     const rect = sentence.getBoundingClientRect();
     const viewH = window.innerHeight;
-    // Progress: 0 when sentence is centered, 1 when scrolled well past
     const center = rect.top + rect.height / 2;
     const progress = Math.max(0, Math.min(1, (viewH * 0.4 - center) / (viewH * 0.5)));
 
-    const blur = progress * 8;
-    const yShift = progress * -16;
-    const opacity = 1 - progress * 0.6;
+    if (progress < 0.01) {
+      sentence.style.transform = '';
+      sentence.style.filter = '';
+      sentence.style.opacity = '';
+    } else {
+      sentence.style.transform = `translateY(${progress * -16}px)`;
+      sentence.style.filter = `blur(${progress * 8}px)`;
+      sentence.style.opacity = String(1 - progress * 0.6);
+    }
+  }
 
-    sentence.style.transform = `translateY(${yShift}px)`;
-    sentence.style.filter = `blur(${blur}px)`;
-    sentence.style.opacity = opacity;
+  function onScroll() {
+    if (!heroRafId) heroRafId = requestAnimationFrame(updateHeroBlur);
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
