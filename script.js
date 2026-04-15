@@ -262,7 +262,10 @@ function renderCohorts(cohorts) {
     <div class="cohort-card">
       <div class="cohort-name">${c.label}</div>
       <div class="cohort-rate">${c.rate}%</div>
-      <div class="cohort-count">${c.accounts} accounts</div>
+      <div class="cohort-meta">
+        <span>${c.accounts} accounts</span>
+        <span>${c.ciwps} CIWPs</span>
+      </div>
     </div>`)
     .join('');
 }

@@ -494,8 +494,10 @@ body {
   letter-spacing: -0.02em;
 }
 
-.cohort-count {
-  font-size: 14px;
+.cohort-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
   color: var(--text-secondary);
 }
 

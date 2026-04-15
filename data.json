@@ -1,5 +1,5 @@
 {
-  "date": "2026-04-14",
+  "date": "2026-04-15",
   "client": "INNOVARE",
   "product": "CIWP Activation",
   "ranges": {
@@ -18,8 +18,9 @@
         { "label": "CIWP Generated", "value": 16 }
       ],
       "cohorts": [
-        { "label": "CPS Schools", "rate": 4.2, "accounts": 26 },
-        { "label": "Non-CPS", "rate": 2.1, "accounts": 12 }
+        { "label": "Premium", "rate": 0, "accounts": 26, "schools": "CPS Phase 5", "ciwps": 0 },
+        { "label": "Basic", "rate": 0, "accounts": 9, "schools": "CPS Phase 5", "ciwps": 0 },
+        { "label": "Other", "rate": 15.4, "accounts": 13, "schools": "Non-CPS / Internal", "ciwps": 4 }
       ],
       "signals": [
         { "value": "25", "unit": "", "label": "unique logins" },
@@ -35,7 +36,7 @@
         "logins":    [18, 17, 19, 5, 1, 3, 22, 25],
         "generated": [0, 0, 0, 0, 0, 0, 3, 4],
         "visits":    [11, 11, 14, 3, 1, 2, 7, 14],
-        "labels":    ["Apr 7", "Apr 8", "Apr 9", "Apr 10", "Apr 11", "Apr 12", "Apr 13", "Apr 14"]
+        "labels":    ["Apr 8", "Apr 9", "Apr 10", "Apr 11", "Apr 12", "Apr 13", "Apr 14", "Apr 15"]
       },
       "funnel": [
         { "label": "Login", "value": 100 },
@@ -43,14 +44,15 @@
         { "label": "CIWP Generated", "value": 4 }
       ],
       "cohorts": [
-        { "label": "CPS Schools", "rate": 4.2, "accounts": 26 },
-        { "label": "Non-CPS", "rate": 2.1, "accounts": 12 }
+        { "label": "Premium", "rate": 0, "accounts": 26, "schools": "CPS Phase 5", "ciwps": 0 },
+        { "label": "Basic", "rate": 0, "accounts": 9, "schools": "CPS Phase 5", "ciwps": 0 },
+        { "label": "Other", "rate": 15.4, "accounts": 13, "schools": "Non-CPS / Internal", "ciwps": 6 }
       ],
       "signals": [
-        { "value": "156", "unit": "", "label": "unique logins" },
-        { "value": "25", "unit": "", "label": "logins today" },
+        { "value": "56", "unit": "", "label": "unique logins" },
         { "value": "6", "unit": "", "label": "CIWPs generated" },
-        { "value": "14", "unit": "", "label": "dashboard visits today" }
+        { "value": "29", "unit": "", "label": "dashboard visits" },
+        { "value": "48", "unit": "", "label": "total accounts" }
       ]
     },
     "1M": {
@@ -60,7 +62,7 @@
         "logins":    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,23,25,12,2,4,14,18,17,19,5,1,3,22,25],
         "generated": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,3,4],
         "visits":    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,11,14,3,1,2,7,14],
-        "labels":    ["Mar 15","Mar 16","Mar 17","Mar 18","Mar 19","Mar 20","Mar 21","Mar 22","Mar 23","Mar 24","Mar 25","Mar 26","Mar 27","Mar 28","Mar 29","Mar 30","Mar 31","Apr 1","Apr 2","Apr 3","Apr 4","Apr 5","Apr 6","Apr 7","Apr 8","Apr 9","Apr 10","Apr 11","Apr 12","Apr 13","Apr 14","Apr 14"]
+        "labels":    ["Mar 15","Mar 16","Mar 17","Mar 18","Mar 19","Mar 20","Mar 21","Mar 22","Mar 23","Mar 24","Mar 25","Mar 26","Mar 27","Mar 28","Mar 29","Mar 30","Mar 31","Apr 1","Apr 2","Apr 3","Apr 4","Apr 5","Apr 6","Apr 7","Apr 8","Apr 9","Apr 10","Apr 11","Apr 12","Apr 13","Apr 14","Apr 15"]
       },
       "funnel": [
         { "label": "Login", "value": 100 },
@@ -68,14 +70,15 @@
         { "label": "CIWP Generated", "value": 4 }
       ],
       "cohorts": [
-        { "label": "CPS Schools", "rate": 4.2, "accounts": 26 },
-        { "label": "Non-CPS", "rate": 2.1, "accounts": 12 }
+        { "label": "Premium", "rate": 0, "accounts": 26, "schools": "CPS Phase 5", "ciwps": 0 },
+        { "label": "Basic", "rate": 0, "accounts": 9, "schools": "CPS Phase 5", "ciwps": 0 },
+        { "label": "Other", "rate": 15.4, "accounts": 13, "schools": "Non-CPS / Internal", "ciwps": 6 }
       ],
       "signals": [
         { "value": "156", "unit": "", "label": "unique logins" },
         { "value": "6", "unit": "", "label": "CIWPs generated" },
         { "value": "104", "unit": "", "label": "dashboard visits" },
-        { "value": "38", "unit": "", "label": "unique accounts" }
+        { "value": "48", "unit": "", "label": "total accounts" }
       ]
     }
   }
