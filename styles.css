@@ -128,9 +128,38 @@ body {
   cursor: crosshair;
   border-radius: 24px;
   overflow: hidden;
-  background: var(--card-bg);
+  background:
+    radial-gradient(ellipse at 8% 88%, rgba(172, 92, 204, 0.05) 0%, transparent 48%),
+    radial-gradient(ellipse at 92% 80%, rgba(0, 166, 255, 0.04) 0%, transparent 48%),
+    var(--card-bg);
   transition: filter 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: filter, opacity;
+}
+
+.sparkline-wrap::after {
+  content: '';
+  position: absolute;
+  inset: -15%;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse at 30% 70%, rgba(172, 92, 204, 0.10) 0%, transparent 45%),
+    radial-gradient(ellipse at 70% 60%, rgba(0, 166, 255, 0.08) 0%, transparent 45%),
+    radial-gradient(ellipse at 14% 38%, rgba(255, 170, 100, 0.05) 0%, transparent 40%);
+  opacity: 0;
+  transition: opacity 1.0s ease;
+}
+
+.sparkline-wrap:hover::after {
+  opacity: 1;
+  animation: gradientFloat 10s ease-in-out infinite;
+}
+
+@keyframes gradientFloat {
+  0%, 100% { transform: translate(0%, 0%); }
+  25%       { transform: translate(3%, -2%); }
+  50%       { transform: translate(-2%, 2%); }
+  75%       { transform: translate(2%, -1%); }
 }
 
 .sparkline-wrap.transitioning {
