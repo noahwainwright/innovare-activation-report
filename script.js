@@ -15,9 +15,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // ── Tabs ──────────────────────────────────────
 
+function closeQuickLinks() {
+  document.getElementById('quick-links-modal')?.classList.remove('open');
+  document.getElementById('quick-links-backdrop')?.classList.remove('visible');
+}
+
 function bindTabs() {
   document.querySelectorAll('.toggle-btn').forEach(btn => {
     btn.addEventListener('click', () => {
+      closeQuickLinks();
       if (btn.dataset.view === currentView) return;
       document.querySelector('.toggle-btn.active').classList.remove('active');
       btn.classList.add('active');
