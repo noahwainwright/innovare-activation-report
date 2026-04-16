@@ -204,7 +204,7 @@ function buildAdoptionHTML() {
 
     <div class="section" id="cohorts-section">
       <div class="section-label-row">
-        <span class="section-label">Cohorts</span>
+        <span class="section-label">Tiers</span>
         <a class="mixpanel-link" id="link-cohorts" href="${DATA.mixpanelLinks?.cohorts || '#'}" target="_blank" rel="noopener">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 1.5H2.25C1.836 1.5 1.5 1.836 1.5 2.25v7.5c0 .414.336.75.75.75h7.5c.414 0 .75-.336.75-.75V7.5M7.5 1.5h3m0 0v3m0-3L5.25 6.75" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Mixpanel
@@ -213,9 +213,7 @@ function buildAdoptionHTML() {
       <div id="cohorts"></div>
     </div>
 
-    <div class="section section-placeholder">
-      <div class="placeholder-inner">Error tracking -- Sentry integration pending eng setup</div>
-    </div>`;
+`;
 }
 
 function bindAdoption() {
@@ -297,7 +295,7 @@ function renderRescueList(accounts) {
       <div class="rescue-toggle">
         <button class="rescue-toggle-btn" id="rescue-expand">Show all ${rescue.length}</button>
       </div>
-      <div id="rescue-overflow" style="display:none">
+      <div id="rescue-overflow" class="rescue-overflow">
         ${rescue.slice(5).map(a => rescueRow(a)).join('')}
       </div>` : ''}`;
 
@@ -305,12 +303,19 @@ function renderRescueList(accounts) {
   if (expandBtn) {
     expandBtn.addEventListener('click', () => {
       const overflow = document.getElementById('rescue-overflow');
-      if (overflow.style.display === 'none') {
-        overflow.style.display = 'block';
-        expandBtn.textContent = 'Show less';
-      } else {
-        overflow.style.display = 'none';
+      const isOpen = overflow.classList.contains('expanded');
+      if (isOpen) {
+        overflow.style.height = overflow.scrollHeight + 'px';
+        requestAnimationFrame(() => { overflow.style.height = '0'; });
+        overflow.classList.remove('expanded');
         expandBtn.textContent = `Show all ${rescue.length}`;
+      } else {
+        overflow.style.height = overflow.scrollHeight + 'px';
+        overflow.classList.add('expanded');
+        overflow.addEventListener('transitionend', () => {
+          if (overflow.classList.contains('expanded')) overflow.style.height = 'auto';
+        }, { once: true });
+        expandBtn.textContent = 'Show less';
       }
     });
   }
@@ -550,14 +555,13 @@ function buildQualityHTML() {
       <div id="ticket-categories"></div>
     </div>
 
-    <div class="section section-placeholder">
-      <div class="placeholder-inner">Error tracking -- Sentry integration pending eng setup</div>
-    </div>`;
+    <div class="section" id="sentry-section"></div>`;
 }
 
 function bindQuality() {
   renderSummary();
   renderTickets();
+  renderSentryCard();
 }
 
 function getAllTickets() {
@@ -646,6 +650,111 @@ function renderTickets() {
 
 function stripCiwpPrefix(title) {
   return title.replace(/^\[CIWP\]\s*/i, '').replace(/^\*?\[CIWP\]\s*/i, '');
+}
+
+// ── Sentry Card ───────────────────────────
+
+function renderSentryCard() {
+  const el = document.getElementById('sentry-section');
+  if (!el) return;
+
+  const issues = (DATA.sentry?.issues || []);
+
+  // Sort: unlinked+open+severity first, then linked+open, then resolved
+  const sevOrder = { critical: 0, high: 1, medium: 2, low: 3 };
+  const sorted = [...issues].sort((a, b) => {
+    if (a.resolved !== b.resolved) return a.resolved ? 1 : -1;
+    const aUnlinked = !a.linkedTicket;
+    const bUnlinked = !b.linkedTicket;
+    if (aUnlinked !== bUnlinked) return aUnlinked ? -1 : 1;
+    return (sevOrder[a.severity] ?? 4) - (sevOrder[b.severity] ?? 4);
+  });
+
+  const openUnlinked = sorted.filter(i => !i.resolved && !i.linkedTicket);
+  const openLinked = sorted.filter(i => !i.resolved && i.linkedTicket);
+  const resolved = sorted.filter(i => i.resolved);
+
+  // Status dot class
+  let dotClass = 'muted';
+  let subText = 'All issues linked';
+  if (resolved.length === issues.length) {
+    dotClass = 'clear';
+    subText = 'All clear';
+  } else if (openUnlinked.length > 0) {
+    const worstSev = openUnlinked[0].severity;
+    dotClass = worstSev === 'critical' ? 'critical' : worstSev === 'high' ? 'high' : 'muted';
+    subText = `${openUnlinked.length} unlinked issue${openUnlinked.length !== 1 ? 's' : ''} need triage`;
+  } else if (openLinked.length > 0) {
+    dotClass = 'muted';
+    subText = `${openLinked.length} open, all linked`;
+  }
+
+  el.innerHTML = `
+    <div class="sentry-card" id="sentry-card">
+      <div class="sentry-pill-wrap">
+        <button class="sentry-pill" id="sentry-trigger">
+          <span class="sentry-sev-dot ${dotClass}"></span>
+          <span class="sentry-pill-label">Sentry Monitoring</span>
+        </button>
+      </div>
+      <div class="sentry-body" id="sentry-body">
+        <div class="sentry-body-inner" id="sentry-body-inner">
+          ${sorted.map(i => sentryIssueRow(i)).join('')}
+        </div>
+      </div>
+    </div>`;
+
+  const card = document.getElementById('sentry-card');
+  const trigger = document.getElementById('sentry-trigger');
+  const body = document.getElementById('sentry-body');
+  const inner = document.getElementById('sentry-body-inner');
+
+  trigger.addEventListener('click', () => {
+    const isOpen = body.classList.contains('expanded');
+    if (isOpen) {
+      body.style.height = body.scrollHeight + 'px';
+      requestAnimationFrame(() => { body.style.height = '0'; });
+      body.classList.remove('expanded');
+      card.classList.remove('expanded');
+    } else {
+      body.style.height = inner.scrollHeight + 'px';
+      body.classList.add('expanded');
+      card.classList.add('expanded');
+      body.addEventListener('transitionend', () => {
+        if (!body.classList.contains('expanded')) return;
+        body.style.height = 'auto';
+        el.querySelectorAll('.sentry-issue-title').forEach(titleEl => {
+          const textEl = titleEl.querySelector('.sentry-title-text');
+          if (!textEl) return;
+          const overflow = textEl.scrollWidth - titleEl.clientWidth;
+          if (overflow > 0) {
+            titleEl.style.setProperty('--scroll-distance', `-${overflow}px`);
+            titleEl.classList.add('can-scroll');
+          }
+        });
+      }, { once: true });
+    }
+  });
+}
+
+function sentryIssueRow(issue) {
+  const jiraBase = DATA.ciwpTesting?.jiraBase || '';
+  const sevDotClass = issue.severity;
+
+  const linkedHTML = issue.linkedTicket
+    ? `<a class="sentry-ticket-link" href="${jiraBase}${issue.linkedTicket}" target="_blank" rel="noopener">${issue.linkedTicket}</a>`
+    : `<span class="sentry-unlinked-badge">Unlinked</span>`;
+
+  const queueStr = issue.resolved ? 'Resolved' : `${issue.daysInQueue}d in queue`;
+  const resolvedClass = issue.resolved ? ' sentry-row-resolved' : '';
+
+  return `
+    <div class="sentry-issue-row${resolvedClass}">
+      <span class="sentry-sev-dot ${sevDotClass}"></span>
+      <span class="sentry-issue-title"><span class="sentry-title-text">${issue.title}</span></span>
+      ${linkedHTML}
+      <span class="sentry-queue">${queueStr}</span>
+    </div>`;
 }
 
 function ticketRow(t, jiraBase) {

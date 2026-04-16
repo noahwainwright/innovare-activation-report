@@ -432,6 +432,12 @@ body {
 
 .rescue-toggle-btn:hover { color: var(--text-secondary); }
 
+.rescue-overflow {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.4s var(--ease-spring);
+}
+
 /* ── Stage Pipeline ──────────────────────── */
 
 .stage-bar-wrap {
@@ -1121,23 +1127,177 @@ a.ticket-id:hover { color: #0088CC; }
   padding: 4px 10px;
 }
 
-/* ── Sentry Placeholder ──────────────────── */
+/* ── Sentry Card ─────────────────────────── */
 
-.section-placeholder {
-  opacity: 1;
-  transform: none;
-  filter: none;
+.sentry-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: var(--radius-card);
+  transition: border-color 0.3s var(--ease-smooth), padding 0.3s var(--ease-smooth);
 }
 
-.placeholder-inner {
-  border: 1px dashed var(--card-border);
-  border-radius: var(--radius-card);
+.sentry-card.expanded {
+  border-color: var(--card-border);
+  padding: 20px 24px 24px;
+}
+
+.sentry-pill-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0 0;
+}
+
+.sentry-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px 7px 12px;
   background: var(--card-bg);
-  color: var(--text-muted);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-pill);
+  font-family: var(--font);
   font-size: 13px;
   font-weight: 500;
-  text-align: center;
-  padding: 28px 24px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition:
+    background 0.2s var(--ease-smooth),
+    border-color 0.2s var(--ease-smooth),
+    color 0.2s var(--ease-smooth);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.sentry-pill:hover {
+  background: rgba(0,0,0,0.03);
+  color: var(--text-primary);
+}
+
+.sentry-card.expanded .sentry-pill {
+  background: transparent;
+  border-color: transparent;
+}
+
+.sentry-pill-label { letter-spacing: 0.01em; }
+
+/* Severity dot — used in both pill and rows */
+
+.sentry-sev-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sentry-sev-dot.critical {
+  background: #FF3B30;
+  box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.4);
+  animation: sentryPulse 2s ease-in-out infinite;
+}
+
+.sentry-sev-dot.high   { background: var(--accent-amber); }
+.sentry-sev-dot.muted  { background: var(--text-muted); opacity: 0.45; }
+.sentry-sev-dot.clear  { background: var(--accent-up); }
+.sentry-sev-dot.medium { background: var(--text-muted); }
+.sentry-sev-dot.low    { background: var(--card-border); }
+
+@keyframes sentryPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.4); }
+  50%       { box-shadow: 0 0 0 6px rgba(255, 59, 48, 0); }
+}
+
+/* Expand body */
+
+.sentry-body {
+  width: 100%;
+  height: 0;
+  overflow: hidden;
+  transition: height 0.4s var(--ease-spring);
+}
+
+.sentry-body-inner {
+  padding: 16px 0 0;
+}
+
+/* Issue rows — same visual language as ticket rows */
+
+.sentry-issue-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.sentry-issue-row:last-child { border-bottom: none; }
+.sentry-row-resolved { opacity: 0.35; }
+
+.sentry-issue-title {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+}
+
+.sentry-title-text {
+  display: inline-block;
+}
+
+.sentry-issue-title.can-scroll {
+  text-overflow: clip;
+  cursor: default;
+}
+
+.sentry-issue-title.can-scroll:hover .sentry-title-text {
+  animation: sentryScroll 8s linear infinite;
+}
+
+@keyframes sentryScroll {
+  0%, 6%  { transform: translateX(0);                            filter: blur(0px); }
+  32%     { transform: translateX(var(--scroll-distance, 0px)); filter: blur(0px); }
+  65%     { transform: translateX(var(--scroll-distance, 0px)); filter: blur(0px); }
+  68%     { transform: translateX(var(--scroll-distance, 0px)); filter: blur(1.5px); }
+  74%     { transform: translateX(0);                            filter: blur(1px); }
+  82%     { transform: translateX(0);                            filter: blur(0px); }
+  100%    { transform: translateX(0);                            filter: blur(0px); }
+}
+
+.sentry-ticket-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-blue);
+  text-decoration: none;
+  flex-shrink: 0;
+  letter-spacing: 0.03em;
+  transition: opacity 0.2s ease;
+}
+
+.sentry-ticket-link:hover { opacity: 0.7; }
+
+.sentry-unlinked-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--accent-amber);
+  background: rgba(224, 159, 62, 0.1);
+  border-radius: var(--radius-pill);
+  padding: 2px 8px;
+  flex-shrink: 0;
+}
+
+.sentry-queue {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  min-width: 68px;
+  text-align: right;
 }
 
 /* ── Responsive ──────────────────────────── */
@@ -1147,6 +1307,7 @@ a.ticket-id:hover { color: #0088CC; }
   .sparkline-wrap { height: 36vh; }
   .rescue-metric { font-size: 48px; }
   .metric-value { font-size: 40px; }
+  .sentry-card.expanded { padding: 16px 16px 20px; }
 }
 
 @media (max-width: 600px) {
@@ -1160,6 +1321,12 @@ a.ticket-id:hover { color: #0088CC; }
   .summary-count { font-size: 26px; }
   .testing-summary-wrap { padding: 28px 20px; }
   .stage-labels { gap: 10px; }
+  .sentry-card.expanded { padding: 14px 14px 18px; }
+  .sentry-issue-row { gap: 8px; }
+  .sentry-issue-title { font-size: 12px; }
+  .sentry-queue { min-width: 56px; font-size: 10px; }
+  .sentry-unlinked-badge { font-size: 9px; padding: 2px 6px; }
+  .sentry-ticket-link { font-size: 11px; }
 }
 
 @media (max-width: 400px) {

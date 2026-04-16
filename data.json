@@ -8,7 +8,50 @@
     "cohorts": "#",
     "perAccount": "#"
   },
-  "sentry": { "_placeholder": true },
+  "sentry": {
+    "issues": [
+      {
+        "id": "SENTRY-4821",
+        "title": "TypeError: Cannot read properties of undefined (reading 'goalPriorityArea')",
+        "severity": "critical",
+        "linkedTicket": null,
+        "daysInQueue": 3,
+        "resolved": false
+      },
+      {
+        "id": "SENTRY-4809",
+        "title": "Unhandled Promise Rejection: POST /api/ciwp/generate 504 Gateway Timeout",
+        "severity": "high",
+        "linkedTicket": null,
+        "daysInQueue": 5,
+        "resolved": false
+      },
+      {
+        "id": "SENTRY-4816",
+        "title": "ChunkLoadError: Loading chunk vendors~ciwp-modal failed after 3 retries",
+        "severity": "high",
+        "linkedTicket": "IW-6796",
+        "daysInQueue": 2,
+        "resolved": false
+      },
+      {
+        "id": "SENTRY-4802",
+        "title": "SyntaxError: Unexpected token '<' in JSON response from /api/goals/map",
+        "severity": "medium",
+        "linkedTicket": "IW-6798",
+        "daysInQueue": 1,
+        "resolved": false
+      },
+      {
+        "id": "SENTRY-4791",
+        "title": "RangeError: Maximum call stack size exceeded in goal-mapper.resolveTargets",
+        "severity": "medium",
+        "linkedTicket": null,
+        "daysInQueue": 11,
+        "resolved": true
+      }
+    ]
+  },
   "perAccount": [
     { "account": "Bass Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
     { "account": "Beidler Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
