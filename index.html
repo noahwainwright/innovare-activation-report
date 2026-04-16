@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CIWP Activation</title>
+  <title>CIWP Briefing</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -12,78 +12,35 @@
 <body>
 
   <div class="container">
-
-    <div class="hero">
-      <div class="chart-header">
-        <div class="view-selector" id="view-selector">
-          <button class="view-title-btn" id="view-title-btn">
-            <span id="view-label">CIWP Activation</span>
-            <span class="view-chevron-icon"></span>
-          </button>
-          <div class="view-dropdown" id="view-dropdown">
-            <button class="view-option active" data-view="activation">CIWP Activation</button>
-            <button class="view-option" data-view="ciwp-testing">CIWP Testing</button>
-          </div>
-        </div>
-        <div class="time-selector">
-          <button class="time-btn active" data-range="1D">1D</button>
-          <button class="time-btn" data-range="1W">1W</button>
-          <button class="time-btn" data-range="1M">1M</button>
-        </div>
-      </div>
-      <div class="sparkline-wrap">
-        <svg id="sparkline" viewBox="0 0 960 480" preserveAspectRatio="none"></svg>
-      </div>
-      <div class="metric-overlay">
-        <div class="metric-row">
-          <span class="metric-value" id="metric-value">--</span>
-          <span class="metric-delta">
-            <span class="arrow" id="delta-arrow"></span>
-            <span id="delta-value"></span>
-          </span>
-        </div>
-        <div class="metric-sub" id="accounts"></div>
-      </div>
+    <div class="view-header">
+      <span class="freshness" id="freshness"></span>
     </div>
-
-    <div class="pill-wrap">
-      <button class="pill" id="pill">Details</button>
-    </div>
-
+    <div id="view-content"></div>
   </div>
 
-  <div class="sheet-backdrop" id="sheet-backdrop"></div>
+  <nav class="view-toggle" id="tab-bar">
+    <button class="toggle-btn active" data-view="adoption" aria-label="Adoption">
+      <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+        <polyline points="16 7 22 7 22 13"/>
+      </svg>
+    </button>
+    <button class="toggle-btn" data-view="quality" aria-label="Quality">
+      <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        <polyline points="9 12 11 14 15 10"/>
+      </svg>
+    </button>
+    <button class="toggle-dot" id="quick-links-trigger" aria-label="Quick links">
+      <span class="dot-icon"></span>
+    </button>
+  </nav>
 
-  <div class="sheet" id="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-content">
-
-      <div class="sheet-section" data-delay="0">
-        <div class="sheet-label">Activation</div>
-        <div id="funnel"></div>
-      </div>
-
-      <div class="sheet-section" data-delay="1">
-        <div class="sheet-label">Cohorts</div>
-        <div class="cohort-grid" id="cohorts"></div>
-      </div>
-
-      <div class="sheet-section" data-delay="2">
-        <div class="sheet-label">Account Health</div>
-        <div id="account-health"></div>
-      </div>
-
-      <div class="sheet-section" data-delay="3">
-        <div class="sheet-label">Usage</div>
-        <div class="signal-grid" id="signals"></div>
-      </div>
-
-      <div class="sheet-section" data-delay="4">
-        <div class="sheet-label">Per Account</div>
-        <div class="per-account-list" id="per-account"></div>
-      </div>
-
-    </div>
+  <div class="quick-links-backdrop" id="quick-links-backdrop"></div>
+  <div class="quick-links-modal" id="quick-links-modal">
+    <a class="quick-link" href="https://mixpanel.com" target="_blank" rel="noopener">Mixpanel</a>
+    <a class="quick-link" href="https://innovaresip.atlassian.net" target="_blank" rel="noopener">Jira</a>
+    <a class="quick-link" href="https://frill.co" target="_blank" rel="noopener">Frill</a>
   </div>
 
   <script src="script.js"></script>

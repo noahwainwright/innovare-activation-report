@@ -1,73 +1,82 @@
 {
-  "date": "2026-04-15",
+  "date": "2026-04-16",
+  "time": "6:30pm",
   "client": "INNOVARE",
-  "product": "CIWP Activation",
+  "product": "CIWP Briefing",
+  "mixpanelLinks": {
+    "funnel": "#",
+    "cohorts": "#",
+    "perAccount": "#"
+  },
+  "sentry": { "_placeholder": true },
   "perAccount": [
-    { "account": "Bass Elementary", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Beidler Elementary", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Bowen High School", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Brown Elementary", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Cather Elementary", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Chopin Elementary", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Davis Elementary", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Deneen", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Doolittle", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Englewood High School", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Esmond Elementary", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Fairfield Elementary", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Henderson Elementary", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Joplin Elementary", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Kellman Elementary", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Laura S. Ward Elementary", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Lawndale Elementary", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Mollison", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Nash", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "O'Toole Elementary", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Pershing Elementary", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Roosevelt High School", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Sherman Elementary", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Stowe Elementary", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Tilton Elementary", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Wadsworth Elementary", "tier": "Premium", "ciwpsCreated": 0 },
-    { "account": "Avalon Park Elementary", "tier": "Basic", "ciwpsCreated": 0 },
-    { "account": "Bradwell School of Excellence", "tier": "Basic", "ciwpsCreated": 0 },
-    { "account": "Chalmers", "tier": "Basic", "ciwpsCreated": 0 },
-    { "account": "Graham Elementary", "tier": "Basic", "ciwpsCreated": 0 },
-    { "account": "Jesse Owens Elementary", "tier": "Basic", "ciwpsCreated": 0 },
-    { "account": "Powell Elementary", "tier": "Basic", "ciwpsCreated": 0 },
-    { "account": "Wells HS", "tier": "Basic", "ciwpsCreated": 0 },
-    { "account": "Westcott Elementary", "tier": "Basic", "ciwpsCreated": 0 },
-    { "account": "Woodson Elementary", "tier": "Basic", "ciwpsCreated": 0 },
-    { "account": "Amethod Public Schools", "tier": "Starter", "ciwpsCreated": 0 }
+    { "account": "Bass Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Beidler Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Bowen High School", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 1, "events": { "user_login": true, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "at-risk", "lastActivityDate": "2026-04-12" },
+    { "account": "Brown Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Cather Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Chopin Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Davis Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Deneen", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Doolittle", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Englewood High School", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Esmond Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Fairfield Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Henderson Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Joplin Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Kellman Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Laura S. Ward Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 1, "events": { "user_login": true, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "at-risk", "lastActivityDate": "2026-04-10" },
+    { "account": "Lawndale Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 1, "events": { "user_login": true, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "at-risk", "lastActivityDate": "2026-04-11" },
+    { "account": "Mollison", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Nash", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "O'Toole Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Pershing Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Roosevelt High School", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Sherman Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Stowe Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Tilton Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Wadsworth Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Wells HS", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 1, "events": { "user_login": true, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "active", "lastActivityDate": "2026-04-15" },
+    { "account": "Avalon Park Elementary", "tier": "Basic", "ciwpsCreated": 0, "activationStage": 1, "events": { "user_login": true, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "at-risk", "lastActivityDate": "2026-04-09" },
+    { "account": "Bradwell School of Excellence", "tier": "Basic", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Chalmers", "tier": "Basic", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Graham Elementary", "tier": "Basic", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Jesse Owens Elementary", "tier": "Basic", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Powell Elementary", "tier": "Basic", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Westcott Elementary", "tier": "Basic", "ciwpsCreated": 0, "activationStage": 1, "events": { "user_login": true, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "active", "lastActivityDate": "2026-04-15" },
+    { "account": "Woodson Elementary", "tier": "Basic", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Amethod Public Schools", "tier": "Starter", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 7, "healthStatus": "dormant", "lastActivityDate": null }
   ],
   "ciwpTesting": {
-    "date": "2026-04-13",
+    "date": "2026-04-16",
     "jiraBase": "https://innovaresip.atlassian.net/browse/",
-    "primary": { "label": "Tickets Complete", "value": 1, "unit": "/5", "sub": "" },
+    "primary": { "label": "Open Tickets", "value": 12, "unit": "", "sub": "6 bugs, 6 stories" },
     "summary": [
-      { "label": "under review", "count": 2, "dot": "review" },
-      { "label": "in dev review", "count": 1, "dot": "dev" },
-      { "label": "complete", "count": 1, "dot": "complete" }
+      { "label": "bugs in triage", "count": 6, "dot": "review" },
+      { "label": "stories open", "count": 5, "dot": "dev" },
+      { "label": "in QA", "count": 1, "dot": "complete" }
     ],
     "categories": [
       {
-        "key": "bugs", "label": "Bugs", "badge": "B",
+        "key": "bugs", "label": "Bugs",
         "tickets": [
-          { "id": "IW-6796", "title": "AI recommendations generate unsupported targets from uploaded evidence", "status": "under-review", "priority": "high" },
-          { "id": "IW-6798", "title": "Goal maps to incorrect priority area", "status": "under-review", "priority": "high" }
+          { "id": "IW-6796", "title": "[CIWP] AI recommendations generate unsupported targets from uploaded evidence", "type": "Bug", "status": "under-review", "priority": "P2", "dueDate": null, "daysOpen": 2, "accountsImpacted": ["All accounts"], "workaround": false, "processStage": "Triage" },
+          { "id": "IW-6798", "title": "[CIWP] Goal maps to incorrect priority area", "type": "Bug", "status": "under-review", "priority": "P2", "dueDate": null, "daysOpen": 1, "accountsImpacted": ["All accounts"], "workaround": false, "processStage": "Triage" },
+          { "id": "IW-6678", "title": "[CIWP] Upload screen empty state uses incorrect component", "type": "Bug", "status": "under-review", "priority": "P2", "dueDate": null, "daysOpen": 13, "accountsImpacted": [], "workaround": null, "processStage": "Triage" },
+          { "id": "IW-6677", "title": "[CIWP] Upload screen spinner icon missing during file processing", "type": "Bug", "status": "under-review", "priority": "P2", "dueDate": null, "daysOpen": 13, "accountsImpacted": [], "workaround": null, "processStage": "Triage" },
+          { "id": "IW-6598", "title": "[CIWP] Upload screen error message renders inline instead of as a banner", "type": "Bug", "status": "under-review", "priority": "P2", "dueDate": null, "daysOpen": 20, "accountsImpacted": [], "workaround": null, "processStage": "Triage" },
+          { "id": "IW-6480", "title": "[CIWP] Edit Goal and Create Goal modal badges display incorrect labels", "type": "Bug", "status": "under-review", "priority": "P2", "dueDate": null, "daysOpen": 28, "accountsImpacted": [], "workaround": null, "processStage": "Triage" }
         ]
       },
       {
-        "key": "stories", "label": "Stories", "badge": "S",
+        "key": "stories", "label": "Stories",
         "tickets": [
-          { "id": "IW-6797", "title": "Clarify Update Draft AI workflow and recommendation logic", "status": "dev-review", "priority": "medium" }
-        ]
-      },
-      {
-        "key": "additional", "label": "Additional", "badge": "A",
-        "tickets": [
-          { "id": "IW-6386", "title": "Standardize delete confirmation pattern", "status": "complete", "priority": "low" },
-          { "id": "--", "title": "Updated CIWP Guide in Confluence (workflow, roles, AI)", "status": "complete", "priority": "low" }
+          { "id": "IW-6803", "title": "[CIWP] Add EdAI Icon to Create CIWP Modal and Goal Rationale Modal", "type": "Story", "status": "under-review", "priority": "P2", "dueDate": null, "daysOpen": 1, "accountsImpacted": [], "workaround": null, "processStage": "Triage" },
+          { "id": "IW-6797", "title": "[CIWP] Clarify Update Draft AI workflow and CS-facing guidance", "type": "Task", "status": "under-review", "priority": "P2", "dueDate": null, "daysOpen": 2, "accountsImpacted": [], "workaround": null, "processStage": "Triage" },
+          { "id": "IW-6740", "title": "[CIWP] File Management -- Prevent File Removal on Modal Cancel / Close", "type": "Story", "status": "under-review", "priority": "P2", "dueDate": null, "daysOpen": 6, "accountsImpacted": [], "workaround": null, "processStage": "Triage" },
+          { "id": "IW-6739", "title": "[CIWP] File Management -- Visibility of Uploaded Files", "type": "Story", "status": "in-qa", "priority": "P2", "dueDate": null, "daysOpen": 6, "accountsImpacted": [], "workaround": null, "processStage": "QA" },
+          { "id": "IW-6728", "title": "Handle edge case on goals limit during plan generation", "type": "Story", "status": "under-review", "priority": "P2", "dueDate": null, "daysOpen": 7, "accountsImpacted": [], "workaround": null, "processStage": "Triage" },
+          { "id": "IW-6355", "title": "Public CIWP Viewer -- Read-Only Live Link (No New Designs)", "type": "Story", "status": "under-review", "priority": "P3", "dueDate": null, "daysOpen": 42, "accountsImpacted": [], "workaround": null, "processStage": "Triage" }
         ]
       }
     ]
@@ -86,24 +95,6 @@
         { "label": "Login", "value": 100 },
         { "label": "AI Analysis", "value": 16 },
         { "label": "CIWP Generated", "value": 16 }
-      ],
-      "cohorts": [
-        { "label": "Premium", "rate": 0, "accounts": 26, "schools": "CPS Phase 5", "ciwps": 0 },
-        { "label": "Basic", "rate": 0, "accounts": 9, "schools": "CPS Phase 5", "ciwps": 0 },
-        { "label": "Other", "rate": 15.4, "accounts": 13, "schools": "Non-CPS / Internal", "ciwps": 4 }
-      ],
-      "health": {
-        "active": ["Wells HS", "CICS", "Distinctive Schools", "CICS Northtown", "Westcott Elementary"],
-        "atRisk": ["Avalon Park Elementary", "Bowen High School", "Lawndale Elementary", "Laura S. Ward Elementary School"],
-        "dormant": ["Bass Elementary", "Beidler Elementary", "Brown Elementary", "Cather Elementary", "Chopin Elementary", "Davis Elementary", "Deneen", "Doolittle", "Englewood High School", "Esmond Elementary", "Fairfield Elementary", "Graham Elementary School", "Henderson Elementary", "Jesse Owens", "Joplin Elementary", "Kellman Elementary", "Mollison", "Nash", "O'Toole Elementary", "Pershing Elementary", "Powell Elementary", "Roosevelt High School", "Sherman Elementary", "Stowe Elementary", "Tilton Elementary", "Wadsworth Elementary", "Bradwell School of Excellence", "Chalmers", "Woodson Elementary"]
-      },
-      "signals": [
-        { "value": "--", "unit": "", "label": "unique CIWP page viewers" },
-        { "value": "--", "unit": "", "label": "goal generation — new" },
-        { "value": "--", "unit": "", "label": "goal generation — improve" },
-        { "value": "4",  "unit": "", "label": "CIWP generation — new" },
-        { "value": "--", "unit": "", "label": "CIWP generation — improve" },
-        { "value": "0",  "unit": "", "label": "manual CIWPs created" }
       ]
     },
     "1W": {
@@ -119,24 +110,6 @@
         { "label": "Login", "value": 100 },
         { "label": "AI Analysis", "value": 4 },
         { "label": "CIWP Generated", "value": 4 }
-      ],
-      "cohorts": [
-        { "label": "Premium", "rate": 0, "accounts": 26, "schools": "CPS Phase 5", "ciwps": 0 },
-        { "label": "Basic", "rate": 0, "accounts": 9, "schools": "CPS Phase 5", "ciwps": 0 },
-        { "label": "Other", "rate": 15.4, "accounts": 13, "schools": "Non-CPS / Internal", "ciwps": 6 }
-      ],
-      "health": {
-        "active": ["Wells HS", "CICS", "Distinctive Schools", "CICS Northtown", "Westcott Elementary", "CICS West Belden", "CICS Ralph Ellison High School", "Salazar"],
-        "atRisk": ["Avalon Park Elementary", "Bowen High School", "Lawndale Elementary", "Laura S. Ward Elementary School", "Roosevelt High School", "Tilton Elementary", "Chopin Elementary"],
-        "dormant": ["Bass Elementary", "Beidler Elementary", "Brown Elementary", "Cather Elementary", "Davis Elementary", "Deneen", "Doolittle", "Englewood High School", "Esmond Elementary", "Fairfield Elementary", "Graham Elementary School", "Henderson Elementary", "Jesse Owens", "Joplin Elementary", "Kellman Elementary", "Mollison", "Nash", "O'Toole Elementary", "Pershing Elementary", "Powell Elementary", "Sherman Elementary", "Stowe Elementary", "Wadsworth Elementary", "Bradwell School of Excellence", "Chalmers", "Woodson Elementary"]
-      },
-      "signals": [
-        { "value": "--", "unit": "", "label": "unique CIWP page viewers" },
-        { "value": "--", "unit": "", "label": "goal generation — new" },
-        { "value": "--", "unit": "", "label": "goal generation — improve" },
-        { "value": "6",  "unit": "", "label": "CIWP generation — new" },
-        { "value": "--", "unit": "", "label": "CIWP generation — improve" },
-        { "value": "0",  "unit": "", "label": "manual CIWPs created" }
       ]
     },
     "1M": {
@@ -152,24 +125,6 @@
         { "label": "Login", "value": 100 },
         { "label": "AI Analysis", "value": 4 },
         { "label": "CIWP Generated", "value": 4 }
-      ],
-      "cohorts": [
-        { "label": "Premium", "rate": 0, "accounts": 26, "schools": "CPS Phase 5", "ciwps": 0 },
-        { "label": "Basic", "rate": 0, "accounts": 9, "schools": "CPS Phase 5", "ciwps": 0 },
-        { "label": "Other", "rate": 15.4, "accounts": 13, "schools": "Non-CPS / Internal", "ciwps": 6 }
-      ],
-      "health": {
-        "active": ["Wells HS", "CICS", "Distinctive Schools", "CICS Northtown", "Westcott Elementary", "CICS West Belden", "Nash", "Brown Elementary", "Lawndale Elementary", "CICS Ralph Ellison High School", "Salazar", "Roosevelt High School"],
-        "atRisk": ["Avalon Park Elementary", "Bowen High School", "Laura S. Ward Elementary School", "Tilton Elementary", "Chopin Elementary", "Fairfield Elementary"],
-        "dormant": ["Bass Elementary", "Beidler Elementary", "Cather Elementary", "Davis Elementary", "Deneen", "Doolittle", "Englewood High School", "Esmond Elementary", "Graham Elementary School", "Henderson Elementary", "Jesse Owens", "Joplin Elementary", "Kellman Elementary", "Mollison", "O'Toole Elementary", "Pershing Elementary", "Powell Elementary", "Sherman Elementary", "Stowe Elementary", "Wadsworth Elementary", "Bradwell School of Excellence", "Chalmers", "Woodson Elementary"]
-      },
-      "signals": [
-        { "value": "--", "unit": "", "label": "unique CIWP page viewers" },
-        { "value": "--", "unit": "", "label": "goal generation — new" },
-        { "value": "--", "unit": "", "label": "goal generation — improve" },
-        { "value": "6",  "unit": "", "label": "CIWP generation — new" },
-        { "value": "--", "unit": "", "label": "CIWP generation — improve" },
-        { "value": "0",  "unit": "", "label": "manual CIWPs created" }
       ]
     }
   }

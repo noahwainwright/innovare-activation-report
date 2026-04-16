@@ -1,110 +1,257 @@
-let currentData = null;
+let DATA = null;
 let currentRange = '1D';
-let currentView = 'activation';
+let currentView = 'adoption';
+let currentTier = 'all';
 
-const ACTIVATION_SHEET_HTML = `
-  <div class="sheet-section" data-delay="0">
-    <div class="sheet-label">Activation</div>
-    <div id="funnel"></div>
-  </div>
-  <div class="sheet-section" data-delay="1">
-    <div class="sheet-label">Cohorts</div>
-    <div class="cohort-grid" id="cohorts"></div>
-  </div>
-  <div class="sheet-section" data-delay="2">
-    <div class="sheet-label">Account Health</div>
-    <div id="account-health"></div>
-  </div>
-  <div class="sheet-section" data-delay="3">
-    <div class="sheet-label">Per Account</div>
-    <div class="per-account-list" id="per-account"></div>
-  </div>
-  <div class="sheet-section" data-delay="4">
-    <div class="sheet-label">Usage</div>
-    <div class="signal-grid" id="signals"></div>
-  </div>`;
+// ── Boot ──────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', async () => {
   const res = await fetch('./data.json');
-  currentData = await res.json();
-  renderRange('1D');
-  bindTimeSelector();
-  bindSheet();
-  bindViewSelector();
+  DATA = await res.json();
+  renderFreshness();
+  renderView('adoption');
+  bindTabs();
 });
+
+// ── Tabs ──────────────────────────────────────
+
+function bindTabs() {
+  document.querySelectorAll('.toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.dataset.view === currentView) return;
+      document.querySelector('.toggle-btn.active').classList.remove('active');
+      btn.classList.add('active');
+      currentView = btn.dataset.view;
+      renderView(currentView);
+    });
+  });
+  bindQuickLinks();
+}
+
+// ── Quick Links Modal ─────────────────────────
+
+function bindQuickLinks() {
+  const trigger = document.getElementById('quick-links-trigger');
+  const modal = document.getElementById('quick-links-modal');
+  const backdrop = document.getElementById('quick-links-backdrop');
+  if (!trigger || !modal || !backdrop) return;
+
+  function openModal() {
+    modal.classList.add('open');
+    backdrop.classList.add('visible');
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    backdrop.classList.remove('visible');
+  }
+
+  trigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    modal.classList.contains('open') ? closeModal() : openModal();
+  });
+
+  backdrop.addEventListener('click', closeModal);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+  });
+}
+
+// ── View Router ───────────────────────────────
+
+function renderView(view) {
+  const content = document.getElementById('view-content');
+  content.style.opacity = '0';
+  content.style.filter = 'blur(6px)';
+  content.style.transition = 'opacity 0.2s ease, filter 0.2s ease';
+
+  setTimeout(() => {
+    if (view === 'adoption') {
+      content.innerHTML = buildAdoptionHTML();
+      bindAdoption();
+    } else {
+      content.innerHTML = buildQualityHTML();
+      bindQuality();
+    }
+    observeSections();
+    requestAnimationFrame(() => {
+      content.style.opacity = '1';
+      content.style.filter = 'blur(0px)';
+    });
+  }, 200);
+}
+
+function renderFreshness() {
+  const el = document.getElementById('freshness');
+  if (!el || !DATA.date) return;
+  const d = new Date(DATA.date + 'T00:00:00');
+  const opts = { month: 'short', day: 'numeric' };
+  const time = DATA.time || '';
+  el.textContent = 'Updated ' + d.toLocaleDateString('en-US', opts) + (time ? ', ' + time : '');
+}
+
+// ── IntersectionObserver ──────────────────────
+
+function observeSections() {
+  const sections = document.querySelectorAll('.section:not(.section-placeholder)');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  sections.forEach(s => io.observe(s));
+}
+
+// ── Data Helpers ──────────────────────────────
+
+function getFilteredAccounts() {
+  if (currentTier === 'all') return DATA.perAccount;
+  return DATA.perAccount.filter(a => a.tier === currentTier);
+}
+
+function computeStages(accounts) {
+  const stages = [0, 0, 0, 0];
+  accounts.forEach(a => { stages[a.activationStage || 0]++; });
+  return stages;
+}
+
+function computeRescue(accounts) {
+  return accounts
+    .filter(a => a.healthStatus === 'dormant' || a.healthStatus === 'at-risk')
+    .sort((a, b) => {
+      const order = { dormant: 0, 'at-risk': 1, active: 2 };
+      return (order[a.healthStatus] || 2) - (order[b.healthStatus] || 2);
+    });
+}
+
+function computeCohorts(accounts) {
+  const tiers = {};
+  accounts.forEach(a => {
+    const t = a.tier || 'Other';
+    if (!tiers[t]) tiers[t] = { label: t, accounts: 0, ciwps: 0, activated: 0 };
+    tiers[t].accounts++;
+    tiers[t].ciwps += a.ciwpsCreated || 0;
+    if ((a.activationStage || 0) >= 3) tiers[t].activated++;
+  });
+  return Object.values(tiers).map(t => ({
+    ...t,
+    rate: t.accounts > 0 ? Math.round((t.activated / t.accounts) * 100) : 0
+  }));
+}
+
+// ── Adoption View ─────────────────────────────
+
+function buildAdoptionHTML() {
+  return `
+    <div class="tier-filter" id="tier-filter">
+      <button class="tier-btn active" data-tier="all">All</button>
+      <button class="tier-btn" data-tier="Premium">Premium</button>
+      <button class="tier-btn" data-tier="Basic">Basic</button>
+      <button class="tier-btn" data-tier="Starter">Starter</button>
+    </div>
+
+    <div class="section" id="rescue-section">
+      <div class="section-label">Needs Outreach</div>
+      <div id="rescue-list"></div>
+    </div>
+
+    <div class="section" id="chart-section">
+      <div class="chart-header">
+        <span class="section-label">Activity</span>
+        <div class="time-selector">
+          <button class="time-btn active" data-range="1D">1D</button>
+          <button class="time-btn" data-range="1W">1W</button>
+          <button class="time-btn" data-range="1M">1M</button>
+        </div>
+      </div>
+      <div class="sparkline-wrap">
+        <svg id="sparkline" viewBox="0 0 960 480" preserveAspectRatio="none"></svg>
+      </div>
+      <div class="metric-overlay">
+        <div class="metric-row">
+          <span class="metric-value" id="metric-value">--</span>
+          <span class="metric-delta">
+            <span class="arrow" id="delta-arrow"></span>
+            <span id="delta-value"></span>
+          </span>
+        </div>
+        <div class="metric-sub" id="metric-sub"></div>
+      </div>
+    </div>
+
+    <div class="section" id="funnel-section">
+      <div class="section-label-row">
+        <span class="section-label">Activation</span>
+        <a class="mixpanel-link" id="link-funnel" href="${DATA.mixpanelLinks?.funnel || '#'}" target="_blank" rel="noopener">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 1.5H2.25C1.836 1.5 1.5 1.836 1.5 2.25v7.5c0 .414.336.75.75.75h7.5c.414 0 .75-.336.75-.75V7.5M7.5 1.5h3m0 0v3m0-3L5.25 6.75" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Mixpanel
+        </a>
+      </div>
+      <div id="stage-pipeline"></div>
+      <div class="activation-divider"></div>
+      <div id="funnel"></div>
+    </div>
+
+    <div class="section" id="cohorts-section">
+      <div class="section-label-row">
+        <span class="section-label">Cohorts</span>
+        <a class="mixpanel-link" id="link-cohorts" href="${DATA.mixpanelLinks?.cohorts || '#'}" target="_blank" rel="noopener">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 1.5H2.25C1.836 1.5 1.5 1.836 1.5 2.25v7.5c0 .414.336.75.75.75h7.5c.414 0 .75-.336.75-.75V7.5M7.5 1.5h3m0 0v3m0-3L5.25 6.75" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Mixpanel
+        </a>
+      </div>
+      <div id="cohorts"></div>
+    </div>
+
+    <div class="section section-placeholder">
+      <div class="placeholder-inner">Error tracking -- Sentry integration pending eng setup</div>
+    </div>`;
+}
+
+function bindAdoption() {
+  bindTierFilter();
+  bindTimeSelector();
+  renderAdoptionData();
+}
+
+function renderAdoptionData() {
+  const accounts = getFilteredAccounts();
+  renderRescueList(accounts);
+  renderStagePipeline(accounts);
+  renderChartSection();
+  renderFunnel();
+  renderCohorts(accounts);
+}
+
+// ── Tier Filter ───────────────────────────────
+
+function bindTierFilter() {
+  const filter = document.getElementById('tier-filter');
+  if (!filter) return;
+  filter.querySelectorAll('.tier-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.dataset.tier === currentTier) return;
+      filter.querySelector('.tier-btn.active').classList.remove('active');
+      btn.classList.add('active');
+      currentTier = btn.dataset.tier;
+      renderAdoptionData();
+    });
+  });
+}
+
+// ── Time Selector ─────────────────────────────
 
 let isTransitioning = false;
 
-function bindViewSelector() {
-  const selector = document.getElementById('view-selector');
-  const btn = document.getElementById('view-title-btn');
-  const dropdown = document.getElementById('view-dropdown');
-
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const isOpen = selector.classList.contains('open');
-    if (isOpen) {
-      closeDropdown();
-    } else {
-      selector.classList.add('open');
-      document.addEventListener('click', closeDropdown, { once: true });
-    }
-  });
-
-  function closeDropdown() {
-    selector.classList.remove('open');
-  }
-
-  dropdown.querySelectorAll('.view-option').forEach((opt) => {
-    opt.addEventListener('click', () => {
-      const view = opt.dataset.view;
-      if (view === currentView) { closeDropdown(); return; }
-      dropdown.querySelectorAll('.view-option').forEach(o => o.classList.remove('active'));
-      opt.classList.add('active');
-      document.getElementById('view-label').textContent = opt.textContent;
-      closeDropdown();
-      switchView(view);
-    });
-  });
-}
-
-function switchView(view) {
-  currentView = view;
-  const hero = document.querySelector('.hero');
-  const timeSelector = document.querySelector('.time-selector');
-
-  // Blur out
-  hero.classList.add('view-transitioning');
-
-  setTimeout(() => {
-    if (view === 'ciwp-testing') {
-      timeSelector.style.opacity = '0';
-      timeSelector.style.pointerEvents = 'none';
-      renderCiwpTestingView();
-    } else {
-      timeSelector.style.opacity = '';
-      timeSelector.style.pointerEvents = '';
-      const sparkWrap = document.querySelector('.sparkline-wrap');
-      sparkWrap.classList.remove('testing-summary-mode');
-      sparkWrap.innerHTML = '<svg id="sparkline" viewBox="0 0 960 480" preserveAspectRatio="none"></svg>';
-      document.querySelector('.sheet-content').innerHTML = ACTIVATION_SHEET_HTML;
-      renderRange(currentRange);
-    }
-
-    // Blur in
-    requestAnimationFrame(() => {
-      hero.classList.remove('view-transitioning');
-    });
-  }, 300);
-}
-
 function bindTimeSelector() {
-  document.querySelectorAll('.time-btn').forEach((btn) => {
+  document.querySelectorAll('.time-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      if (currentView !== 'activation') return;
       const range = btn.dataset.range;
       if (range === currentRange || isTransitioning) return;
-
       isTransitioning = true;
 
       document.querySelector('.time-btn.active').classList.remove('active');
@@ -112,18 +259,13 @@ function bindTimeSelector() {
       currentRange = range;
 
       const wrap = document.querySelector('.sparkline-wrap');
-      const overlay = document.querySelector('.metric-overlay');
-
       wrap.classList.add('transitioning');
-      overlay.classList.add('blur-out');
 
       setTimeout(() => {
         document.querySelectorAll('.hover-line, .hover-dot, .sparkline-tooltip').forEach(el => el.remove());
-        renderRange(range, true);
-
+        renderChartSection(true);
         setTimeout(() => {
           wrap.classList.remove('transitioning');
-          overlay.classList.remove('blur-out');
           isTransitioning = false;
         }, 80);
       }, 450);
@@ -131,137 +273,86 @@ function bindTimeSelector() {
   });
 }
 
-function bindSheet() {
-  const pill = document.getElementById('pill');
-  const sheet = document.getElementById('sheet');
-  const backdrop = document.getElementById('sheet-backdrop');
-  const container = document.querySelector('.container');
+// ── Rescue List ───────────────────────────────
 
-  function openSheet() {
-    container.classList.add('receded');
-    sheet.classList.add('open');
-    backdrop.classList.add('visible');
-    pill.textContent = 'Close';
-  }
+function renderRescueList(accounts) {
+  const el = document.getElementById('rescue-list');
+  if (!el) return;
 
-  function closeSheet() {
-    sheet.style.transition = '';
-    sheet.style.transform = '';
-    sheet.classList.remove('open');
-    backdrop.classList.remove('visible');
-    container.classList.remove('receded');
-    pill.textContent = 'Details';
-    // Reset scroll blur -- remove inline styles so CSS cascade takes over
-    sheet.scrollTo(0, 0);
-    sheet.querySelectorAll('.sheet-section').forEach(sec => {
-      sec.removeAttribute('style');
+  const rescue = computeRescue(accounts);
+  const showAll = rescue.length <= 6;
+  const visible = showAll ? rescue : rescue.slice(0, 5);
+
+  el.innerHTML = `
+    <div class="rescue-metric">${rescue.length}</div>
+    <div class="rescue-subtitle">account${rescue.length !== 1 ? 's' : ''} need${rescue.length === 1 ? 's' : ''} attention</div>
+    ${visible.map(a => rescueRow(a)).join('')}
+    ${!showAll ? `
+      <div class="rescue-toggle">
+        <button class="rescue-toggle-btn" id="rescue-expand">Show all ${rescue.length}</button>
+      </div>
+      <div id="rescue-overflow" style="display:none">
+        ${rescue.slice(5).map(a => rescueRow(a)).join('')}
+      </div>` : ''}`;
+
+  const expandBtn = document.getElementById('rescue-expand');
+  if (expandBtn) {
+    expandBtn.addEventListener('click', () => {
+      const overflow = document.getElementById('rescue-overflow');
+      if (overflow.style.display === 'none') {
+        overflow.style.display = 'block';
+        expandBtn.textContent = 'Show less';
+      } else {
+        overflow.style.display = 'none';
+        expandBtn.textContent = `Show all ${rescue.length}`;
+      }
     });
   }
-
-  pill.addEventListener('click', () => {
-    sheet.classList.contains('open') ? closeSheet() : openSheet();
-  });
-
-  // Scroll-driven depth blur on sheet sections
-  let sheetRafId = null;
-
-  function updateSheetBlur() {
-    sheetRafId = null;
-    if (!sheet.classList.contains('open') || isDragging) return;
-    const sections = sheet.querySelectorAll('.sheet-section');
-    const sheetTop = sheet.getBoundingClientRect().top;
-    const sheetH = sheet.clientHeight;
-    const fadeZone = sheetH * 0.05;
-    const bottomEdge = sheetH - fadeZone;
-
-    for (let i = 0; i < sections.length; i++) {
-      const sec = sections[i];
-      const rect = sec.getBoundingClientRect();
-      const relTop = rect.top - sheetTop;
-      const secH = rect.height;
-
-      // Skip sections fully off-screen (no layout thrash)
-      if (relTop > sheetH + 100 || relTop + secH < -100) continue;
-
-      // Skip blur on tall sections (expanded accordions)
-      if (secH > sheetH * 0.5) {
-        if (sec.style.filter) { sec.style.filter = ''; sec.style.opacity = ''; }
-        continue;
-      }
-
-      const mid = relTop + secH * 0.5;
-      let blur = 0;
-      let opacity = 1;
-
-      if (mid < fadeZone) {
-        const p = 1 - mid / fadeZone;
-        blur = p * 4;
-        opacity = 1 - p * 0.25;
-      } else if (mid > bottomEdge) {
-        const p = (mid - bottomEdge) / fadeZone;
-        blur = p * 3;
-        opacity = 1 - p * 0.2;
-      }
-
-      if (blur < 0.1) {
-        if (sec.style.filter) { sec.style.filter = ''; sec.style.opacity = ''; }
-      } else {
-        opacity = Math.max(0.75, opacity);
-        sec.style.filter = `blur(${blur}px)`;
-        sec.style.opacity = String(opacity);
-      }
-    }
-  }
-
-  sheet.addEventListener('scroll', () => {
-    if (!sheetRafId) sheetRafId = requestAnimationFrame(updateSheetBlur);
-  }, { passive: true });
-
-  backdrop.addEventListener('click', closeSheet);
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && sheet.classList.contains('open')) {
-      closeSheet();
-    }
-  });
-
-  let touchStartY = 0;
-  let touchDeltaY = 0;
-  let isDragging = false;
-
-  sheet.addEventListener('touchstart', (e) => {
-    if (sheet.scrollTop > 0) return;
-    touchStartY = e.touches[0].clientY;
-    isDragging = true;
-    sheet.style.transition = 'none';
-  }, { passive: true });
-
-  sheet.addEventListener('touchmove', (e) => {
-    if (!isDragging) return;
-    touchDeltaY = e.touches[0].clientY - touchStartY;
-    if (touchDeltaY < 0) { touchDeltaY = 0; return; }
-    sheet.style.transform = `translateY(${touchDeltaY}px)`;
-  }, { passive: true });
-
-  sheet.addEventListener('touchend', () => {
-    if (!isDragging) return;
-    isDragging = false;
-    sheet.style.transition = '';
-    if (touchDeltaY > 80) {
-      closeSheet();
-    } else {
-      sheet.style.transform = 'translateY(0)';
-      requestAnimationFrame(() => { sheet.style.transform = ''; });
-    }
-    touchDeltaY = 0;
-  });
 }
 
-function renderRange(range, skipChartAnimation) {
-  const d = currentData.ranges[range];
+function rescueRow(a) {
+  const days = a.daysSinceEnabled != null ? a.daysSinceEnabled + 'd' : '--';
+  return `
+    <div class="rescue-row">
+      <span class="health-dot ${a.healthStatus}"></span>
+      <span class="rescue-name">${a.account}</span>
+      <span class="rescue-days">${days}</span>
+      <span class="tier-pill">${a.tier}</span>
+    </div>`;
+}
 
-  const dateEl = document.getElementById('report-date');
-  if (dateEl) dateEl.textContent = formatDate(currentData.date);
+// ── Stage Pipeline ────────────────────────────
+
+function renderStagePipeline(accounts) {
+  const el = document.getElementById('stage-pipeline');
+  if (!el) return;
+
+  const stages = computeStages(accounts);
+  const total = accounts.length || 1;
+  const labels = ['Not Started', 'Onboarding', 'Adopted', 'Converted'];
+
+  el.innerHTML = `
+    <div class="stage-bar-wrap">
+      <div class="stage-bar">
+        ${stages.map((count, i) => `<div class="stage-segment s${i}" style="flex-grow: ${count || 0.1}"></div>`).join('')}
+      </div>
+    </div>
+    <div class="stage-labels">
+      ${stages.map((count, i) => `
+        <div class="stage-label-item">
+          <span class="stage-dot s${i}"></span>
+          <span class="stage-count">${count}</span>
+          <span class="stage-fraction">${labels[i]} (${Math.round(count / total * 100)}%)</span>
+        </div>`).join('')}
+    </div>`;
+}
+
+// ── Chart + Metric ────────────────────────────
+
+function renderChartSection(skipAnimation) {
+  const d = DATA.ranges[currentRange];
+  if (!d) return;
+
   document.getElementById('metric-value').textContent = d.primary.value + d.primary.unit;
 
   const arrow = document.getElementById('delta-arrow');
@@ -269,171 +360,19 @@ function renderRange(range, skipChartAnimation) {
   arrow.textContent = d.primary.direction === 'up' ? '\u2191' : '\u2193';
   arrow.className = 'arrow ' + d.primary.direction;
 
-  const vsLabel = range === '1D' ? 'vs yesterday' : range === '1W' ? 'vs last week' : 'vs last month';
+  const vsLabel = currentRange === '1D' ? 'vs yesterday' : currentRange === '1W' ? 'vs last week' : 'vs last month';
   delta.textContent = d.primary.delta + '% ' + vsLabel;
+  document.getElementById('metric-sub').textContent = d.accounts.total + ' ' + d.accounts.label;
 
-  document.getElementById('accounts').textContent = d.accounts.total + ' ' + d.accounts.label;
-
-  renderChart(d.chart, skipChartAnimation);
-  renderFunnel(d.funnel);
-  renderCohorts(d.cohorts);
-  renderHealth(d.health);
-  renderSignals(d.signals);
-  renderPerAccount(currentData.perAccount);
+  renderChart(d.chart, skipAnimation);
 }
-
-// ── CIWP Testing View ─────────────────────────
-
-function renderCiwpTestingView() {
-  const data = currentData.ciwpTesting;
-
-  // Update hero metric
-  document.getElementById('metric-value').textContent = data.primary.value + data.primary.unit;
-  document.getElementById('delta-arrow').textContent = '';
-  document.getElementById('delta-value').textContent = data.primary.label;
-  document.getElementById('accounts').textContent = data.primary.sub;
-
-  // Replace sparkline with summary sentence
-  const sparkWrap = document.querySelector('.sparkline-wrap');
-  sparkWrap.innerHTML = buildTestingSummaryHTML(data.summary);
-  sparkWrap.classList.add('testing-summary-mode');
-
-  // Replace sheet content
-  document.querySelector('.sheet-content').innerHTML = buildTestingSheetHTML(data);
-
-  // Scroll-driven blur/parallax on sentence
-  bindTestingScroll();
-
-  // Cowboy hat easter egg
-  const howdy = document.querySelector('.howdy-trigger');
-  if (howdy) {
-    let hatCooldown = false;
-    howdy.addEventListener('mouseenter', () => {
-      if (hatCooldown) return;
-      hatCooldown = true;
-      const hat = document.createElement('span');
-      hat.className = 'cowboy-hat';
-      hat.textContent = '\uD83E\uDD20';
-      howdy.appendChild(hat);
-      setTimeout(() => {
-        hat.classList.add('cowboy-hat-out');
-        hat.addEventListener('animationend', () => {
-          hat.remove();
-          hatCooldown = false;
-        });
-      }, 2000);
-    });
-  }
-}
-
-function bindTestingScroll() {
-  const sentence = document.querySelector('.testing-summary-sentence');
-  if (!sentence) return;
-
-  let heroRafId = null;
-
-  function updateHeroBlur() {
-    heroRafId = null;
-    if (currentView !== 'ciwp-testing') {
-      window.removeEventListener('scroll', onScroll);
-      sentence.style.transform = '';
-      sentence.style.filter = '';
-      sentence.style.opacity = '';
-      return;
-    }
-    const rect = sentence.getBoundingClientRect();
-    const viewH = window.innerHeight;
-    const center = rect.top + rect.height / 2;
-    const progress = Math.max(0, Math.min(1, (viewH * 0.4 - center) / (viewH * 0.5)));
-
-    if (progress < 0.01) {
-      sentence.style.transform = '';
-      sentence.style.filter = '';
-      sentence.style.opacity = '';
-    } else {
-      sentence.style.transform = `translateY(${progress * -16}px)`;
-      sentence.style.filter = `blur(${progress * 8}px)`;
-      sentence.style.opacity = String(1 - progress * 0.6);
-    }
-  }
-
-  function onScroll() {
-    if (!heroRafId) heroRafId = requestAnimationFrame(updateHeroBlur);
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-}
-
-function buildTestingSummaryHTML(summary) {
-  const dotClass = {
-    'review': 'status-review',
-    'dev': 'status-dev',
-    'complete': 'status-complete'
-  };
-
-  const parts = summary.map(s => {
-    return `<span class="summary-count ${dotClass[s.dot] || ''}">${s.count}</span>\u00A0${s.label}`;
-  });
-
-  // Join with commas and "and" before the last item
-  let joined = parts[0];
-  for (let i = 1; i < parts.length; i++) {
-    joined += i === parts.length - 1 ? ' and\u00A0' : ',\u00A0';
-    joined += parts[i];
-  }
-
-  return `<div class="testing-summary-sentence"><span class="summary-clause" style="animation-delay: 200ms"><span class="howdy-trigger">Howdy.</span>\u00A0We\u00A0have ${joined}.</span></div>`;
-}
-
-function buildTestingSheetHTML(data) {
-  const statusDotClass = {
-    'under-review': 'status-review',
-    'dev-review': 'status-dev',
-    'complete': 'status-complete'
-  };
-
-  const statusLabel = {
-    'under-review': 'Under Review',
-    'dev-review': 'Dev Review',
-    'complete': 'Complete'
-  };
-
-  const jiraBase = data.jiraBase || '';
-
-  return data.categories.map((cat, i) => `
-    <div class="sheet-section" data-delay="${i}">
-      <div class="testing-category-header">
-        <span class="testing-category-label">${cat.label}</span>
-        <span class="testing-category-count">${cat.tickets.length}</span>
-      </div>
-      <div class="testing-ticket-list">
-        ${cat.tickets.map(t => {
-          const isLinked = jiraBase && t.id !== '--';
-          const idHTML = isLinked
-            ? `<a class="testing-ticket-id testing-ticket-link" href="${jiraBase}${t.id}" target="_blank" rel="noopener">${t.id}</a>`
-            : `<span class="testing-ticket-id">${t.id}</span>`;
-          return `
-          <div class="testing-ticket-row">
-            <span class="testing-status-dot ${statusDotClass[t.status] || ''}"></span>
-            ${idHTML}
-            <span class="testing-ticket-title">${t.title}</span>
-            <span class="testing-ticket-status">${statusLabel[t.status] || t.status}</span>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`).join('');
-}
-
-// ── Activation sheet renderers ────────────────
 
 function renderChart(chart, skipAnimation) {
   const svg = document.getElementById('sparkline');
   const wrap = document.querySelector('.sparkline-wrap');
-  const w = 960;
-  const h = 480;
-  const padX = 8;
-  const padTop = 40;
-  const padBottom = 40;
+  if (!svg || !wrap) return;
+
+  const w = 960, h = 480, padX = 8, padTop = 40, padBottom = 40;
 
   const allVals = [...chart.logins, ...chart.visits, ...chart.generated];
   const maxVal = Math.max(...allVals, 1);
@@ -448,8 +387,7 @@ function renderChart(chart, skipAnimation) {
   function buildPath(coords) {
     let d = `M ${coords[0].x} ${coords[0].y}`;
     for (let i = 1; i < coords.length; i++) {
-      const prev = coords[i - 1];
-      const curr = coords[i];
+      const prev = coords[i - 1], curr = coords[i];
       const cpx = (prev.x + curr.x) / 2;
       d += ` C ${cpx} ${prev.y}, ${cpx} ${curr.y}, ${curr.x} ${curr.y}`;
     }
@@ -488,23 +426,23 @@ function renderChart(chart, skipAnimation) {
     <path d="${buildArea(loginPath, loginCoords)}" fill="url(#fill-logins)" class="chart-area"/>
     <path d="${loginPath}" fill="none" stroke="#666666" stroke-width="3" stroke-linecap="round" class="chart-line"/>
     <path d="${buildArea(genPath, genCoords)}" fill="url(#fill-generated)" class="chart-area"/>
-    <path d="${genPath}" fill="none" stroke="#AC5CCC" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6 4" class="chart-line"/>
-  `;
+    <path d="${genPath}" fill="none" stroke="#AC5CCC" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6 4" class="chart-line"/>`;
 
   if (skipAnimation) {
-    svg.querySelectorAll('.chart-line, .chart-area').forEach((el) => { el.style.opacity = '1'; });
+    svg.querySelectorAll('.chart-line, .chart-area').forEach(el => { el.style.opacity = '1'; });
   } else {
     svg.querySelectorAll('.chart-line, .chart-area').forEach((el, i) => {
       el.style.opacity = '0';
       el.style.transition = 'none';
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          el.style.transition = `opacity 0.5s ease ${50 + i * 60}ms`;
-          el.style.opacity = '1';
-        });
-      });
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        el.style.transition = `opacity 0.5s ease ${50 + i * 60}ms`;
+        el.style.opacity = '1';
+      }));
     });
   }
+
+  // Hover
+  wrap.querySelectorAll('.hover-line, .hover-dot, .sparkline-tooltip').forEach(el => el.remove());
 
   const line = document.createElement('div');
   line.className = 'hover-line';
@@ -520,21 +458,17 @@ function renderChart(chart, skipAnimation) {
     <div class="tooltip-date"></div>
     <div class="tooltip-row"><span class="t-dot" style="background:#666666"></span><span class="t-label">Logins</span><span class="t-val t-logins"></span></div>
     <div class="tooltip-row"><span class="t-dot" style="background:#00A6FF"></span><span class="t-label">Visits</span><span class="t-val t-visits"></span></div>
-    <div class="tooltip-row"><span class="t-dot" style="background:#AC5CCC"></span><span class="t-label">Generated</span><span class="t-val t-gen"></span></div>
-  `;
+    <div class="tooltip-row"><span class="t-dot" style="background:#AC5CCC"></span><span class="t-label">Generated</span><span class="t-val t-gen"></span></div>`;
   wrap.appendChild(tooltip);
 
   function updateHover(clientX) {
     const rect = wrap.getBoundingClientRect();
     const mouseX = ((clientX - rect.left) / rect.width) * w;
-
-    let nearest = 0;
-    let nearestDist = Infinity;
+    let nearest = 0, nearestDist = Infinity;
     for (let i = 0; i < loginCoords.length; i++) {
       const dist = Math.abs(loginCoords[i].x - mouseX);
       if (dist < nearestDist) { nearestDist = dist; nearest = i; }
     }
-
     const pt = loginCoords[nearest];
     const pctX = (pt.x / w) * 100;
     const pctY = (pt.y / h) * 100;
@@ -555,19 +489,20 @@ function renderChart(chart, skipAnimation) {
     tooltip.style.transform = `translate(${pctX > 75 ? '-90%' : pctX < 25 ? '-10%' : '-50%'}, ${atPeak ? '0%' : '-100%'})`;
   }
 
-  wrap.addEventListener('mousemove', (e) => updateHover(e.clientX));
-  wrap.addEventListener('touchstart', (e) => { updateHover(e.touches[0].clientX); }, { passive: true });
-  wrap.addEventListener('touchmove', (e) => { e.preventDefault(); updateHover(e.touches[0].clientX); }, { passive: false });
-  wrap.addEventListener('touchend', () => { setTimeout(() => {
-    line.style.opacity = '';
-    dot.style.opacity = '';
-    tooltip.style.opacity = '';
-  }, 1500); });
+  wrap.addEventListener('mousemove', e => updateHover(e.clientX));
+  wrap.addEventListener('touchstart', e => updateHover(e.touches[0].clientX), { passive: true });
+  wrap.addEventListener('touchmove', e => { e.preventDefault(); updateHover(e.touches[0].clientX); }, { passive: false });
 }
 
-function renderFunnel(funnel) {
-  document.getElementById('funnel').innerHTML = funnel
-    .map((step, i) => `
+// ── Funnel ────────────────────────────────────
+
+function renderFunnel() {
+  const d = DATA.ranges[currentRange];
+  if (!d) return;
+  const el = document.getElementById('funnel');
+  if (!el) return;
+
+  el.innerHTML = d.funnel.map((step, i) => `
     <div class="funnel-row">
       <span class="funnel-label">${step.label}</span>
       <div class="funnel-bar-track">
@@ -577,9 +512,14 @@ function renderFunnel(funnel) {
     </div>`).join('');
 }
 
-function renderCohorts(cohorts) {
-  document.getElementById('cohorts').innerHTML = cohorts
-    .map((c) => `
+// ── Cohorts ───────────────────────────────────
+
+function renderCohorts(accounts) {
+  const el = document.getElementById('cohorts');
+  if (!el) return;
+
+  const cohorts = computeCohorts(accounts);
+  el.innerHTML = '<div class="cohort-grid">' + cohorts.map(c => `
     <div class="cohort-card">
       <div class="cohort-name">${c.label}</div>
       <div class="cohort-rate">${c.rate}%</div>
@@ -587,112 +527,158 @@ function renderCohorts(cohorts) {
         <span>${c.accounts} accounts</span>
         <span>${c.ciwps} CIWPs</span>
       </div>
-    </div>`).join('');
+    </div>`).join('') + '</div>';
 }
 
-function renderHealth(health) {
-  const el = document.getElementById('account-health');
-  const groups = [
-    { key: 'active',  label: 'Active',   dot: 'active',   items: health.active },
-    { key: 'atRisk',  label: 'At Risk',  dot: 'at-risk',  items: health.atRisk },
-    { key: 'dormant', label: 'Dormant',  dot: 'dormant',  items: health.dormant }
-  ];
+// ── Quality View ──────────────────────────────
 
-  el.innerHTML = groups.map(g => `
-    <div class="health-group">
-      <button class="health-group-header" data-accordion>
-        <span class="health-dot ${g.dot}"></span>
-        <span class="health-group-label">${g.label}</span>
-        <span class="health-group-count">${g.items.length}</span>
-        <span class="health-chevron"></span>
-      </button>
-      <div class="health-body">
-        <div class="health-body-inner">
-          <div class="health-accounts">
-            ${g.items.map(name => `<span class="health-tag">${name}</span>`).join('')}
-          </div>
-        </div>
+function buildQualityHTML() {
+  return `
+    <div class="section" id="summary-section">
+      <div class="testing-summary-wrap">
+        <div class="testing-summary-sentence" id="testing-summary"></div>
       </div>
+    </div>
+
+    <div class="section" id="tickets-section">
+      <div id="ticket-categories"></div>
+    </div>
+
+    <div class="section section-placeholder">
+      <div class="placeholder-inner">Error tracking -- Sentry integration pending eng setup</div>
+    </div>`;
+}
+
+function bindQuality() {
+  renderSummary();
+  renderTickets();
+}
+
+function getAllTickets() {
+  const cats = DATA.ciwpTesting?.categories || [];
+  return cats.flatMap(c => c.tickets || []);
+}
+
+// ── Summary Sentence (with scorecard data merged) ──
+
+function renderSummary() {
+  const el = document.getElementById('testing-summary');
+  if (!el) return;
+
+  const allTickets = getAllTickets();
+  const bugs = allTickets.filter(t => t.type === 'Bug');
+  const stories = allTickets.filter(t => t.type !== 'Bug');
+  const totalOpen = bugs.length + stories.length;
+  const p0p1 = bugs.filter(t => t.priority === 'P0' || t.priority === 'P1').length;
+  const avgDays = bugs.length > 0 ? Math.round(bugs.reduce((s, t) => s + (t.daysOpen || 0), 0) / bugs.length) : 0;
+  const workarounds = allTickets.filter(t => t.workaround).length;
+
+  // Natural sentence with scorecard data
+  let sentence = `We have <span class="summary-count status-review">${bugs.length}</span> bug${bugs.length !== 1 ? 's' : ''}`;
+  sentence += ` and <span class="summary-count status-dev">${stories.length}</span> stor${stories.length !== 1 ? 'ies' : 'y'} open`;
+  sentence += ` with an average resolution time of <span class="summary-count">${avgDays} days</span>`;
+  if (p0p1 > 0) sentence += ` and <span class="summary-count alert-inline">${p0p1}</span> critical`;
+  if (workarounds > 0) sentence += `. <span class="summary-count status-complete">${workarounds}</span> workaround${workarounds !== 1 ? 's' : ''} available`;
+  sentence += '.';
+
+  el.innerHTML = `<span class="summary-clause"><span class="howdy-trigger">Howdy.</span> ${sentence}</span>`;
+}
+
+// ── Tickets ───────────────────────────────────
+
+function renderTickets() {
+  const el = document.getElementById('ticket-categories');
+  if (!el) return;
+
+  const cats = DATA.ciwpTesting?.categories || [];
+  const jiraBase = DATA.ciwpTesting?.jiraBase || '';
+
+  // Sort categories: bugs first, stories second, additional last
+  const typeOrder = { bugs: 0, stories: 1, additional: 2 };
+  const sorted = [...cats].sort((a, b) => (typeOrder[a.key] ?? 3) - (typeOrder[b.key] ?? 3));
+
+  // Sort tickets within each category by priority (P0 first)
+  const prioOrder = { P0: 0, P1: 1, P2: 2, P3: 3 };
+  sorted.forEach(cat => {
+    cat.tickets = [...cat.tickets].sort((a, b) =>
+      (prioOrder[a.priority] ?? 4) - (prioOrder[b.priority] ?? 4)
+    );
+  });
+
+  el.innerHTML = sorted.map(cat => `
+    <div class="ticket-category">
+      <div class="ticket-category-header">
+        <span class="ticket-category-label">${cat.label}</span>
+        <span class="ticket-category-count">${cat.tickets.length}</span>
+      </div>
+      ${cat.tickets.map(t => ticketRow(t, jiraBase)).join('')}
     </div>`).join('');
 
-  el.querySelectorAll('[data-accordion]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const group = btn.parentElement;
-      const body = group.querySelector('.health-body');
-      const inner = group.querySelector('.health-body-inner');
-      const isOpen = group.classList.contains('expanded');
+  // Tap to expand
+  el.querySelectorAll('.ticket-row').forEach(row => {
+    row.addEventListener('click', (e) => {
+      if (e.target.closest('a')) return;
+      const detail = row.querySelector('.ticket-detail');
+      const inner = row.querySelector('.ticket-detail-inner');
+      if (!detail) return;
 
+      const isOpen = row.classList.contains('expanded');
       if (isOpen) {
-        body.style.height = body.scrollHeight + 'px';
-        requestAnimationFrame(() => { body.style.height = '0'; });
-        group.classList.remove('expanded');
+        detail.style.height = detail.scrollHeight + 'px';
+        requestAnimationFrame(() => { detail.style.height = '0'; });
+        row.classList.remove('expanded');
       } else {
-        body.style.height = inner.scrollHeight + 'px';
-        group.classList.add('expanded');
-        body.addEventListener('transitionend', () => {
-          if (group.classList.contains('expanded')) body.style.height = 'auto';
+        detail.style.height = inner.scrollHeight + 'px';
+        row.classList.add('expanded');
+        detail.addEventListener('transitionend', () => {
+          if (row.classList.contains('expanded')) detail.style.height = 'auto';
         }, { once: true });
       }
     });
   });
 }
 
-function renderSignals(signals) {
-  document.getElementById('signals').innerHTML = signals
-    .map((s) => `
-    <div class="signal-card">
-      <div class="signal-value">${s.value}${s.unit ? (s.unit === '%' ? '' : ' ') + s.unit : ''}</div>
-      <div class="signal-label">${s.label}</div>
-    </div>`).join('');
+function stripCiwpPrefix(title) {
+  return title.replace(/^\[CIWP\]\s*/i, '').replace(/^\*?\[CIWP\]\s*/i, '');
 }
 
-function renderPerAccount(accounts) {
-  const el = document.getElementById('per-account');
-  if (!el || !accounts) return;
+function ticketRow(t, jiraBase) {
+  const isLinked = jiraBase && t.id !== '--';
+  const idHTML = isLinked
+    ? `<a class="ticket-id" href="${jiraBase}${t.id}" target="_blank" rel="noopener">${t.id}</a>`
+    : `<span class="ticket-id">${t.id}</span>`;
 
-  const rows = accounts.map((a) => `
-    <div class="per-account-row">
-      <span class="per-account-name">${a.account}</span>
-      <span class="per-account-tier">${a.tier}</span>
-      <span class="per-account-count${a.ciwpsCreated > 0 ? ' has-ciwp' : ''}">${a.ciwpsCreated} plan${a.ciwpsCreated !== 1 ? 's' : ''}</span>
-    </div>`).join('');
+  const priorityClass = (t.priority || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const title = stripCiwpPrefix(t.title);
+  const daysStr = t.daysOpen != null ? t.daysOpen + 'd' : '';
 
-  el.innerHTML = `
-    <div class="per-account-accordion">
-      <button class="per-account-header">
-        <span class="per-account-summary-label">All accounts</span>
-        <span class="per-account-summary-count">${accounts.length}</span>
-        <span class="health-chevron"></span>
-      </button>
-      <div class="per-account-body">
-        <div class="per-account-body-inner">
-          <div class="per-account-list">${rows}</div>
-        </div>
+  const impacted = (t.accountsImpacted || []);
+  const hasDetail = impacted.length > 0 || t.workaround != null || t.dueDate;
+
+  // Build expand content
+  let detailParts = [];
+  if (t.workaround != null) {
+    detailParts.push(t.workaround
+      ? '<span class="workaround-badge yes">Workaround available</span>'
+      : '<span class="workaround-badge no">No workaround</span>');
+  }
+  if (t.dueDate) detailParts.push(`<span class="ticket-meta">Due ${t.dueDate}</span>`);
+  if (t.processStage) detailParts.push(`<span class="process-pill">${t.processStage}</span>`);
+  if (impacted.length > 0) {
+    detailParts.push(impacted.map(a => `<span class="ticket-account-pill">${a}</span>`).join(''));
+  }
+
+  return `
+    <div class="ticket-row${hasDetail ? '' : ' no-expand'}">
+      <div class="ticket-line1">
+        <span class="priority-label ${priorityClass}">${t.priority || ''}</span>
+        ${idHTML}
+        <span class="ticket-title">${title}</span>
+        <span class="ticket-days">${daysStr}</span>
       </div>
+      ${hasDetail ? `
+        <div class="ticket-detail">
+          <div class="ticket-detail-inner">${detailParts.join('')}</div>
+        </div>` : ''}
     </div>`;
-
-  const btn = el.querySelector('.per-account-header');
-  const accordion = el.querySelector('.per-account-accordion');
-  const body = el.querySelector('.per-account-body');
-  const inner = el.querySelector('.per-account-body-inner');
-
-  btn.addEventListener('click', () => {
-    const isOpen = accordion.classList.contains('expanded');
-    if (isOpen) {
-      body.style.height = body.scrollHeight + 'px';
-      requestAnimationFrame(() => { body.style.height = '0'; });
-      accordion.classList.remove('expanded');
-    } else {
-      body.style.height = inner.scrollHeight + 'px';
-      accordion.classList.add('expanded');
-      body.addEventListener('transitionend', () => {
-        if (accordion.classList.contains('expanded')) body.style.height = 'auto';
-      }, { once: true });
-    }
-  });
-}
-
-function formatDate(dateStr) {
-  const d = new Date(dateStr + 'T00:00:00');
-  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 }
