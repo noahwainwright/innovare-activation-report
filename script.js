@@ -750,7 +750,6 @@ function renderSentryCard() {
           <span class="sentry-sev-dot ${worstDot}"></span>
           <span class="sentry-account-name">${ae.account}</span>
           <span class="tier-pill">${ae.tier}</span>
-          <span class="sentry-issue-count">${openCount} issue${openCount !== 1 ? 's' : ''}</span>
         </div>
         ${acctIssues.filter(i => !i.resolved).map(sentryIssueRow).join('')}
       </div>`;
@@ -839,7 +838,6 @@ function sentryIssueRow(issue) {
 
   return `
     <div class="sentry-issue-row sentry-issue-sub${resolvedClass}">
-      <span class="sentry-sev-dot ${issue.severity}"></span>
       <div class="sentry-issue-body">
         <div class="sentry-issue-row-top">
           <span class="sentry-issue-title"><span class="sentry-title-text">${issue.title}</span></span>
