@@ -95,7 +95,7 @@ function renderFreshness() {
   const d = new Date(DATA.date + 'T00:00:00');
   const opts = { month: 'short', day: 'numeric' };
   const dateStr = d.toLocaleDateString('en-US', opts) + (DATA.time ? ', ' + DATA.time : '');
-  const viewLabel = currentView === 'adoption' ? 'Activation' : 'Error';
+  const viewLabel = currentView === 'adoption' ? 'Activation' : 'CIWP Testing';
   el.innerHTML = `<span class="breadcrumb-line"><span class="breadcrumb-prefix">CIWP Activation Dashboard</span> / ${viewLabel}</span><span class="breadcrumb-date">Updated ${dateStr}</span>`;
 }
 
@@ -136,20 +136,6 @@ function computeRescue(accounts) {
     });
 }
 
-function computeCohorts(accounts) {
-  const tiers = {};
-  accounts.forEach(a => {
-    const t = a.tier || 'Other';
-    if (!tiers[t]) tiers[t] = { label: t, accounts: 0, ciwps: 0, activated: 0 };
-    tiers[t].accounts++;
-    tiers[t].ciwps += a.ciwpsCreated || 0;
-    if ((a.activationStage || 0) >= 3) tiers[t].activated++;
-  });
-  return Object.values(tiers).map(t => ({
-    ...t,
-    rate: t.accounts > 0 ? Math.round((t.activated / t.accounts) * 100) : 0
-  }));
-}
 
 // ── North Star KPI Cards ──────────────────────
 
@@ -193,7 +179,10 @@ function buildAdoptionHTML() {
       <button class="tier-btn" data-tier="Paid">Paid</button>
     </div>
 
-    ${renderKpiCards()}
+    <div class="section" id="kpi-section">
+      ${renderKpiCards()}
+      <div id="kpi-tier-badge" class="kpi-tier-badge" style="display:none">KPIs reflect all tiers</div>
+    </div>
 
     <div class="section" id="chart-section">
       <div class="sparkline-wrap">
@@ -248,6 +237,8 @@ function renderAdoptionData() {
   renderRescueList(accounts);
   renderActivationPipeline(accounts);
   renderChartSection();
+  const badge = document.getElementById('kpi-tier-badge');
+  if (badge) badge.style.display = currentTier !== 'all' ? 'block' : 'none';
 }
 
 // ── Tier Filter ───────────────────────────────
@@ -379,7 +370,7 @@ function renderActivationPipeline(accounts) {
   const funnel = d?.funnel || [];
   const total = accounts.length || 1;
   const stages = computeStages(accounts);
-  const stageLabels = ['Not Started', 'Onboarding', 'Adopted', 'Converted'];
+  const stageLabels = ['Not Started', 'Onboarding', 'Adopted', 'Activated'];
 
   // Build pipeline steps: pair funnel events with stage counts
   const steps = funnel.map((f, i) => {
@@ -387,6 +378,9 @@ function renderActivationPipeline(accounts) {
     const dropOff = i > 0 ? Math.round(((funnel[i - 1].value - f.value) / (funnel[i - 1].value || 1)) * 100) : null;
     return { label: f.label, pct: f.value, stageCount, stageLabel: stageLabels[i], dropOff };
   });
+
+  const convertedCount = stages[3] || 0;
+  const convertedPct = total > 0 ? Math.round((convertedCount / total) * 100) : 0;
 
   el.innerHTML = steps.map((step, i) => `
     <div class="pipeline-step">
@@ -407,7 +401,25 @@ function renderActivationPipeline(accounts) {
           <div class="pipeline-bar ${i === 0 ? 'bar-login' : 'bar-default'}" style="width: ${step.pct}%"></div>
         </div>
       </div>
-    </div>`).join('');
+    </div>`).join('') + (convertedCount > 0 ? `
+    <div class="pipeline-step">
+      <div class="pipeline-connector">
+        <span class="pipeline-dropoff"></span>
+      </div>
+      <div class="pipeline-row">
+        <div class="pipeline-left">
+          <span class="pipeline-event">CIWP Published</span>
+          <span class="pipeline-stage-label">Activated</span>
+        </div>
+        <div class="pipeline-right">
+          <span class="pipeline-pct pipeline-pct-converted">${convertedPct}%</span>
+          <span class="pipeline-count">${convertedCount} account${convertedCount !== 1 ? 's' : ''}</span>
+        </div>
+        <div class="pipeline-bar-track">
+          <div class="pipeline-bar bar-converted" style="width: ${convertedPct}%"></div>
+        </div>
+      </div>
+    </div>` : '');
 }
 
 // ── Chart + Metric ────────────────────────────
@@ -560,23 +572,6 @@ function renderChart(chart, skipAnimation) {
 }
 
 
-// ── Cohorts ───────────────────────────────────
-
-function renderCohorts(accounts) {
-  const el = document.getElementById('cohorts');
-  if (!el) return;
-
-  const cohorts = computeCohorts(accounts);
-  el.innerHTML = '<div class="cohort-grid">' + cohorts.map(c => `
-    <div class="cohort-card">
-      <div class="cohort-name">${c.label}</div>
-      <div class="cohort-rate">${c.rate}%</div>
-      <div class="cohort-meta">
-        <span>${c.accounts} accounts</span>
-        <span>${c.ciwps} CIWPs</span>
-      </div>
-    </div>`).join('') + '</div>';
-}
 
 // ── Quality View ──────────────────────────────
 
