@@ -342,17 +342,18 @@ function renderRescueList(accounts) {
   trigger.addEventListener('click', () => {
     const isOpen = body.classList.contains('expanded');
     if (isOpen) {
-      body.style.height = body.scrollHeight + 'px';
+      const currentHeight = body.getBoundingClientRect().height;
+      body.style.height = currentHeight + 'px';
       requestAnimationFrame(() => { body.style.height = '0'; });
       body.classList.remove('expanded');
       card.classList.remove('expanded');
     } else {
-      body.style.height = inner.scrollHeight + 'px';
+      const innerMaxHeight = 280;
+      const innerPadding = 24; // 16px top + 8px bottom from .rescue-body-inner
+      const targetHeight = Math.min(inner.scrollHeight, innerMaxHeight) + innerPadding;
+      body.style.height = targetHeight + 'px';
       body.classList.add('expanded');
       card.classList.add('expanded');
-      body.addEventListener('transitionend', () => {
-        if (body.classList.contains('expanded')) body.style.height = 'auto';
-      }, { once: true });
     }
   });
 }
