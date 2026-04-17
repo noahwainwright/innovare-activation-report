@@ -1155,7 +1155,10 @@ a.ticket-id:hover { color: #0088CC; }
 }
 
 .sentry-body-inner {
-  padding: 16px 0 8px;
+  max-height: 280px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 16px 12px 8px 0;
 }
 
 /* Account > Issues > Bug hierarchy */
