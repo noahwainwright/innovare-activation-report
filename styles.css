@@ -1059,44 +1059,65 @@ a.ticket-id:hover { color: #0088CC; }
   padding: 20px 24px 24px;
 }
 
-.sentry-pill-wrap {
-  display: flex;
-  justify-content: center;
-  padding: 4px 0 0;
-}
-
 .sentry-pill {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 7px 16px 7px 12px;
+  gap: 12px;
+  padding: 10px 16px 10px 14px;
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--radius-pill);
   font-family: var(--font);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-secondary);
   cursor: pointer;
+  width: 100%;
+  text-align: left;
   transition:
     background 0.2s var(--ease-smooth),
-    border-color 0.2s var(--ease-smooth),
-    color 0.2s var(--ease-smooth);
+    border-color 0.2s var(--ease-smooth);
   -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
 
-.sentry-pill:hover {
-  background: rgba(0,0,0,0.03);
-  color: var(--text-primary);
-}
+.sentry-pill:hover { background: rgba(0,0,0,0.03); }
 
 .sentry-card.expanded .sentry-pill {
   background: transparent;
   border-color: transparent;
+  padding-left: 0;
+  padding-right: 0;
 }
 
-.sentry-pill-label { letter-spacing: 0.01em; }
+.sentry-chevron {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 0.3s var(--ease-smooth), color 0.2s ease;
+}
+
+.sentry-card.expanded .sentry-chevron {
+  transform: rotate(90deg);
+  color: var(--text-secondary);
+}
+
+.sentry-pill-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.sentry-pill-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  line-height: 1.2;
+}
+
+.sentry-pill-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.2;
+}
 
 /* Severity dot — used in both pill and rows */
 
@@ -1134,6 +1155,9 @@ a.ticket-id:hover { color: #0088CC; }
 }
 
 .sentry-body-inner {
+  max-height: 280px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 16px 0 8px;
 }
 

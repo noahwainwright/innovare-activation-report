@@ -699,10 +699,20 @@ function renderSentryCard() {
   issues.forEach(i => { issueMap[i.id] = i; });
 
   const openUnlinked = issues.filter(i => !i.resolved && !i.linkedTicket);
+  const openLinked = issues.filter(i => !i.resolved && i.linkedTicket);
   let dotClass = 'muted';
   if (openUnlinked.length > 0) {
     const worst = [...openUnlinked].sort((a, b) => (sevOrder[a.severity] ?? 4) - (sevOrder[b.severity] ?? 4))[0];
     dotClass = worst.severity === 'critical' ? 'critical' : worst.severity === 'high' ? 'high' : 'muted';
+  }
+
+  let subText = 'All clear';
+  if (openUnlinked.length > 0) {
+    const parts = [`${openUnlinked.length} unlinked`];
+    if (openLinked.length > 0) parts.push(`${openLinked.length} linked`);
+    subText = parts.join(' · ');
+  } else if (openLinked.length > 0) {
+    subText = `${openLinked.length} open, all linked`;
   }
 
   const attributedIds = new Set(accountErrors.flatMap(ae => ae.issueIds));
@@ -730,12 +740,16 @@ function renderSentryCard() {
 
   el.innerHTML = `
     <div class="sentry-card" id="sentry-card">
-      <div class="sentry-pill-wrap">
-        <button class="sentry-pill" id="sentry-trigger">
-          <span class="sentry-sev-dot ${dotClass}"></span>
+      <button class="sentry-pill" id="sentry-trigger">
+        <span class="sentry-sev-dot ${dotClass}"></span>
+        <div class="sentry-pill-text">
           <span class="sentry-pill-label">Sentry Monitoring</span>
-        </button>
-      </div>
+          <span class="sentry-pill-sub">${subText}</span>
+        </div>
+        <svg class="sentry-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
       <div class="sentry-body" id="sentry-body">
         <div class="sentry-body-inner" id="sentry-body-inner">
 
@@ -765,17 +779,18 @@ function renderSentryCard() {
   trigger.addEventListener('click', () => {
     const isOpen = body.classList.contains('expanded');
     if (isOpen) {
-      body.style.height = body.scrollHeight + 'px';
+      const currentHeight = body.getBoundingClientRect().height;
+      body.style.height = currentHeight + 'px';
       requestAnimationFrame(() => { body.style.height = '0'; });
       body.classList.remove('expanded');
       card.classList.remove('expanded');
     } else {
-      body.style.height = inner.scrollHeight + 'px';
+      const targetHeight = Math.min(inner.scrollHeight, 280) + 24;
+      body.style.height = targetHeight + 'px';
       body.classList.add('expanded');
       card.classList.add('expanded');
       body.addEventListener('transitionend', () => {
         if (!body.classList.contains('expanded')) return;
-        body.style.height = 'auto';
         el.querySelectorAll('.sentry-issue-title').forEach(titleEl => {
           const textEl = titleEl.querySelector('.sentry-title-text');
           if (!textEl) return;
