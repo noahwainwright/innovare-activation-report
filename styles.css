@@ -1532,6 +1532,7 @@ a.ticket-id:hover { color: #0088CC; }
   display: flex;
   flex-direction: column;
   flex: 1;
+  min-width: 0;
 }
 
 .kpi-card.kpi-blocked {

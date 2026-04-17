@@ -13,7 +13,7 @@
       "blocked": false
     },
     "conversionRate": {
-      "label": "Free → Paid Conversion",
+      "label": "Free-to-Paid Conv.",
       "value": 14,
       "unit": "%",
       "sub": "CIWP generated → subscription start, 30d window",
