@@ -80,6 +80,7 @@ function renderView(view) {
       content.innerHTML = buildQualityHTML();
       bindQuality();
     }
+    renderFreshness();
     observeSections();
     requestAnimationFrame(() => {
       content.style.opacity = '1';
@@ -93,8 +94,9 @@ function renderFreshness() {
   if (!el || !DATA.date) return;
   const d = new Date(DATA.date + 'T00:00:00');
   const opts = { month: 'short', day: 'numeric' };
-  const time = DATA.time || '';
-  el.textContent = 'Updated ' + d.toLocaleDateString('en-US', opts) + (time ? ', ' + time : '');
+  const dateStr = d.toLocaleDateString('en-US', opts) + (DATA.time ? ', ' + DATA.time : '');
+  const viewLabel = currentView === 'adoption' ? 'Activation' : 'Error';
+  el.innerHTML = `<span class="breadcrumb-line"><span class="breadcrumb-prefix">CIWP Activation Dashboard</span> / ${viewLabel}</span><span class="breadcrumb-date">Updated ${dateStr}</span>`;
 }
 
 // ── IntersectionObserver ──────────────────────
@@ -149,69 +151,88 @@ function computeCohorts(accounts) {
   }));
 }
 
+// ── North Star KPI Cards ──────────────────────
+
+function renderKpiCards() {
+  const kpis = DATA.northStarKpis;
+  if (!kpis) return '';
+
+  function kpiCard(kpi) {
+    if (kpi.blocked) {
+      return `
+        <div class="kpi-card kpi-blocked">
+          <div class="kpi-label">${kpi.label}</div>
+          <div class="kpi-value">--</div>
+          <div class="kpi-sub">${kpi.sub}</div>
+          <div class="kpi-pending-badge">Pending instrumentation</div>
+        </div>`;
+    }
+    return `
+      <div class="kpi-card">
+        <div class="kpi-label">${kpi.label}</div>
+        <div class="kpi-value">${kpi.value}<span class="kpi-unit">${kpi.unit}</span></div>
+        <div class="kpi-sub">${kpi.sub}</div>
+      </div>`;
+  }
+
+  return `
+    <div class="kpi-hero-section">
+      ${kpiCard(kpis.adoptionRate)}
+      ${kpiCard(kpis.conversionRate)}
+      ${kpiCard(kpis.timeToValue)}
+    </div>`;
+}
+
 // ── Adoption View ─────────────────────────────
 
 function buildAdoptionHTML() {
   return `
     <div class="tier-filter" id="tier-filter">
       <button class="tier-btn active" data-tier="all">All</button>
-      <button class="tier-btn" data-tier="Premium">Premium</button>
-      <button class="tier-btn" data-tier="Basic">Basic</button>
-      <button class="tier-btn" data-tier="Starter">Starter</button>
+      <button class="tier-btn" data-tier="Free">Free</button>
+      <button class="tier-btn" data-tier="Paid">Paid</button>
+    </div>
+
+    ${renderKpiCards()}
+
+    <div class="section" id="chart-section">
+      <div class="sparkline-wrap">
+        <svg id="sparkline" viewBox="0 0 960 480" preserveAspectRatio="none"></svg>
+        <div class="chart-time-overlay">
+          <div class="time-selector">
+            <button class="time-btn active" data-range="1D">1D</button>
+            <button class="time-btn" data-range="1W">1W</button>
+            <button class="time-btn" data-range="1M">1M</button>
+          </div>
+        </div>
+        <div class="metric-overlay">
+          <div class="metric-row">
+            <span class="metric-value" id="metric-value">--</span>
+            <span class="metric-delta">
+              <span class="arrow" id="delta-arrow"></span>
+              <span id="delta-value"></span>
+            </span>
+          </div>
+          <div class="metric-sub" id="metric-sub"></div>
+        </div>
+      </div>
     </div>
 
     <div class="section" id="rescue-section">
-      <div class="section-label">Needs Outreach</div>
       <div id="rescue-list"></div>
-    </div>
-
-    <div class="section" id="chart-section">
-      <div class="chart-header">
-        <span class="section-label">Activity</span>
-        <div class="time-selector">
-          <button class="time-btn active" data-range="1D">1D</button>
-          <button class="time-btn" data-range="1W">1W</button>
-          <button class="time-btn" data-range="1M">1M</button>
-        </div>
-      </div>
-      <div class="sparkline-wrap">
-        <svg id="sparkline" viewBox="0 0 960 480" preserveAspectRatio="none"></svg>
-      </div>
-      <div class="metric-overlay">
-        <div class="metric-row">
-          <span class="metric-value" id="metric-value">--</span>
-          <span class="metric-delta">
-            <span class="arrow" id="delta-arrow"></span>
-            <span id="delta-value"></span>
-          </span>
-        </div>
-        <div class="metric-sub" id="metric-sub"></div>
-      </div>
     </div>
 
     <div class="section" id="funnel-section">
       <div class="section-label-row">
-        <span class="section-label">Activation</span>
+        <span class="section-label">Activation Pipeline</span>
         <a class="mixpanel-link" id="link-funnel" href="${DATA.mixpanelLinks?.funnel || '#'}" target="_blank" rel="noopener">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 1.5H2.25C1.836 1.5 1.5 1.836 1.5 2.25v7.5c0 .414.336.75.75.75h7.5c.414 0 .75-.336.75-.75V7.5M7.5 1.5h3m0 0v3m0-3L5.25 6.75" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Mixpanel
         </a>
       </div>
-      <div id="stage-pipeline"></div>
-      <div class="activation-divider"></div>
-      <div id="funnel"></div>
+      <div id="activation-pipeline"></div>
     </div>
 
-    <div class="section" id="cohorts-section">
-      <div class="section-label-row">
-        <span class="section-label">Tiers</span>
-        <a class="mixpanel-link" id="link-cohorts" href="${DATA.mixpanelLinks?.cohorts || '#'}" target="_blank" rel="noopener">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 1.5H2.25C1.836 1.5 1.5 1.836 1.5 2.25v7.5c0 .414.336.75.75.75h7.5c.414 0 .75-.336.75-.75V7.5M7.5 1.5h3m0 0v3m0-3L5.25 6.75" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Mixpanel
-        </a>
-      </div>
-      <div id="cohorts"></div>
-    </div>
 
 `;
 }
@@ -225,10 +246,8 @@ function bindAdoption() {
 function renderAdoptionData() {
   const accounts = getFilteredAccounts();
   renderRescueList(accounts);
-  renderStagePipeline(accounts);
+  renderActivationPipeline(accounts);
   renderChartSection();
-  renderFunnel();
-  renderCohorts(accounts);
 }
 
 // ── Tier Filter ───────────────────────────────
@@ -284,47 +303,64 @@ function renderRescueList(accounts) {
   if (!el) return;
 
   const rescue = computeRescue(accounts);
-  const showAll = rescue.length <= 6;
-  const visible = showAll ? rescue : rescue.slice(0, 5);
+  const paid = rescue.filter(a => a.tier === 'Paid').length;
+  const free = rescue.filter(a => a.tier === 'Free').length;
+
+  const breakdown = [
+    paid > 0 ? `${paid} Paid` : '',
+    free > 0 ? `${free} Free` : '',
+  ].filter(Boolean).join(' · ');
+
+  // Dot color: red if any dormant, amber if at-risk only
+  const hasDormant = rescue.some(a => a.healthStatus === 'dormant');
+  const dotClass = hasDormant ? 'dormant' : 'at-risk';
 
   el.innerHTML = `
-    <div class="rescue-metric">${rescue.length}</div>
-    <div class="rescue-subtitle">account${rescue.length !== 1 ? 's' : ''} need${rescue.length === 1 ? 's' : ''} attention</div>
-    ${visible.map(a => rescueRow(a)).join('')}
-    ${!showAll ? `
-      <div class="rescue-toggle">
-        <button class="rescue-toggle-btn" id="rescue-expand">Show all ${rescue.length}</button>
+    <div class="rescue-card" id="rescue-card">
+      <button class="rescue-pill" id="rescue-trigger">
+        <span class="rescue-pill-count">${rescue.length}</span>
+        <div class="rescue-pill-text">
+          <span class="rescue-pill-label">Needs Outreach</span>
+          <span class="rescue-pill-sub">${breakdown}</span>
+        </div>
+        <svg class="rescue-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="rescue-body" id="rescue-body">
+        <div class="rescue-body-inner" id="rescue-body-inner">
+          ${rescue.map(a => rescueRow(a)).join('')}
+        </div>
       </div>
-      <div id="rescue-overflow" class="rescue-overflow">
-        ${rescue.slice(5).map(a => rescueRow(a)).join('')}
-      </div>` : ''}`;
+    </div>`;
 
-  const expandBtn = document.getElementById('rescue-expand');
-  if (expandBtn) {
-    expandBtn.addEventListener('click', () => {
-      const overflow = document.getElementById('rescue-overflow');
-      const isOpen = overflow.classList.contains('expanded');
-      if (isOpen) {
-        overflow.style.height = overflow.scrollHeight + 'px';
-        requestAnimationFrame(() => { overflow.style.height = '0'; });
-        overflow.classList.remove('expanded');
-        expandBtn.textContent = `Show all ${rescue.length}`;
-      } else {
-        overflow.style.height = overflow.scrollHeight + 'px';
-        overflow.classList.add('expanded');
-        overflow.addEventListener('transitionend', () => {
-          if (overflow.classList.contains('expanded')) overflow.style.height = 'auto';
-        }, { once: true });
-        expandBtn.textContent = 'Show less';
-      }
-    });
-  }
+  const card = document.getElementById('rescue-card');
+  const trigger = document.getElementById('rescue-trigger');
+  const body = document.getElementById('rescue-body');
+  const inner = document.getElementById('rescue-body-inner');
+
+  trigger.addEventListener('click', () => {
+    const isOpen = body.classList.contains('expanded');
+    if (isOpen) {
+      body.style.height = body.scrollHeight + 'px';
+      requestAnimationFrame(() => { body.style.height = '0'; });
+      body.classList.remove('expanded');
+      card.classList.remove('expanded');
+    } else {
+      body.style.height = inner.scrollHeight + 'px';
+      body.classList.add('expanded');
+      card.classList.add('expanded');
+      body.addEventListener('transitionend', () => {
+        if (body.classList.contains('expanded')) body.style.height = 'auto';
+      }, { once: true });
+    }
+  });
 }
 
 function rescueRow(a) {
   const days = a.daysSinceEnabled != null ? a.daysSinceEnabled + 'd' : '--';
   return `
-    <div class="rescue-row">
+    <div class="rescue-row" data-health="${a.healthStatus}" data-days="${a.daysSinceEnabled || 0}">
       <span class="health-dot ${a.healthStatus}"></span>
       <span class="rescue-name">${a.account}</span>
       <span class="rescue-days">${days}</span>
@@ -332,30 +368,45 @@ function rescueRow(a) {
     </div>`;
 }
 
-// ── Stage Pipeline ────────────────────────────
+// ── Activation Pipeline (unified stage + funnel) ─────────
 
-function renderStagePipeline(accounts) {
-  const el = document.getElementById('stage-pipeline');
+function renderActivationPipeline(accounts) {
+  const el = document.getElementById('activation-pipeline');
   if (!el) return;
 
-  const stages = computeStages(accounts);
+  const d = DATA.ranges[currentRange];
+  const funnel = d?.funnel || [];
   const total = accounts.length || 1;
-  const labels = ['Not Started', 'Onboarding', 'Adopted', 'Converted'];
+  const stages = computeStages(accounts);
+  const stageLabels = ['Not Started', 'Onboarding', 'Adopted', 'Converted'];
 
-  el.innerHTML = `
-    <div class="stage-bar-wrap">
-      <div class="stage-bar">
-        ${stages.map((count, i) => `<div class="stage-segment s${i}" style="flex-grow: ${count || 0.1}"></div>`).join('')}
+  // Build pipeline steps: pair funnel events with stage counts
+  const steps = funnel.map((f, i) => {
+    const stageCount = stages[i] !== undefined ? stages[i] : null;
+    const dropOff = i > 0 ? Math.round(((funnel[i - 1].value - f.value) / (funnel[i - 1].value || 1)) * 100) : null;
+    return { label: f.label, pct: f.value, stageCount, stageLabel: stageLabels[i], dropOff };
+  });
+
+  el.innerHTML = steps.map((step, i) => `
+    <div class="pipeline-step">
+      ${step.dropOff !== null ? `
+        <div class="pipeline-connector">
+          <span class="pipeline-dropoff">${step.dropOff}% drop-off</span>
+        </div>` : ''}
+      <div class="pipeline-row">
+        <div class="pipeline-left">
+          <span class="pipeline-event">${step.label}</span>
+          ${step.stageLabel ? `<span class="pipeline-stage-label">${step.stageLabel}</span>` : ''}
+        </div>
+        <div class="pipeline-right">
+          <span class="pipeline-pct">${step.pct}%</span>
+          ${step.stageCount !== null ? `<span class="pipeline-count">${step.stageCount} accounts</span>` : ''}
+        </div>
+        <div class="pipeline-bar-track">
+          <div class="pipeline-bar ${i === 0 ? 'bar-login' : 'bar-default'}" style="width: ${step.pct}%"></div>
+        </div>
       </div>
-    </div>
-    <div class="stage-labels">
-      ${stages.map((count, i) => `
-        <div class="stage-label-item">
-          <span class="stage-dot s${i}"></span>
-          <span class="stage-count">${count}</span>
-          <span class="stage-fraction">${labels[i]} (${Math.round(count / total * 100)}%)</span>
-        </div>`).join('')}
-    </div>`;
+    </div>`).join('');
 }
 
 // ── Chart + Metric ────────────────────────────
@@ -383,7 +434,7 @@ function renderChart(chart, skipAnimation) {
   const wrap = document.querySelector('.sparkline-wrap');
   if (!svg || !wrap) return;
 
-  const w = 960, h = 480, padX = 8, padTop = 40, padBottom = 40;
+  const w = 960, h = 480, padX = 8, padTop = 40, padBottom = 70;
 
   const allVals = [...chart.logins, ...chart.visits, ...chart.generated];
   const maxVal = Math.max(...allVals, 1);
@@ -406,7 +457,8 @@ function renderChart(chart, skipAnimation) {
   }
 
   function buildArea(pathD, coords) {
-    return pathD + ` L ${coords[coords.length - 1].x} ${h} L ${coords[0].x} ${h} Z`;
+    const base = h - padBottom;
+    return pathD + ` L ${coords[coords.length - 1].x} ${base} L ${coords[0].x} ${base} Z`;
   }
 
   const loginCoords = toCoords(chart.logins);
@@ -432,6 +484,7 @@ function renderChart(chart, skipAnimation) {
         <stop offset="100%" stop-color="#AC5CCC" stop-opacity="0.02"/>
       </linearGradient>
     </defs>
+    <line x1="${padX}" y1="${h - padBottom}" x2="${w - padX}" y2="${h - padBottom}" stroke="rgba(0,0,0,0.07)" stroke-width="1"/>
     <path d="${buildArea(visitPath, visitCoords)}" fill="url(#fill-visits)" class="chart-area"/>
     <path d="${visitPath}" fill="none" stroke="#00A6FF" stroke-width="2" stroke-linecap="round" class="chart-line"/>
     <path d="${buildArea(loginPath, loginCoords)}" fill="url(#fill-logins)" class="chart-area"/>
@@ -505,23 +558,6 @@ function renderChart(chart, skipAnimation) {
   wrap.addEventListener('touchmove', e => { e.preventDefault(); updateHover(e.touches[0].clientX); }, { passive: false });
 }
 
-// ── Funnel ────────────────────────────────────
-
-function renderFunnel() {
-  const d = DATA.ranges[currentRange];
-  if (!d) return;
-  const el = document.getElementById('funnel');
-  if (!el) return;
-
-  el.innerHTML = d.funnel.map((step, i) => `
-    <div class="funnel-row">
-      <span class="funnel-label">${step.label}</span>
-      <div class="funnel-bar-track">
-        <div class="funnel-bar ${i === 0 ? 'bar-login' : 'bar-default'}" style="width: ${step.value}%; opacity: ${0.4 + step.value * 0.006}"></div>
-      </div>
-      <span class="funnel-pct">${step.value}%</span>
-    </div>`).join('');
-}
 
 // ── Cohorts ───────────────────────────────────
 
@@ -555,7 +591,8 @@ function buildQualityHTML() {
       <div id="ticket-categories"></div>
     </div>
 
-    <div class="section" id="sentry-section"></div>`;
+    <div class="section" id="sentry-section"></div>
+    <div style="height: 100px; flex-shrink: 0;"></div>`;
 }
 
 function bindQuality() {

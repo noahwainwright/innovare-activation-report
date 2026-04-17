@@ -1,12 +1,49 @@
 {
-  "date": "2026-04-16",
-  "time": "6:30pm",
+  "date": "2026-04-17",
+  "time": "9:00am",
+  "northStarKpis": {
+    "adoptionRate": {
+      "label": "CIWP Adoption Rate",
+      "value": 2,
+      "unit": "%",
+      "sub": "1 of 36 enrolled accounts",
+      "note": "A. P. Willits — first external activation. Denominator pending backend confirmation.",
+      "source": "mixpanel",
+      "asOf": "2026-04-17",
+      "blocked": false
+    },
+    "conversionRate": {
+      "label": "Free-to-Paid Conversion",
+      "value": 14,
+      "unit": "%",
+      "sub": "CIWP generated → subscription start, 30-day window",
+      "note": "Directional — n=7. Paid: 25%, Trial: 0%, Free: 0%",
+      "source": "mixpanel",
+      "asOf": "2026-04-17",
+      "blocked": false,
+      "caveat": "Uses account_subscription_start as proxy. Confirm with eng if subscription_converted will replace this."
+    },
+    "timeToValue": {
+      "label": "Time to First CIWP",
+      "value": "<1",
+      "unit": "day",
+      "sub": "A. P. Willits — same-day activation (Apr 13)",
+      "source": "mixpanel",
+      "asOf": "2026-04-17",
+      "blocked": false
+    }
+  },
   "client": "INNOVARE",
   "product": "CIWP Briefing",
   "mixpanelLinks": {
-    "funnel": "#",
-    "cohorts": "#",
-    "perAccount": "#"
+    "adoptionRate": "https://mixpanel.com/project/3209880/view/3720364/app/insights#9zneGG9mKciZ",
+    "adoptionVelocity": "https://mixpanel.com/project/3209880/view/3720364/app/insights#hG63PyUVHTwG",
+    "conversionFunnel": "https://mixpanel.com/project/3209880/view/3720364/app/insights#t3LbiDsoYfV5",
+    "deadEndRate": "https://mixpanel.com/project/3209880/view/3720364/app/insights#DxmKYGRADTyr",
+    "firstEngagement": "https://mixpanel.com/project/3209880/view/3720364/app/insights#3w7qmD8D5oB8",
+    "funnel": "https://mixpanel.com/project/3209880/view/3720364/app/insights#9zneGG9mKciZ",
+    "cohorts": "https://mixpanel.com/project/3209880/view/3720364/app/boards#id=11020009",
+    "perAccount": "https://mixpanel.com/project/3209880/view/3720364/app/boards#id=11020009"
   },
   "sentry": {
     "issues": [
@@ -53,42 +90,58 @@
     ]
   },
   "perAccount": [
-    { "account": "Bass Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Beidler Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Bowen High School", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 1, "events": { "user_login": true, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "at-risk", "lastActivityDate": "2026-04-12" },
-    { "account": "Brown Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Cather Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Chopin Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Davis Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Deneen", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Doolittle", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Englewood High School", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Esmond Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Fairfield Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Henderson Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Joplin Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Kellman Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Laura S. Ward Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 1, "events": { "user_login": true, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "at-risk", "lastActivityDate": "2026-04-10" },
-    { "account": "Lawndale Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 1, "events": { "user_login": true, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "at-risk", "lastActivityDate": "2026-04-11" },
-    { "account": "Mollison", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Nash", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "O'Toole Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Pershing Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Roosevelt High School", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Sherman Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Stowe Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Tilton Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Wadsworth Elementary", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Wells HS", "tier": "Premium", "ciwpsCreated": 0, "activationStage": 1, "events": { "user_login": true, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "active", "lastActivityDate": "2026-04-15" },
-    { "account": "Avalon Park Elementary", "tier": "Basic", "ciwpsCreated": 0, "activationStage": 1, "events": { "user_login": true, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "at-risk", "lastActivityDate": "2026-04-09" },
-    { "account": "Bradwell School of Excellence", "tier": "Basic", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Chalmers", "tier": "Basic", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Graham Elementary", "tier": "Basic", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Jesse Owens Elementary", "tier": "Basic", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Powell Elementary", "tier": "Basic", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Westcott Elementary", "tier": "Basic", "ciwpsCreated": 0, "activationStage": 1, "events": { "user_login": true, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "active", "lastActivityDate": "2026-04-15" },
-    { "account": "Woodson Elementary", "tier": "Basic", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
-    { "account": "Amethod Public Schools", "tier": "Starter", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 7, "healthStatus": "dormant", "lastActivityDate": null }
+    { "account": "Bass Elementary", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Beidler Elementary", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Bowen High School", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Brown Elementary", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Cather Elementary", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Chopin Elementary", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Davis Elementary", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Deneen", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Doolittle", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Englewood High School", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Esmond Elementary", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Fairfield Elementary", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Henderson Elementary", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Joplin Elementary", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Kellman Elementary", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Laura S. Ward Elementary", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Lawndale Elementary", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Mollison", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Nash", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "O'Toole Elementary", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Pershing Elementary", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Roosevelt High School", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Sherman Elementary", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Stowe Elementary", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Tilton Elementary", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Wadsworth Elementary", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Wells HS", "tier": "Paid", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Avalon Park Elementary", "tier": "Free", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Bradwell School of Excellence", "tier": "Free", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Chalmers", "tier": "Free", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Graham Elementary", "tier": "Free", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Jesse Owens Elementary", "tier": "Free", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Powell Elementary", "tier": "Free", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Westcott Elementary", "tier": "Free", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Woodson Elementary", "tier": "Free", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 14, "healthStatus": "dormant", "lastActivityDate": null },
+    { "account": "Amethod Public Schools", "tier": "Free", "ciwpsCreated": 0, "activationStage": 0, "events": { "user_login": false, "ciwp_ai_analysis_completed": false, "ciwp_generated": false }, "daysSinceEnabled": 7, "healthStatus": "dormant", "lastActivityDate": null },
+    {
+      "account": "A. P. Willits Elementary School",
+      "tier": "Free",
+      "ciwpsCreated": 1,
+      "activationStage": 3,
+      "events": {
+        "user_login": false,
+        "ciwp_ai_analysis_completed": true,
+        "ciwp_generated": true
+      },
+      "daysSinceEnabled": null,
+      "ciwpEnabledDate": null,
+      "firstCiwpDate": "2026-04-13",
+      "healthStatus": "active",
+      "lastActivityDate": "2026-04-13"
+    }
   ],
   "ciwpTesting": {
     "date": "2026-04-16",
@@ -126,7 +179,7 @@
   },
   "ranges": {
     "1D": {
-      "primary": { "label": "Activated", "value": 3.8, "unit": "%", "delta": 1.3, "direction": "up" },
+      "primary": { "label": "Activated", "value": 2, "unit": "%", "delta": 0, "direction": "flat" },
       "accounts": { "total": 4, "label": "CIWPs generated today" },
       "chart": {
         "logins":    [0,0,0,0,0,0,0,1,1,3,6,1,3,3,4,6,8,1,2,1,0],
@@ -141,7 +194,7 @@
       ]
     },
     "1W": {
-      "primary": { "label": "Activated", "value": 3.8, "unit": "%", "delta": 3.8, "direction": "up" },
+      "primary": { "label": "Activated", "value": 2, "unit": "%", "delta": 3.8, "direction": "up" },
       "accounts": { "total": 6, "label": "users generated a CIWP" },
       "chart": {
         "logins":    [18, 17, 19, 5, 1, 3, 22, 25],
@@ -156,7 +209,7 @@
       ]
     },
     "1M": {
-      "primary": { "label": "Activated", "value": 3.8, "unit": "%", "delta": 3.8, "direction": "up" },
+      "primary": { "label": "Activated", "value": 2, "unit": "%", "delta": 3.8, "direction": "up" },
       "accounts": { "total": 6, "label": "users generated a CIWP" },
       "chart": {
         "logins":    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,23,25,12,2,4,14,18,17,19,5,1,3,22,25],
