@@ -233,7 +233,7 @@ function buildAdoptionHTML() {
       <div id="activation-pipeline"></div>
     </div>
 
-
+    <div style="height: 100px; flex-shrink: 0;"></div>
 `;
 }
 
