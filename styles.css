@@ -827,6 +827,12 @@ body {
 
 .pipeline-pct-converted { color: var(--accent-up); }
 
+.pipeline-step-blocked { opacity: 0.45; }
+.pipeline-event-muted  { color: var(--text-muted); }
+.pipeline-pct-muted    { color: var(--text-muted); }
+.pipeline-label-muted  { color: var(--text-muted); font-style: italic; }
+.pipeline-bar-track-blocked { border-style: dashed; }
+
 /* ── Testing Summary ─────────────────────── */
 
 .testing-summary-wrap {

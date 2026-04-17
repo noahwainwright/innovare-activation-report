@@ -163,7 +163,7 @@
   "ciwpTesting": {
     "date": "2026-04-16",
     "jiraBase": "https://innovaresip.atlassian.net/browse/",
-    "primary": { "label": "Open Tickets", "value": 12, "unit": "", "sub": "6 bugs, 5 stories, 1 task" },
+    "primary": { "label": "Open Tickets", "value": 12, "unit": "", "sub": "6 bugs, 6 stories" },
     "summary": [
       { "label": "bugs in triage", "count": 6, "dot": "review" },
       { "label": "stories open", "count": 5, "dot": "dev" },
@@ -212,7 +212,7 @@
     },
     "1W": {
       "primary": { "label": "Activated", "value": 2, "unit": "%", "delta": 3.8, "direction": "up" },
-      "accounts": { "total": 6, "label": "users generated a CIWP" },
+      "accounts": { "total": 6, "label": "CIWPs generated (incl. internal)" },
       "chart": {
         "logins":    [18, 17, 19, 5, 1, 3, 22, 25],
         "generated": [0, 0, 0, 0, 0, 0, 3, 4],
@@ -227,7 +227,7 @@
     },
     "1M": {
       "primary": { "label": "Activated", "value": 2, "unit": "%", "delta": 2.0, "direction": "up" },
-      "accounts": { "total": 6, "label": "users generated a CIWP" },
+      "accounts": { "total": 6, "label": "CIWPs generated (incl. internal)" },
       "chart": {
         "logins":    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,23,25,12,2,4,14,18,17,19,5,1,3,22,25],
         "generated": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,3,4],

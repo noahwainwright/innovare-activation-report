@@ -419,7 +419,25 @@ function renderActivationPipeline(accounts) {
           <div class="pipeline-bar bar-converted" style="width: ${convertedPct}%"></div>
         </div>
       </div>
-    </div>` : '');
+    </div>` : '') + `
+    <div class="pipeline-step pipeline-step-blocked">
+      <div class="pipeline-connector">
+        <span class="pipeline-dropoff"></span>
+      </div>
+      <div class="pipeline-row">
+        <div class="pipeline-left">
+          <span class="pipeline-event pipeline-event-muted">Dead End Rate</span>
+          <span class="pipeline-stage-label pipeline-label-muted">Pending instrumentation</span>
+        </div>
+        <div class="pipeline-right">
+          <span class="pipeline-pct pipeline-pct-muted">--</span>
+          <span class="pipeline-count pipeline-label-muted">ciwp_creation_started not fired</span>
+        </div>
+        <div class="pipeline-bar-track pipeline-bar-track-blocked">
+          <div class="pipeline-bar bar-default" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>`;
 }
 
 // ── Chart + Metric ────────────────────────────
