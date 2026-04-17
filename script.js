@@ -685,41 +685,47 @@ function stripCiwpPrefix(title) {
   return title.replace(/^\[CIWP\]\s*/i, '').replace(/^\*?\[CIWP\]\s*/i, '');
 }
 
-// ── Sentry Card ───────────────────────────
+// ── Sentry Card (Account > Issues > Bug hierarchy) ────────
 
 function renderSentryCard() {
   const el = document.getElementById('sentry-section');
   if (!el) return;
 
-  const issues = (DATA.sentry?.issues || []);
-
-  // Sort: unlinked+open+severity first, then linked+open, then resolved
+  const issues = DATA.sentry?.issues || [];
+  const accountErrors = DATA.sentry?.accountErrors || [];
   const sevOrder = { critical: 0, high: 1, medium: 2, low: 3 };
-  const sorted = [...issues].sort((a, b) => {
-    if (a.resolved !== b.resolved) return a.resolved ? 1 : -1;
-    const aUnlinked = !a.linkedTicket;
-    const bUnlinked = !b.linkedTicket;
-    if (aUnlinked !== bUnlinked) return aUnlinked ? -1 : 1;
-    return (sevOrder[a.severity] ?? 4) - (sevOrder[b.severity] ?? 4);
-  });
 
-  const openUnlinked = sorted.filter(i => !i.resolved && !i.linkedTicket);
-  const openLinked = sorted.filter(i => !i.resolved && i.linkedTicket);
-  const resolved = sorted.filter(i => i.resolved);
+  const issueMap = {};
+  issues.forEach(i => { issueMap[i.id] = i; });
 
-  // Status dot class
+  const openUnlinked = issues.filter(i => !i.resolved && !i.linkedTicket);
   let dotClass = 'muted';
-  let subText = 'All issues linked';
-  if (resolved.length === issues.length) {
-    dotClass = 'clear';
-    subText = 'All clear';
-  } else if (openUnlinked.length > 0) {
-    const worstSev = openUnlinked[0].severity;
-    dotClass = worstSev === 'critical' ? 'critical' : worstSev === 'high' ? 'high' : 'muted';
-    subText = `${openUnlinked.length} unlinked issue${openUnlinked.length !== 1 ? 's' : ''} need triage`;
-  } else if (openLinked.length > 0) {
-    dotClass = 'muted';
-    subText = `${openLinked.length} open, all linked`;
+  if (openUnlinked.length > 0) {
+    const worst = [...openUnlinked].sort((a, b) => (sevOrder[a.severity] ?? 4) - (sevOrder[b.severity] ?? 4))[0];
+    dotClass = worst.severity === 'critical' ? 'critical' : worst.severity === 'high' ? 'high' : 'muted';
+  }
+
+  const attributedIds = new Set(accountErrors.flatMap(ae => ae.issueIds));
+  const unattributed = issues.filter(i => !attributedIds.has(i.id) && !i.resolved)
+    .sort((a, b) => (sevOrder[a.severity] ?? 4) - (sevOrder[b.severity] ?? 4));
+  const resolved = issues.filter(i => i.resolved);
+
+  function accountBlock(ae) {
+    const acctIssues = ae.issueIds.map(id => issueMap[id]).filter(Boolean)
+      .sort((a, b) => (sevOrder[a.severity] ?? 4) - (sevOrder[b.severity] ?? 4));
+    const worstOpen = acctIssues.find(i => !i.resolved);
+    const worstDot = worstOpen?.severity || 'muted';
+    const openCount = acctIssues.filter(i => !i.resolved).length;
+    return `
+      <div class="sentry-account-block">
+        <div class="sentry-account-row">
+          <span class="sentry-sev-dot ${worstDot}"></span>
+          <span class="sentry-account-name">${ae.account}</span>
+          <span class="tier-pill">${ae.tier}</span>
+          <span class="sentry-issue-count">${openCount} issue${openCount !== 1 ? 's' : ''}</span>
+        </div>
+        ${acctIssues.filter(i => !i.resolved).map(sentryIssueRow).join('')}
+      </div>`;
   }
 
   el.innerHTML = `
@@ -732,7 +738,21 @@ function renderSentryCard() {
       </div>
       <div class="sentry-body" id="sentry-body">
         <div class="sentry-body-inner" id="sentry-body-inner">
-          ${sorted.map(i => sentryIssueRow(i)).join('')}
+
+          ${accountErrors.map(accountBlock).join('')}
+
+          ${unattributed.length > 0 ? `
+          <div class="sentry-account-block sentry-unattributed-block">
+            <div class="sentry-account-row">
+              <span class="sentry-sev-dot muted"></span>
+              <span class="sentry-account-name sentry-pending-name">Account attribution pending</span>
+              <span class="sentry-pending-note">Sentry account IDs not yet tagged</span>
+            </div>
+            ${unattributed.map(sentryIssueRow).join('')}
+          </div>` : ''}
+
+          ${resolved.map(i => sentryIssueRow(i)).join('')}
+
         </div>
       </div>
     </div>`;
@@ -772,21 +792,29 @@ function renderSentryCard() {
 
 function sentryIssueRow(issue) {
   const jiraBase = DATA.ciwpTesting?.jiraBase || '';
-  const sevDotClass = issue.severity;
-
   const linkedHTML = issue.linkedTicket
     ? `<a class="sentry-ticket-link" href="${jiraBase}${issue.linkedTicket}" target="_blank" rel="noopener">${issue.linkedTicket}</a>`
     : `<span class="sentry-unlinked-badge">Unlinked</span>`;
 
-  const queueStr = issue.resolved ? 'Resolved' : `${issue.daysInQueue}d in queue`;
+  const queueStr = issue.resolved ? 'Resolved' : `${issue.daysInQueue}d`;
   const resolvedClass = issue.resolved ? ' sentry-row-resolved' : '';
 
+  const meta = [];
+  if (issue.occurrences) meta.push(`${issue.occurrences} occurrences`);
+  if (issue.affectedAccounts != null) meta.push(`${issue.affectedAccounts} account${issue.affectedAccounts !== 1 ? 's' : ''} affected`);
+  else if (!issue.resolved) meta.push('accounts unknown');
+
   return `
-    <div class="sentry-issue-row${resolvedClass}">
-      <span class="sentry-sev-dot ${sevDotClass}"></span>
-      <span class="sentry-issue-title"><span class="sentry-title-text">${issue.title}</span></span>
-      ${linkedHTML}
-      <span class="sentry-queue">${queueStr}</span>
+    <div class="sentry-issue-row sentry-issue-sub${resolvedClass}">
+      <span class="sentry-sev-dot ${issue.severity}"></span>
+      <div class="sentry-issue-body">
+        <div class="sentry-issue-row-top">
+          <span class="sentry-issue-title"><span class="sentry-title-text">${issue.title}</span></span>
+          ${linkedHTML}
+          <span class="sentry-queue">${queueStr}</span>
+        </div>
+        ${meta.length > 0 ? `<div class="sentry-issue-meta">${meta.join(' · ')}</div>` : ''}
+      </div>
     </div>`;
 }
 

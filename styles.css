@@ -1137,18 +1137,88 @@ a.ticket-id:hover { color: #0088CC; }
   padding: 16px 0 8px;
 }
 
-/* Issue rows — same visual language as ticket rows */
+/* Account > Issues > Bug hierarchy */
+
+.sentry-account-block {
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+}
+
+.sentry-account-block:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.sentry-account-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0 8px;
+}
+
+.sentry-account-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+  min-width: 0;
+}
+
+.sentry-issue-count {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.sentry-pending-name {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.sentry-pending-note {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+/* Issue sub-rows */
 
 .sentry-issue-row {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 11px 0;
-  border-bottom: 1px solid var(--card-border);
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 0 6px 16px;
+  border-bottom: none;
 }
 
 .sentry-issue-row:last-child { border-bottom: none; }
 .sentry-row-resolved { opacity: 0.35; }
+
+.sentry-issue-sub { padding-left: 16px; }
+
+.sentry-issue-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.sentry-issue-row-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sentry-issue-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  letter-spacing: 0.01em;
+}
 
 .sentry-issue-title {
   flex: 1;
