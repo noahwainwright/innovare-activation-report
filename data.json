@@ -3,7 +3,7 @@
   "time": "9:00am",
   "northStarKpis": {
     "adoptionRate": {
-      "label": "CIWP Adoption Rate",
+      "label": "Adoption Rate",
       "value": 2,
       "unit": "%",
       "sub": "1 of 36 enrolled accounts",
@@ -13,10 +13,10 @@
       "blocked": false
     },
     "conversionRate": {
-      "label": "Free-to-Paid Conversion",
+      "label": "Free → Paid Conversion",
       "value": 14,
       "unit": "%",
-      "sub": "CIWP generated → subscription start, 30-day window",
+      "sub": "CIWP generated → subscription start, 30d window",
       "note": "Directional — n=7. Paid: 25%, Trial: 0%, Free: 0%",
       "source": "mixpanel",
       "asOf": "2026-04-17",
@@ -27,7 +27,7 @@
       "label": "Time to First CIWP",
       "value": "<1",
       "unit": "day",
-      "sub": "A. P. Willits — same-day activation (Apr 13)",
+      "sub": "A. P. Willits — same-day (Apr 13)",
       "source": "mixpanel",
       "asOf": "2026-04-17",
       "blocked": false
