@@ -785,7 +785,7 @@ function renderSentryCard() {
       body.classList.remove('expanded');
       card.classList.remove('expanded');
     } else {
-      const targetHeight = Math.min(inner.scrollHeight, 280) + 24;
+      const targetHeight = inner.scrollHeight + 24;
       body.style.height = targetHeight + 'px';
       body.classList.add('expanded');
       card.classList.add('expanded');

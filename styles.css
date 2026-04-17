@@ -1155,9 +1155,6 @@ a.ticket-id:hover { color: #0088CC; }
 }
 
 .sentry-body-inner {
-  max-height: 280px;
-  overflow-y: auto;
-  overscroll-behavior: contain;
   padding: 16px 0 8px;
 }
 
