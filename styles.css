@@ -1427,8 +1427,116 @@ a.ticket-id:hover { color: #0088CC; }
   text-align: center;
 }
 
+/* ── Century Card ────────────────────────── */
+
+.century-card {
+  background: var(--card-bg);
+  border: 1px dashed var(--card-border);
+  border-radius: var(--radius-card);
+  padding: 20px 24px 24px;
+  opacity: 0.75;
+}
+
+.century-pill-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.century-pill-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.century-pill-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.01em;
+}
+
+.century-pill-sub {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.century-blocked-body {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.century-blocked-reason {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.century-fields-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.century-field-chip {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-pill);
+  padding: 3px 10px;
+}
+
+/* ── Sentry Error Type Badges ────────────── */
+
+.sentry-error-type-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border-radius: var(--radius-pill);
+  padding: 2px 8px;
+  flex-shrink: 0;
+}
+
+.sentry-et-insufficient-context {
+  color: #92400E;
+  background: rgba(146, 64, 14, 0.1);
+}
+
+.sentry-et-pii-violation {
+  color: #7C3AED;
+  background: rgba(124, 58, 237, 0.1);
+}
+
+.sentry-et-403-forbidden {
+  color: var(--accent-down);
+  background: rgba(193, 18, 31, 0.08);
+}
+
+.sentry-et-timeout {
+  color: #B45309;
+  background: rgba(180, 83, 9, 0.1);
+}
+
+.sentry-et-network {
+  color: #0369A1;
+  background: rgba(3, 105, 161, 0.1);
+}
+
+/* ── Responsive (480px) ─────────────────── */
+
 @media (max-width: 480px) {
   .kpi-hero-section {
     flex-direction: column;
   }
+  .century-card { padding: 16px 16px 20px; }
+  .sentry-error-type-badge { font-size: 9px; padding: 2px 6px; }
 }

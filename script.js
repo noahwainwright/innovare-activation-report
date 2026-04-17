@@ -222,6 +222,10 @@ function buildAdoptionHTML() {
       <div id="activation-pipeline"></div>
     </div>
 
+    <div class="section" id="century-section">
+      <div id="century-card-container"></div>
+    </div>
+
     <div style="height: 100px; flex-shrink: 0;"></div>
 `;
 }
@@ -237,8 +241,35 @@ function renderAdoptionData() {
   renderRescueList(accounts);
   renderActivationPipeline(accounts);
   renderChartSection();
+  renderCenturyCard();
   const badge = document.getElementById('kpi-tier-badge');
   if (badge) badge.style.display = currentTier !== 'all' ? 'block' : 'none';
+}
+
+function renderCenturyCard() {
+  const el = document.getElementById('century-card-container');
+  if (!el) return;
+  const c = DATA.centuryIntegration;
+  if (!c) return;
+
+  const fieldChips = (c.fields || []).map(f =>
+    `<span class="century-field-chip">${f}</span>`
+  ).join('');
+
+  el.innerHTML = `
+    <div class="century-card">
+      <div class="century-pill-row">
+        <div class="century-pill-text">
+          <span class="century-pill-label">Century Learning Data</span>
+          <span class="century-pill-sub">Pending integration</span>
+        </div>
+        <span class="kpi-pending-badge">Pending</span>
+      </div>
+      <div class="century-blocked-body">
+        <p class="century-blocked-reason">${c.blockedReason}</p>
+        ${fieldChips ? `<div class="century-fields-row">${fieldChips}</div>` : ''}
+      </div>
+    </div>`;
 }
 
 // ── Tier Filter ───────────────────────────────
@@ -831,6 +862,19 @@ function sentryIssueRow(issue) {
   const queueStr = issue.resolved ? 'Resolved' : `${issue.daysInQueue}d`;
   const resolvedClass = issue.resolved ? ' sentry-row-resolved' : '';
 
+  const errorTypeLabels = {
+    'INSUFFICIENT_CONTEXT': 'Insufficient Context',
+    'PII_VIOLATION': 'PII Violation',
+    'TIMEOUT': 'Timeout',
+    'NETWORK': 'Network',
+    '403_FORBIDDEN': '403 Forbidden'
+  };
+  const etKey = issue.errorType || '';
+  const etClass = etKey.toLowerCase().replace(/_/g, '-');
+  const errorTypeBadge = etKey
+    ? `<span class="sentry-error-type-badge sentry-et-${etClass}">${errorTypeLabels[etKey] || etKey}</span>`
+    : '';
+
   const meta = [];
   if (issue.occurrences) meta.push(`${issue.occurrences} occurrences`);
   if (issue.affectedAccounts != null) meta.push(`${issue.affectedAccounts} account${issue.affectedAccounts !== 1 ? 's' : ''} affected`);
@@ -841,6 +885,7 @@ function sentryIssueRow(issue) {
       <div class="sentry-issue-body">
         <div class="sentry-issue-row-top">
           <span class="sentry-issue-title"><span class="sentry-title-text">${issue.title}</span></span>
+          ${errorTypeBadge}
           ${linkedHTML}
           <span class="sentry-queue">${queueStr}</span>
         </div>
