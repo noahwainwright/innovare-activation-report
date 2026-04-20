@@ -724,24 +724,24 @@
     "jiraBase": "https://innovaresip.atlassian.net/browse/",
     "primary": {
       "label": "Open Tickets",
-      "value": 12,
+      "value": 35,
       "unit": "",
-      "sub": "6 bugs, 6 stories"
+      "sub": "16 bugs, 19 stories"
     },
     "summary": [
       {
         "label": "bugs in triage",
-        "count": 6,
+        "count": 8,
         "dot": "review"
       },
       {
         "label": "stories open",
-        "count": 5,
+        "count": 19,
         "dot": "dev"
       },
       {
         "label": "in QA",
-        "count": 1,
+        "count": 11,
         "dot": "complete"
       }
     ],
