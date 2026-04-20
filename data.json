@@ -14,9 +14,9 @@
     },
     "conversionRate": {
       "label": "Free-to-Paid Conv.",
-      "value": 14,
+      "value": 0,
       "unit": "%",
-      "sub": "CIWP Generated → Plan Upgraded, 30d (n=7 — proxy only)",
+      "sub": "CIWP Generated → Plan Upgraded, 30d (n=0 of 6 — Apr 20 live)",
       "note": "Current 30d funnel (live Apr 20): 0/6 conversions. Prior proxy figure (n=7, 14%) was account_subscription_start billing proxy from earlier cohort — window may not have closed for Apr 13 cohort. Do not present 14% as current.",
       "source": "mixpanel",
       "asOf": "2026-04-20",
