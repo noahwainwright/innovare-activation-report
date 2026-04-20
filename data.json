@@ -1447,15 +1447,15 @@
       "funnel": [
         {
           "label": "Login",
-          "value": 100
+          "value": 0
         },
         {
           "label": "AI Analysis",
-          "value": 10
+          "value": 0
         },
         {
           "label": "CIWP Generated",
-          "value": 9
+          "value": 0
         }
       ]
     },
@@ -1608,15 +1608,15 @@
       "funnel": [
         {
           "label": "Login",
-          "value": 100
+          "value": 0
         },
         {
           "label": "AI Analysis",
-          "value": 4
+          "value": 0
         },
         {
           "label": "CIWP Generated",
-          "value": 3
+          "value": 0
         }
       ]
     }
