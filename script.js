@@ -689,12 +689,15 @@ function renderTickets() {
   const typeOrder = { bugs: 0, stories: 1, additional: 2 };
   const sorted = [...cats].sort((a, b) => (typeOrder[a.key] ?? 3) - (typeOrder[b.key] ?? 3));
 
-  // Sort tickets within each category by priority (P0 first)
+  // Sort tickets within each category: active first (by priority), done last
   const prioOrder = { P0: 0, P1: 1, P2: 2, P3: 3 };
   sorted.forEach(cat => {
-    cat.tickets = [...cat.tickets].sort((a, b) =>
-      (prioOrder[a.priority] ?? 4) - (prioOrder[b.priority] ?? 4)
-    );
+    cat.tickets = [...cat.tickets].sort((a, b) => {
+      const aDone = a.status === 'done' ? 1 : 0;
+      const bDone = b.status === 'done' ? 1 : 0;
+      if (aDone !== bDone) return aDone - bDone;
+      return (prioOrder[a.priority] ?? 4) - (prioOrder[b.priority] ?? 4);
+    });
   });
 
   el.innerHTML = sorted.map(cat => `
@@ -916,6 +919,7 @@ function ticketRow(t, jiraBase) {
   }
   if (t.dueDate) detailParts.push(`<span class="ticket-meta">Due ${t.dueDate}</span>`);
   if (t.processStage) detailParts.push(`<span class="process-pill">${t.processStage}</span>`);
+  if (t.sprint) detailParts.push(`<span class="ticket-meta">${t.sprint}</span>`);
   if (impacted.length > 0) {
     detailParts.push(impacted.map(a => `<span class="ticket-account-pill">${a}</span>`).join(''));
   }
