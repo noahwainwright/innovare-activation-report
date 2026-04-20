@@ -1272,7 +1272,7 @@
     "1D": {
       "primary": {
         "label": "Activated",
-        "value": 3,
+        "value": 0,
         "unit": "%",
         "delta": 0,
         "direction": "flat"
@@ -1393,7 +1393,7 @@
     "1W": {
       "primary": {
         "label": "Activated",
-        "value": 3,
+        "value": 0,
         "unit": "%",
         "delta": 0,
         "direction": "flat"
@@ -1462,7 +1462,7 @@
     "1M": {
       "primary": {
         "label": "Activated",
-        "value": 3,
+        "value": 0,
         "unit": "%",
         "delta": 0,
         "direction": "flat"
