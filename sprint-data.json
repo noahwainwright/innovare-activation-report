@@ -1,0 +1,51 @@
+{
+  "date": "2026-04-21",
+  "time": "18:26",
+  "client": "INNOVARE",
+  "sprint": {
+    "name": "Active Sprint",
+    "total": 42,
+    "complete": 16,
+    "completionPct": 38.1,
+    "statusBreakdown": {
+      "todo": 8,
+      "inProgress": 15,
+      "inReview": 3,
+      "done": 16
+    },
+    "blockers": 0,
+    "byAssignee": [
+      { "name": "Noah Wainwright", "count": 20 },
+      { "name": "Kyle Glasper", "count": 6 },
+      { "name": "Antonio Massaro", "count": 4 },
+      { "name": "Ruthvik Kanumuri", "count": 3 },
+      { "name": "Mingxing Li", "count": 3 },
+      { "name": "Unassigned", "count": 2 },
+      { "name": "Daniel Pinto", "count": 1 },
+      { "name": "fer", "count": 1 },
+      { "name": "Oscar Vidal", "count": 1 },
+      { "name": "Riya Chougule", "count": 1 }
+    ]
+  },
+  "design": {
+    "spikes": 12,
+    "spikesComplete": 12,
+    "designFlagged": 12,
+    "unshielded": 12,
+    "coveragePct": 0.0,
+    "unshieldedTickets": [
+      { "key": "IW-6779", "summary": "Handoff" },
+      { "key": "IW-6778", "summary": "CS, CPO and CGRO final review and approval" },
+      { "key": "IW-6777", "summary": "Revisions (post-hifi)" },
+      { "key": "IW-6776", "summary": "Hi-fi prototype" },
+      { "key": "IW-6775", "summary": "Revisions (post-lofi)" },
+      { "key": "IW-6774", "summary": "Lo-fi prototypes" },
+      { "key": "IW-6773", "summary": "Revisions (post-review)" },
+      { "key": "IW-6772", "summary": "CPO review" },
+      { "key": "IW-6771", "summary": "Pod lead review" },
+      { "key": "IW-6770", "summary": "Scenario matrix doc" },
+      { "key": "IW-6657", "summary": "Final CPO review and approval" },
+      { "key": "IW-6655", "summary": "Send to CPO for review" }
+    ]
+  }
+}
