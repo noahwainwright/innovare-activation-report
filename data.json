@@ -46,7 +46,7 @@
     "perAccount": "https://mixpanel.com/project/3209880/view/3720364/app/boards#id=11020009"
   },
   "sentry": {
-    "dataAsOf": "2026-04-20",
+    "dataAsOf": "2026-04-23",
     "project": "javascript-react",
     "accountErrors": [
       {
@@ -63,7 +63,7 @@
         "id": "JAVASCRIPT-REACT-8H",
         "title": "Error: The service is temporarily unavailable. Please try again in a moment.",
         "severity": "high",
-        "occurrences": 24,
+        "occurrences": 25,
         "affectedAccounts": null,
         "linkedJiraTicket": null,
         "assignedDeveloper": null,
@@ -78,7 +78,7 @@
         "id": "JAVASCRIPT-REACT-AX",
         "title": "Error: CIWP generation timed out. Please try again.",
         "severity": "high",
-        "occurrences": 1,
+        "occurrences": 7,
         "affectedAccounts": 1,
         "linkedJiraTicket": null,
         "assignedDeveloper": "antonio@innovaresip.com",
@@ -92,7 +92,7 @@
         "id": "JAVASCRIPT-REACT-AW",
         "title": "Error: Failed to submit CIWP generation request",
         "severity": "high",
-        "occurrences": 2,
+        "occurrences": 3,
         "affectedAccounts": 1,
         "linkedJiraTicket": null,
         "assignedDeveloper": null,
@@ -148,7 +148,7 @@
         "id": "JAVASCRIPT-REACT-99",
         "title": "Error: Failed to get recommendations: Uploaded documents contain no valid school assessment data",
         "severity": "medium",
-        "occurrences": 27,
+        "occurrences": 28,
         "affectedAccounts": null,
         "linkedJiraTicket": null,
         "assignedDeveloper": null,
@@ -1663,7 +1663,7 @@
   "sourceMeta": {
     "mixpanelRefreshedAt": null,
     "jiraRefreshedAt": null,
-    "sentryRefreshedAt": "2026-04-23T00:00:00Z",
+    "sentryRefreshedAt": "2026-04-23T15:00:00Z",
     "baseAccountsExcluded": "best_effort_only",
     "limitations": [
       "hitLists populated from local perAccount data — Mixpanel live refresh not available in this agent pass",
