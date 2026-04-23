@@ -158,6 +158,7 @@ function renderKpiCards() {
         <div class="kpi-label">${kpi.label}</div>
         <div class="kpi-value">${kpi.value}<span class="kpi-unit">${kpi.unit}</span></div>
         <div class="kpi-sub">${kpi.sub}</div>
+        ${kpi.caveat ? `<div class="kpi-note">${kpi.caveat}</div>` : ''}
       </div>`;
   }
 
@@ -181,7 +182,7 @@ function buildAdoptionHTML() {
 
     <div class="section" id="kpi-section">
       ${renderKpiCards()}
-      <div id="kpi-tier-badge" class="kpi-tier-badge" style="display:none">KPIs reflect all tiers</div>
+      <div id="kpi-tier-badge" class="kpi-tier-badge" style="display:none">KPIs not filtered by tier</div>
     </div>
 
     <div class="section" id="chart-section">
@@ -222,6 +223,8 @@ function buildAdoptionHTML() {
       <div id="activation-pipeline"></div>
     </div>
 
+    <div class="section" id="sentry-health-section"></div>
+
     <div class="section" id="century-section">
       <div id="century-card-container"></div>
     </div>
@@ -241,9 +244,46 @@ function renderAdoptionData() {
   renderRescueList(accounts);
   renderActivationPipeline(accounts);
   renderChartSection();
+  renderSentryHealthCard();
   renderCenturyCard();
   const badge = document.getElementById('kpi-tier-badge');
   if (badge) badge.style.display = currentTier !== 'all' ? 'block' : 'none';
+}
+
+function renderSentryHealthCard() {
+  const el = document.getElementById('sentry-health-section');
+  if (!el) return;
+
+  const issues = DATA.sentry?.issues || [];
+  const sevOrder = { critical: 0, high: 1, medium: 2, low: 3 };
+  const openUnlinked = issues.filter(i => !i.resolved && !i.linkedTicket);
+  const openTotal = issues.filter(i => !i.resolved).length;
+
+  let dotClass = 'muted';
+  if (openUnlinked.length > 0) {
+    const worst = [...openUnlinked].sort((a, b) => (sevOrder[a.severity] ?? 4) - (sevOrder[b.severity] ?? 4))[0];
+    dotClass = worst.severity === 'critical' ? 'critical' : worst.severity === 'high' ? 'high' : 'muted';
+  }
+
+  const subText = openTotal === 0
+    ? 'All clear'
+    : `${openTotal} open · ${openUnlinked.length} unlinked`;
+
+  el.innerHTML = `
+    <button class="sentry-pill" id="sentry-health-trigger">
+      <span class="sentry-sev-dot ${dotClass}"></span>
+      <div class="sentry-pill-text">
+        <span class="sentry-pill-label">Sentry Monitoring</span>
+        <span class="sentry-pill-sub">${subText}</span>
+      </div>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="flex-shrink:0;color:var(--text-muted)">
+        <path d="M4.5 1.5H2.25C1.836 1.5 1.5 1.836 1.5 2.25v7.5c0 .414.336.75.75.75h7.5c.414 0 .75-.336.75-.75V7.5M7.5 1.5h3m0 0v3m0-3L5.25 6.75" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>`;
+
+  document.getElementById('sentry-health-trigger')?.addEventListener('click', () => {
+    document.querySelector('.toggle-btn[data-view="quality"]')?.click();
+  });
 }
 
 function renderCenturyCard() {

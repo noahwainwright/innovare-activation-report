@@ -1407,6 +1407,16 @@ a.ticket-id:hover { color: #0088CC; }
   margin-bottom: 8px;
 }
 
+.kpi-note {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  margin-top: 6px;
+  opacity: 0.75;
+}
+
 .kpi-pending-badge {
   display: inline-block;
   font-size: 10px;
