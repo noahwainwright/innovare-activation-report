@@ -1146,6 +1146,18 @@ a.ticket-id:hover { color: #0088CC; }
 .sentry-sev-dot.medium { background: var(--text-muted); }
 .sentry-sev-dot.low    { background: var(--card-border); }
 
+/* Generic severity dot — used in Action tab hit list pills */
+.sev-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--text-muted);
+}
+.sev-dot.clear { background: var(--accent-up); }
+.sev-dot.high  { background: var(--accent-amber); }
+.sev-dot.muted { background: var(--text-muted); opacity: 0.45; }
+
 @keyframes sentryPulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.4); }
   50%       { box-shadow: 0 0 0 6px rgba(255, 59, 48, 0); }
@@ -1539,6 +1551,77 @@ a.ticket-id:hover { color: #0088CC; }
 .sentry-et-network {
   color: #0369A1;
   background: rgba(3, 105, 161, 0.1);
+}
+
+/* ── Bug Velocity Chart ─────────────────── */
+
+.velocity-chart-wrap {
+  margin-top: 12px;
+}
+
+.velocity-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+.velocity-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.mttr-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  padding: 4px 10px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+}
+
+/* ── Sentry error type badge — additional severity variants ── */
+
+.sentry-et-high   { background: rgba(224,159,62,0.12); color: #b37d1a; }
+.sentry-et-medium { background: rgba(0,0,0,0.06); color: var(--text-secondary); }
+.sentry-et-low    { background: rgba(0,0,0,0.04); color: var(--text-muted); }
+.sentry-et-critical { background: rgba(255,59,48,0.1); color: #C1121F; }
+
+/* ── Action View ─────────────────────────── */
+
+.cta-badge {
+  background: #E6F4EC;
+  color: #1A7A3C;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.hit-list-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.hit-list-row {
+  border-top: 1px solid var(--border, rgba(0,0,0,0.06));
+}
+
+.hit-list-cell {
+  padding: 8px 4px;
+  font-size: 13px;
+  vertical-align: middle;
 }
 
 /* ── Responsive (480px) ─────────────────── */

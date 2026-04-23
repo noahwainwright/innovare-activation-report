@@ -76,6 +76,9 @@ function renderView(view) {
     if (view === 'adoption') {
       content.innerHTML = buildAdoptionHTML();
       bindAdoption();
+    } else if (view === 'action') {
+      content.innerHTML = buildActionHTML();
+      renderActionData();
     } else {
       content.innerHTML = buildQualityHTML();
       bindQuality();
@@ -95,7 +98,7 @@ function renderFreshness() {
   const d = new Date(DATA.date + 'T00:00:00');
   const opts = { month: 'short', day: 'numeric' };
   const dateStr = d.toLocaleDateString('en-US', opts) + (DATA.time ? ', ' + DATA.time : '');
-  const viewLabel = currentView === 'adoption' ? 'Activation' : 'CIWP Testing';
+  const viewLabel = currentView === 'adoption' ? 'Activation' : currentView === 'action' ? 'Action Lists' : 'CIWP Testing';
   el.innerHTML = `<span class="breadcrumb-line"><span class="breadcrumb-prefix">CIWP Activation Dashboard</span> / ${viewLabel}</span><span class="breadcrumb-date">Updated ${dateStr}</span>`;
 }
 
@@ -677,6 +680,9 @@ function buildQualityHTML() {
     </div>
 
     <div class="section" id="sentry-section"></div>
+    <div class="section" id="bug-velocity-section"></div>
+    <div class="section" id="sentry-ignored-section"></div>
+    <div class="section" id="cs-closed-loop-section"></div>
     <div style="height: 100px; flex-shrink: 0;"></div>`;
 }
 
@@ -684,6 +690,9 @@ function bindQuality() {
   renderSummary();
   renderTickets();
   renderSentryCard();
+  renderBugVelocityChart();
+  renderSentryIgnoredRate();
+  renderCSClosedLoopCard();
 }
 
 function getAllTickets() {
@@ -976,5 +985,443 @@ function ticketRow(t, jiraBase) {
         <div class="ticket-detail">
           <div class="ticket-detail-inner">${detailParts.join('')}</div>
         </div>` : ''}
+    </div>`;
+}
+
+// ── Bug Velocity Chart ────────────────────────
+
+function renderBugVelocityChart() {
+  const el = document.getElementById('bug-velocity-section');
+  if (!el) return;
+
+  const bv = DATA.bugVelocity;
+  if (!bv) return;
+
+  const labels = bv?.labels || [];
+  const opened = bv?.opened || [];
+  const closed = bv?.closed || [];
+
+  // Auto-scale from max value across both series
+  const allVals = [...opened, ...closed];
+  const maxVal = Math.max(...allVals, 1);
+
+  const w = 960, h = 340, padX = 40, padTop = 20, padBottom = 60;
+  const chartW = w - padX * 2;
+  const chartH = h - padTop - padBottom;
+  const n = labels.length;
+
+  function toX(i) {
+    return padX + (n > 1 ? (i / (n - 1)) * chartW : chartW / 2);
+  }
+
+  function toY(val) {
+    return padTop + (1 - val / maxVal) * chartH;
+  }
+
+  function buildPolyline(points) {
+    return points.map((val, i) => `${toX(i)},${toY(val)}`).join(' ');
+  }
+
+  const openedPoints = buildPolyline(opened);
+  const closedPoints = buildPolyline(closed);
+
+  // Y-axis gridlines: 0, half, max
+  const yGridVals = [0, Math.round(maxVal / 2), maxVal];
+  const yGridLines = yGridVals.map(v => {
+    const y = toY(v);
+    return `
+      <line x1="${padX}" y1="${y}" x2="${w - padX}" y2="${y}" stroke="rgba(0,0,0,0.05)" stroke-width="1"/>
+      <text x="${padX - 6}" y="${y + 4}" font-size="18" fill="rgba(0,0,0,0.35)" text-anchor="end" font-family="Inter,system-ui,sans-serif">${v}</text>`;
+  }).join('');
+
+  // X-axis labels
+  const xLabels = labels.map((label, i) => {
+    const x = toX(i);
+    return `<text x="${x}" y="${h - padBottom + 22}" font-size="18" fill="rgba(0,0,0,0.4)" text-anchor="middle" font-family="Inter,system-ui,sans-serif">${label}</text>`;
+  }).join('');
+
+  // Dots on opened line
+  const openedDots = opened.map((val, i) =>
+    `<circle cx="${toX(i)}" cy="${toY(val)}" r="5" fill="#666666"/>`
+  ).join('');
+
+  // Dots on closed line
+  const closedDots = closed.map((val, i) =>
+    `<circle cx="${toX(i)}" cy="${toY(val)}" r="5" fill="#AC5CCC"/>`
+  ).join('');
+
+  // MTTR badge text
+  let mttrText;
+  const mttrStatus = bv?.mttrStatus;
+  if (mttrStatus === 'live' && bv?.mttrDays != null) {
+    mttrText = `MTTR: ${bv.mttrDays.toFixed(1)} days`;
+  } else if (mttrStatus === 'insufficient_data') {
+    mttrText = 'MTTR: insufficient data (\u003c3 closed tickets)';
+  } else {
+    mttrText = 'MTTR: unavailable';
+  }
+
+  const openedCaveat = bv?.openedStatus === 'derived_from_daysOpen'
+    ? `<div class="kpi-note" style="margin-top:8px">Opened counts approximate \u2014 derived from days open field</div>`
+    : '';
+
+  // Legend
+  const legend = `
+    <div class="velocity-legend">
+      <span class="velocity-legend-item">
+        <svg width="20" height="10" viewBox="0 0 20 10"><line x1="0" y1="5" x2="20" y2="5" stroke="#666666" stroke-width="2"/></svg>
+        Opened
+      </span>
+      <span class="velocity-legend-item">
+        <svg width="20" height="10" viewBox="0 0 20 10"><line x1="0" y1="5" x2="20" y2="5" stroke="#AC5CCC" stroke-width="2" stroke-dasharray="4 3"/></svg>
+        Closed
+      </span>
+    </div>`;
+
+  el.innerHTML = `
+    <div class="section-label">Bug Velocity \u2014 CIWP Launch</div>
+    ${legend}
+    <div class="velocity-chart-wrap">
+      <svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" style="width:100%;display:block;">
+        ${yGridLines}
+        <line x1="${padX}" y1="${h - padBottom}" x2="${w - padX}" y2="${h - padBottom}" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+        ${xLabels}
+        <polyline points="${closedPoints}" fill="none" stroke="#AC5CCC" stroke-width="2.5" stroke-dasharray="4 3" stroke-linecap="round" stroke-linejoin="round"/>
+        ${closedDots}
+        <polyline points="${openedPoints}" fill="none" stroke="#666666" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        ${openedDots}
+      </svg>
+    </div>
+    <div class="mttr-badge">${mttrText}</div>
+    ${openedCaveat}`;
+}
+
+// ── Sentry Ignored Rate ───────────────────────
+
+function renderSentryIgnoredRate() {
+  const el = document.getElementById('sentry-ignored-section');
+  if (!el) return;
+
+  const sir = DATA.sentryIgnoredRate;
+  if (!sir) return;
+
+  const status = sir?.status;
+  const isLive = status === 'live';
+
+  let subText;
+  if (isLive) {
+    subText = `${sir.ignored} ignored \u00b7 ${sir.ignoredPct}% of open issues`;
+  } else {
+    subText = 'Sentry data unavailable';
+  }
+
+  const dotClass = (isLive && sir.ignoredPct > 0) ? 'high' : 'muted';
+
+  const sevBadgeClass = {
+    critical: 'sentry-et-insufficient-context',
+    high: 'sentry-et-network',
+    medium: 'sentry-et-timeout',
+    low: 'sentry-et-403-forbidden',
+  };
+
+  function severityBadge(sev) {
+    const label = sev ? (sev.charAt(0).toUpperCase() + sev.slice(1)) : '';
+    const cls = sev === 'critical' ? 'critical' :
+                sev === 'high' ? 'high' :
+                sev === 'medium' ? 'medium' : 'low';
+    return `<span class="sentry-error-type-badge sentry-et-${cls}">${label}</span>`;
+  }
+
+  let bodyHTML;
+  if (!isLive) {
+    bodyHTML = `<div class="sentry-issue-meta" style="padding:12px 0">Sentry API unavailable \u2014 ignored rate cannot be computed.</div>`;
+  } else {
+    const issues = sir?.ignoredIssues || [];
+    bodyHTML = issues.map(issue => `
+      <div class="sentry-issue-row sentry-issue-sub">
+        <div class="sentry-issue-body">
+          <div class="sentry-issue-row-top">
+            <span class="sentry-issue-title"><span class="sentry-title-text">${issue.id}</span></span>
+            ${severityBadge(issue.severity)}
+            <span class="sentry-queue">${issue.daysFiring}d</span>
+            <span class="sentry-unlinked-badge">${issue.occurrences} occ.</span>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  el.innerHTML = `
+    <div class="sentry-card" id="sentry-ignored-card">
+      <button class="sentry-pill" id="sentry-ignored-trigger">
+        <span class="sentry-sev-dot ${dotClass}"></span>
+        <div class="sentry-pill-text">
+          <span class="sentry-pill-label">Sentry Ignored Rate</span>
+          <span class="sentry-pill-sub">${subText}</span>
+        </div>
+        <svg class="sentry-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="sentry-body" id="sentry-ignored-body">
+        <div class="sentry-body-inner" id="sentry-ignored-body-inner">
+          ${bodyHTML}
+        </div>
+      </div>
+    </div>`;
+
+  const card = document.getElementById('sentry-ignored-card');
+  const trigger = document.getElementById('sentry-ignored-trigger');
+  const body = document.getElementById('sentry-ignored-body');
+  const inner = document.getElementById('sentry-ignored-body-inner');
+
+  trigger.addEventListener('click', () => {
+    const isOpen = body.classList.contains('expanded');
+    if (isOpen) {
+      const currentHeight = body.getBoundingClientRect().height;
+      body.style.height = currentHeight + 'px';
+      requestAnimationFrame(() => { body.style.height = '0'; });
+      body.classList.remove('expanded');
+      card.classList.remove('expanded');
+    } else {
+      const targetHeight = Math.min(inner.scrollHeight, 280) + 24;
+      body.style.height = targetHeight + 'px';
+      body.classList.add('expanded');
+      card.classList.add('expanded');
+    }
+  });
+}
+
+// ── CS Closed Loop Card ───────────────────────
+
+function renderCSClosedLoopCard() {
+  const el = document.getElementById('cs-closed-loop-section');
+  if (!el) return;
+
+  const cscl = DATA.csClosedLoop;
+  const blockerReason = cscl?.blockerReason || 'HubSpot integration not configured \u2014 no CRM data accessible';
+
+  el.innerHTML = `
+    <div class="pipeline-step pipeline-step-blocked">
+      <div class="pipeline-row">
+        <div class="pipeline-left">
+          <span class="pipeline-event pipeline-event-muted">CS Closed Loop Rate</span>
+          <span class="pipeline-stage-label pipeline-label-muted">${blockerReason}</span>
+        </div>
+        <div class="pipeline-right">
+          <span class="pipeline-pct pipeline-pct-muted">--</span>
+          <span class="pipeline-count pipeline-label-muted">Pending integration</span>
+        </div>
+        <div class="pipeline-bar-track pipeline-bar-track-blocked">
+          <div class="pipeline-bar bar-default" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── Action View ───────────────────────────────
+
+function buildActionHTML() {
+  return `
+    <div class="section" id="hot-leads-section"></div>
+    <div class="section" id="cs-rescue-section"></div>
+    <div class="section" id="product-friction-section"></div>
+    <div style="height: 100px; flex-shrink: 0;"></div>`;
+}
+
+function renderActionData() {
+  renderHotLeads();
+  renderCSRescue();
+  renderProductFriction();
+}
+
+function renderHotLeads() {
+  const el = document.getElementById('hot-leads-section');
+  if (!el) return;
+
+  const leads = DATA.hitLists?.salesHotLeads?.accounts || [];
+  const N = leads.length;
+  const dotClass = N > 0 ? 'clear' : 'muted';
+
+  const hasInternalCaveat = (DATA.sourceMeta?.limitations || []).some(l =>
+    l.toLowerCase().includes('base account') || l.toLowerCase().includes('is_internal')
+  );
+
+  el.innerHTML = `
+    <div class="rescue-card" id="hot-leads-card">
+      <button class="rescue-pill" id="hot-leads-trigger">
+        <span class="sev-dot ${dotClass}"></span>
+        <div class="rescue-pill-text">
+          <span class="rescue-pill-label">Sales Hot Leads</span>
+          <span class="rescue-pill-sub">${N} account${N !== 1 ? 's' : ''} ready to pitch</span>
+        </div>
+        <svg class="rescue-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      ${hasInternalCaveat ? `<div class="kpi-note" style="padding: 0 16px 8px;">Internal accounts excluded (best-effort)</div>` : ''}
+      <div class="rescue-body" id="hot-leads-body">
+        <div class="rescue-body-inner" id="hot-leads-body-inner">
+          ${N === 0
+            ? `<div class="rescue-row"><span class="rescue-name" style="color:var(--text-muted)">No free accounts have generated a CIWP yet.</span></div>`
+            : `<table class="hit-list-table">
+                <thead>
+                  <tr>
+                    <th class="hit-list-cell" style="color:var(--text-muted);font-weight:500;text-align:left">Account</th>
+                    <th class="hit-list-cell" style="color:var(--text-muted);font-weight:500;text-align:left">Tier</th>
+                    <th class="hit-list-cell" style="color:var(--text-muted);font-weight:500;text-align:left">First CIWP</th>
+                    <th class="hit-list-cell" style="color:var(--text-muted);font-weight:500;text-align:left">CTA</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${leads.map(a => `
+                    <tr class="hit-list-row">
+                      <td class="hit-list-cell">${a.accountName}</td>
+                      <td class="hit-list-cell"><span class="tier-pill">${a.normalizedTier}</span></td>
+                      <td class="hit-list-cell">${a.firstCiwpDate || '--'}</td>
+                      <td class="hit-list-cell"><span class="cta-badge">Pitch Paid Tier</span></td>
+                    </tr>`).join('')}
+                </tbody>
+              </table>`
+          }
+        </div>
+      </div>
+    </div>`;
+
+  const card = document.getElementById('hot-leads-card');
+  const trigger = document.getElementById('hot-leads-trigger');
+  const body = document.getElementById('hot-leads-body');
+  const inner = document.getElementById('hot-leads-body-inner');
+
+  trigger.addEventListener('click', () => {
+    const isOpen = body.classList.contains('expanded');
+    if (isOpen) {
+      const currentHeight = body.getBoundingClientRect().height;
+      body.style.height = currentHeight + 'px';
+      requestAnimationFrame(() => { body.style.height = '0'; });
+      body.classList.remove('expanded');
+      card.classList.remove('expanded');
+    } else {
+      const innerMaxHeight = 280;
+      const innerPadding = 24;
+      const targetHeight = Math.min(inner.scrollHeight, innerMaxHeight) + innerPadding;
+      body.style.height = targetHeight + 'px';
+      body.classList.add('expanded');
+      card.classList.add('expanded');
+    }
+  });
+}
+
+function renderCSRescue() {
+  const el = document.getElementById('cs-rescue-section');
+  if (!el) return;
+
+  const accounts = DATA.hitLists?.csRescue?.accounts || [];
+  const caveat = DATA.hitLists?.csRescueCaveat || DATA.hitLists?.csRescue?.csRescueCaveat || '';
+  const N = accounts.length;
+  const dotClass = N > 0 ? 'high' : 'muted';
+
+  el.innerHTML = `
+    <div class="rescue-card" id="cs-rescue-card">
+      <button class="rescue-pill" id="cs-rescue-trigger">
+        <span class="sev-dot ${dotClass}"></span>
+        <div class="rescue-pill-text">
+          <span class="rescue-pill-label">CS Rescue</span>
+          <span class="rescue-pill-sub">${N} paid account${N !== 1 ? 's' : ''} not yet activated</span>
+        </div>
+        <svg class="rescue-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="rescue-body" id="cs-rescue-body">
+        <div class="rescue-body-inner" id="cs-rescue-body-inner">
+          ${caveat ? `<div class="kpi-note" style="margin-bottom:8px;">${caveat}</div>` : ''}
+          ${N === 0
+            ? `<div class="rescue-row"><span class="rescue-name" style="color:var(--text-muted)">All paid accounts have generated a CIWP.</span></div>`
+            : `<table class="hit-list-table">
+                <thead>
+                  <tr>
+                    <th class="hit-list-cell" style="color:var(--text-muted);font-weight:500;text-align:left">Account</th>
+                    <th class="hit-list-cell" style="color:var(--text-muted);font-weight:500;text-align:left">Tier</th>
+                    <th class="hit-list-cell" style="color:var(--text-muted);font-weight:500;text-align:left">Days Since Enabled</th>
+                    <th class="hit-list-cell" style="color:var(--text-muted);font-weight:500;text-align:left">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${accounts.map(a => `
+                    <tr class="hit-list-row">
+                      <td class="hit-list-cell">${a.accountName}</td>
+                      <td class="hit-list-cell"><span class="tier-pill">${a.normalizedTier}</span></td>
+                      <td class="hit-list-cell">${a.daysSinceEnabled != null ? a.daysSinceEnabled + 'd' : 'Date unknown'}</td>
+                      <td class="hit-list-cell"><span class="cta-badge" style="background:#FFF8ED;color:#B76E00;">No CIWP yet</span></td>
+                    </tr>`).join('')}
+                </tbody>
+              </table>`
+          }
+        </div>
+      </div>
+    </div>`;
+
+  const card = document.getElementById('cs-rescue-card');
+  const trigger = document.getElementById('cs-rescue-trigger');
+  const body = document.getElementById('cs-rescue-body');
+  const inner = document.getElementById('cs-rescue-body-inner');
+
+  trigger.addEventListener('click', () => {
+    const isOpen = body.classList.contains('expanded');
+    if (isOpen) {
+      const currentHeight = body.getBoundingClientRect().height;
+      body.style.height = currentHeight + 'px';
+      requestAnimationFrame(() => { body.style.height = '0'; });
+      body.classList.remove('expanded');
+      card.classList.remove('expanded');
+    } else {
+      const innerMaxHeight = 280;
+      const innerPadding = 24;
+      const targetHeight = Math.min(inner.scrollHeight, innerMaxHeight) + innerPadding;
+      body.style.height = targetHeight + 'px';
+      body.classList.add('expanded');
+      card.classList.add('expanded');
+    }
+  });
+}
+
+function renderProductFriction() {
+  const el = document.getElementById('product-friction-section');
+  if (!el) return;
+
+  const pf = DATA.hitLists?.productFriction;
+  if (!pf) {
+    el.innerHTML = `<div class="kpi-note">Product friction data unavailable.</div>`;
+    return;
+  }
+
+  el.innerHTML = `
+    <div class="century-card">
+      <div class="century-pill-row">
+        <div class="century-pill-text">
+          <span class="century-pill-label">Product Friction \u2014 Top Drop-off</span>
+        </div>
+      </div>
+      <div class="century-blocked-body">
+        <div style="margin-bottom:12px;">
+          <div style="font-size:22px;font-weight:700;letter-spacing:-0.02em;color:var(--text-primary);">
+            ${pf.topDropOffStep}
+          </div>
+          <div style="font-size:13px;color:var(--text-secondary);margin-top:2px;">
+            ${pf.dropOffPct}% drop-off
+          </div>
+          ${pf.dropOffCount == null && pf.dropOffCountReason
+            ? `<div class="kpi-note" style="margin-top:6px;">${pf.dropOffCountReason}</div>`
+            : ''}
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--card-bg);border-radius:12px;border:1px solid var(--card-border);">
+          <span class="sentry-sev-dot muted"></span>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:12px;font-weight:600;color:var(--text-primary);">Sentry account correlation</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">${pf.sentryBlockedReason}</div>
+          </div>
+          <span class="kpi-pending-badge">Blocked</span>
+        </div>
+      </div>
     </div>`;
 }

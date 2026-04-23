@@ -65,7 +65,10 @@
         "severity": "high",
         "occurrences": 24,
         "affectedAccounts": null,
-        "linkedTicket": null,
+        "linkedJiraTicket": null,
+        "assignedDeveloper": null,
+        "firstSeenDate": "2026-04-01",
+        "firstSeenDateNote": "derived from Sentry relative timestamp '22 days ago' as of 2026-04-23",
         "daysInQueue": 20,
         "resolved": false,
         "errorType": "NETWORK",
@@ -77,7 +80,10 @@
         "severity": "high",
         "occurrences": 1,
         "affectedAccounts": 1,
-        "linkedTicket": null,
+        "linkedJiraTicket": null,
+        "assignedDeveloper": "antonio@innovaresip.com",
+        "firstSeenDate": "2026-04-16",
+        "firstSeenDateNote": "derived from Sentry relative timestamp '7 days ago' as of 2026-04-23",
         "daysInQueue": 4,
         "resolved": false,
         "errorType": "TIMEOUT"
@@ -88,7 +94,10 @@
         "severity": "high",
         "occurrences": 2,
         "affectedAccounts": 1,
-        "linkedTicket": null,
+        "linkedJiraTicket": null,
+        "assignedDeveloper": null,
+        "firstSeenDate": "2026-04-16",
+        "firstSeenDateNote": "derived from Sentry relative timestamp '7 days ago' as of 2026-04-23",
         "daysInQueue": 4,
         "resolved": false,
         "errorType": "NETWORK"
@@ -99,7 +108,10 @@
         "severity": "high",
         "occurrences": 191,
         "affectedAccounts": null,
-        "linkedTicket": null,
+        "linkedJiraTicket": null,
+        "assignedDeveloper": null,
+        "firstSeenDate": "2025-12-04",
+        "firstSeenDateNote": "live absolute date from Sentry",
         "daysInQueue": 137,
         "resolved": false,
         "errorType": "NETWORK"
@@ -110,7 +122,10 @@
         "severity": "high",
         "occurrences": 72,
         "affectedAccounts": null,
-        "linkedTicket": null,
+        "linkedJiraTicket": null,
+        "assignedDeveloper": null,
+        "firstSeenDate": "2025-12-05",
+        "firstSeenDateNote": "live absolute date from Sentry",
         "daysInQueue": 136,
         "resolved": false,
         "errorType": "TIMEOUT"
@@ -121,7 +136,10 @@
         "severity": "high",
         "occurrences": 66,
         "affectedAccounts": null,
-        "linkedTicket": null,
+        "linkedJiraTicket": null,
+        "assignedDeveloper": null,
+        "firstSeenDate": "2026-02-26",
+        "firstSeenDateNote": "live absolute date from Sentry",
         "daysInQueue": 53,
         "resolved": false,
         "errorType": "INSUFFICIENT_CONTEXT"
@@ -132,7 +150,10 @@
         "severity": "medium",
         "occurrences": 27,
         "affectedAccounts": null,
-        "linkedTicket": null,
+        "linkedJiraTicket": null,
+        "assignedDeveloper": null,
+        "firstSeenDate": "2026-04-03",
+        "firstSeenDateNote": "derived from Sentry relative timestamp '20 days ago' as of 2026-04-23",
         "daysInQueue": 17,
         "resolved": false,
         "errorType": "INSUFFICIENT_CONTEXT"
@@ -143,7 +164,10 @@
         "severity": "high",
         "occurrences": 25,
         "affectedAccounts": null,
-        "linkedTicket": null,
+        "linkedJiraTicket": null,
+        "assignedDeveloper": null,
+        "firstSeenDate": "2026-04-08",
+        "firstSeenDateNote": "derived from Sentry relative timestamp '15 days ago' as of 2026-04-23",
         "daysInQueue": 12,
         "resolved": false,
         "errorType": "PII_VIOLATION"
@@ -1635,5 +1659,332 @@
     ],
     "engTicketRequired": true,
     "asOf": "2026-04-20"
+  },
+  "sourceMeta": {
+    "mixpanelRefreshedAt": null,
+    "jiraRefreshedAt": null,
+    "sentryRefreshedAt": "2026-04-23T00:00:00Z",
+    "baseAccountsExcluded": "best_effort_only",
+    "limitations": [
+      "hitLists populated from local perAccount data — Mixpanel live refresh not available in this agent pass",
+      "Base account exclusion: best_effort_only — is_internal property not instrumented; email-domain filter not applicable to local data",
+      "ciwpEnabledDate null for all accounts — provisioning event not instrumented",
+      "dropOffCount null — funnel source provides percentages only",
+      "sentryCorrelation null — IW-6814 not in prod",
+      "CIWP_Launch Jira label returned 0 results — bugVelocity createdDate derived from today (2026-04-23) minus daysOpen field (approximation); closedDate unavailable — Jira status transition history not accessible via CIWP_Launch label query",
+      "bugVelocity closed[] all zero — closedDate cannot be derived from existing data; mttrDays null",
+      "Sentry ignored rate computed from 8 issues matching data.sentry.issues[]; assignedDeveloper sourced from live Sentry assignedTo field; firstSeenDate converted from relative Sentry timestamps (approximate calendar dates)"
+    ]
+  },
+  "hitLists": {
+    "salesHotLeads": {
+      "description": "Free accounts that have generated at least one CIWP — conversion candidates",
+      "ciwpPublishedProxy": "ciwp_generated is used as proxy — ciwp_published event does not exist",
+      "generatedAt": "2026-04-23",
+      "count": 1,
+      "accounts": [
+        {
+          "accountName": "A. P. Willits Elementary School",
+          "normalizedTier": "Free",
+          "firstCiwpDate": "2026-04-13",
+          "ciwpsCreated": 1
+        }
+      ]
+    },
+    "csRescue": {
+      "description": "Paid accounts with zero activation events — provisioned but never engaged",
+      "csRescueCaveat": "Days since enabled unavailable — CIWP provisioning event not instrumented. Filter shows Paid + zero CIWP events as proxy for >14 days blocked.",
+      "generatedAt": "2026-04-23",
+      "count": 21,
+      "accounts": [
+        {
+          "accountName": "Bass Elementary",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "Beidler Elementary",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "Brown Elementary",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "Cather Elementary",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "Chopin Elementary",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "Davis Elementary",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "Deneen",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "Doolittle",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "Englewood High School",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "Esmond Elementary",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "Fairfield Elementary",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "Henderson Elementary",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "Joplin Elementary",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "Kellman Elementary",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "Mollison",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "O'Toole Elementary",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "Pershing Elementary",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "Sherman Elementary",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "Stowe Elementary",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "Tilton Elementary",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        },
+        {
+          "accountName": "Wadsworth Elementary",
+          "normalizedTier": "Paid",
+          "ciwpEnabledDate": null,
+          "daysSinceEnabled": null,
+          "activationStage": 0,
+          "lastLoginDate": null
+        }
+      ]
+    },
+    "productFriction": {
+      "description": "Funnel step with highest drop-off — top friction point in the activation flow",
+      "funnelRangeUsed": "1D",
+      "funnelRangeFallbackReason": null,
+      "topDropOffStep": "Login \u2192 AI Analysis",
+      "dropOffPct": 100,
+      "dropOffCount": null,
+      "dropOffCountReason": "Funnel source provides percentages only — count unavailable",
+      "sentryCorrelation": null,
+      "sentryBlockedReason": "IW-6814 not in prod — account-level Sentry correlation blocked"
+    }
+  },
+  "bugVelocity": {
+    "labels": ["Apr 17", "Apr 18", "Apr 19", "Apr 20", "Apr 21", "Apr 22", "Apr 23"],
+    "opened": [2, 2, 4, 0, 0, 1, 1],
+    "closed": [0, 0, 0, 0, 0, 0, 0],
+    "mttrDays": null,
+    "mttrStatus": "estimated_unavailable",
+    "openedStatus": "derived_from_daysOpen",
+    "openedCaveat": "Opened counts derived from today (2026-04-23) minus daysOpen field — CIWP_Launch Jira label returned 0 results; live Jira timestamps unavailable. Closed counts null — closedDate cannot be derived without Jira transition history.",
+    "ticketsIncluded": 18,
+    "ticketSource": "ciwpTesting.categories[bugs] — fallback from CIWP_Launch label (0 results)"
+  },
+  "sentryIgnoredRate": {
+    "status": "live",
+    "dataAsOf": "2026-04-23",
+    "totalOpen": 8,
+    "ignored": 7,
+    "ignoredPct": 88,
+    "ignoredNote": "Ignored definition: no assignedDeveloper AND no linkedJiraTicket AND daysSince(firstSeenDate) > 2. JAVASCRIPT-REACT-AX excluded (assigned: antonio@innovaresip.com).",
+    "ignoredIssues": [
+      {
+        "id": "JAVASCRIPT-REACT-8H",
+        "severity": "high",
+        "daysFiring": 22,
+        "occurrences": 25,
+        "assignedDeveloper": null,
+        "firstSeenDate": "2026-04-01",
+        "firstSeenDateNote": "derived from Sentry relative timestamp '22 days ago' as of 2026-04-23",
+        "linkedJiraTicket": null
+      },
+      {
+        "id": "JAVASCRIPT-REACT-AW",
+        "severity": "high",
+        "daysFiring": 7,
+        "occurrences": 3,
+        "assignedDeveloper": null,
+        "firstSeenDate": "2026-04-16",
+        "firstSeenDateNote": "derived from Sentry relative timestamp '7 days ago' as of 2026-04-23",
+        "linkedJiraTicket": null
+      },
+      {
+        "id": "JAVASCRIPT-REACT-1S",
+        "severity": "high",
+        "daysFiring": 140,
+        "occurrences": 191,
+        "assignedDeveloper": null,
+        "firstSeenDate": "2025-12-04",
+        "firstSeenDateNote": "live absolute date from Sentry",
+        "linkedJiraTicket": null
+      },
+      {
+        "id": "JAVASCRIPT-REACT-1Y",
+        "severity": "high",
+        "daysFiring": 139,
+        "occurrences": 72,
+        "assignedDeveloper": null,
+        "firstSeenDate": "2025-12-05",
+        "firstSeenDateNote": "live absolute date from Sentry",
+        "linkedJiraTicket": null
+      },
+      {
+        "id": "JAVASCRIPT-REACT-5N",
+        "severity": "high",
+        "daysFiring": 56,
+        "occurrences": 66,
+        "assignedDeveloper": null,
+        "firstSeenDate": "2026-02-26",
+        "firstSeenDateNote": "live absolute date from Sentry",
+        "linkedJiraTicket": null
+      },
+      {
+        "id": "JAVASCRIPT-REACT-99",
+        "severity": "medium",
+        "daysFiring": 20,
+        "occurrences": 28,
+        "assignedDeveloper": null,
+        "firstSeenDate": "2026-04-03",
+        "firstSeenDateNote": "derived from Sentry relative timestamp '20 days ago' as of 2026-04-23",
+        "linkedJiraTicket": null
+      },
+      {
+        "id": "JAVASCRIPT-REACT-9X",
+        "severity": "high",
+        "daysFiring": 15,
+        "occurrences": 25,
+        "assignedDeveloper": null,
+        "firstSeenDate": "2026-04-08",
+        "firstSeenDateNote": "derived from Sentry relative timestamp '15 days ago' as of 2026-04-23",
+        "linkedJiraTicket": null
+      }
+    ],
+    "activeIssues": [
+      {
+        "id": "JAVASCRIPT-REACT-AX",
+        "severity": "high",
+        "daysFiring": 7,
+        "occurrences": 7,
+        "assignedDeveloper": "antonio@innovaresip.com",
+        "firstSeenDate": "2026-04-16",
+        "firstSeenDateNote": "derived from Sentry relative timestamp '7 days ago' as of 2026-04-23",
+        "linkedJiraTicket": null
+      }
+    ]
+  },
+  "csClosedLoop": {
+    "status": "blocked",
+    "blockerReason": "HubSpot integration not configured — no CRM data accessible",
+    "rate": null
   }
 }
