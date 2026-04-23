@@ -1553,6 +1553,26 @@ a.ticket-id:hover { color: #0088CC; }
   background: rgba(3, 105, 161, 0.1);
 }
 
+.sentry-et-db-error {
+  color: #991B1B;
+  background: rgba(153, 27, 27, 0.1);
+}
+
+.sentry-et-ai-fail {
+  color: #C2410C;
+  background: rgba(194, 65, 12, 0.1);
+}
+
+.sentry-et-ai-parse {
+  color: #1E40AF;
+  background: rgba(30, 64, 175, 0.1);
+}
+
+.sentry-et-rate-limit {
+  color: #065F46;
+  background: rgba(6, 95, 70, 0.1);
+}
+
 /* ── Bug Velocity Chart ─────────────────── */
 
 .velocity-chart-wrap {

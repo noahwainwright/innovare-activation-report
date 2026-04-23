@@ -917,7 +917,11 @@ function sentryIssueRow(issue) {
     'PII_VIOLATION': 'PII Violation',
     'TIMEOUT': 'Timeout',
     'NETWORK': 'Network',
-    '403_FORBIDDEN': '403 Forbidden'
+    '403_FORBIDDEN': '403 Forbidden',
+    'DB_ERROR': 'DB Error',
+    'AI_FAIL': 'AI Failure',
+    'AI_PARSE': 'AI Parse',
+    'RATE_LIMIT': 'Rate Limit'
   };
   const etKey = issue.errorType || '';
   const etClass = etKey.toLowerCase().replace(/_/g, '-');
