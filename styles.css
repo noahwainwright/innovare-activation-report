@@ -1556,6 +1556,7 @@ a.ticket-id:hover { color: #0088CC; }
 /* ── Bug Velocity Chart ─────────────────── */
 
 .velocity-chart-wrap {
+  position: relative;
   margin-top: 12px;
 }
 

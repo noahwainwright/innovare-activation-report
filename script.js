@@ -1079,8 +1079,8 @@ function renderBugVelocityChart() {
   el.innerHTML = `
     <div class="section-label">Bug Velocity \u2014 CIWP Launch</div>
     ${legend}
-    <div class="velocity-chart-wrap">
-      <svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" style="width:100%;display:block;">
+    <div class="velocity-chart-wrap" id="velocity-wrap">
+      <svg id="velocity-svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="width:100%;display:block;">
         ${yGridLines}
         <line x1="${padX}" y1="${h - padBottom}" x2="${w - padX}" y2="${h - padBottom}" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
         ${xLabels}
@@ -1088,10 +1088,81 @@ function renderBugVelocityChart() {
         ${closedDots}
         <polyline points="${openedPoints}" fill="none" stroke="#666666" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
         ${openedDots}
+        <line id="vel-hover-line" x1="0" y1="${padTop}" x2="0" y2="${h - padBottom}" stroke="rgba(0,0,0,0.15)" stroke-width="1" opacity="0" stroke-dasharray="3 2"/>
+        <circle id="vel-dot-opened" cx="0" cy="0" r="6" fill="#666666" stroke="#fff" stroke-width="2" opacity="0"/>
+        <circle id="vel-dot-closed" cx="0" cy="0" r="6" fill="#AC5CCC" stroke="#fff" stroke-width="2" opacity="0"/>
       </svg>
+      <div class="sparkline-tooltip" id="velocity-tooltip" style="top:12px">
+        <div class="tooltip-date" id="vel-tooltip-date"></div>
+        <div class="tooltip-row">
+          <span class="t-dot" style="background:#666666"></span>
+          <span class="t-label">Opened</span>
+          <span class="t-val" id="vel-tooltip-opened"></span>
+        </div>
+        <div class="tooltip-row">
+          <span class="t-dot" style="background:#AC5CCC"></span>
+          <span class="t-label">Closed</span>
+          <span class="t-val" id="vel-tooltip-closed"></span>
+        </div>
+      </div>
     </div>
     <div class="mttr-badge">${mttrText}</div>
     ${openedCaveat}`;
+
+  const wrap = document.getElementById('velocity-wrap');
+  const svg = document.getElementById('velocity-svg');
+  const hoverLine = document.getElementById('vel-hover-line');
+  const dotOpened = document.getElementById('vel-dot-opened');
+  const dotClosed = document.getElementById('vel-dot-closed');
+  const tooltip = document.getElementById('velocity-tooltip');
+  const tooltipDate = document.getElementById('vel-tooltip-date');
+  const tooltipOpened = document.getElementById('vel-tooltip-opened');
+  const tooltipClosed = document.getElementById('vel-tooltip-closed');
+
+  function updateHover(clientX) {
+    const svgRect = svg.getBoundingClientRect();
+    const relX = clientX - svgRect.left;
+    const svgSpaceX = (relX / svgRect.width) * w;
+    const chartW = w - padX * 2;
+    const t = (svgSpaceX - padX) / chartW;
+    const nearest = Math.round(Math.max(0, Math.min(n - 1, t * (n - 1))));
+
+    const svgX = toX(nearest);
+    const pctX = (svgX / w) * 100;
+
+    hoverLine.setAttribute('x1', svgX);
+    hoverLine.setAttribute('x2', svgX);
+    hoverLine.setAttribute('opacity', '1');
+
+    dotOpened.setAttribute('cx', svgX);
+    dotOpened.setAttribute('cy', toY(opened[nearest]));
+    dotOpened.setAttribute('opacity', '1');
+
+    dotClosed.setAttribute('cx', svgX);
+    dotClosed.setAttribute('cy', toY(closed[nearest]));
+    dotClosed.setAttribute('opacity', '1');
+
+    tooltipDate.textContent = labels[nearest];
+    tooltipOpened.textContent = opened[nearest];
+    tooltipClosed.textContent = closed[nearest];
+
+    const tooltipL = pctX > 70 ? pctX - 2 : pctX < 30 ? pctX + 2 : pctX;
+    tooltip.style.left = tooltipL + '%';
+    tooltip.style.transform = `translate(${pctX > 70 ? '-90%' : pctX < 30 ? '-10%' : '-50%'}, 0)`;
+    tooltip.style.opacity = '1';
+  }
+
+  function clearHover() {
+    hoverLine.setAttribute('opacity', '0');
+    dotOpened.setAttribute('opacity', '0');
+    dotClosed.setAttribute('opacity', '0');
+    tooltip.style.opacity = '0';
+  }
+
+  wrap.addEventListener('mousemove', e => updateHover(e.clientX));
+  wrap.addEventListener('mouseleave', clearHover);
+  wrap.addEventListener('touchstart', e => updateHover(e.touches[0].clientX), { passive: true });
+  wrap.addEventListener('touchmove', e => { e.preventDefault(); updateHover(e.touches[0].clientX); }, { passive: false });
 }
 
 // ── Sentry Ignored Rate ───────────────────────
@@ -1265,7 +1336,7 @@ function actionHotLeadsHTML() {
     : leads.map(a => `
       <div class="ticket-row" style="pointer-events:none">
         <div class="ticket-line1">
-          <span class="ticket-id">${a.accountName}</span>
+          <span class="ticket-title">${a.accountName}</span>
           <span class="tier-pill" style="margin-left:auto">${a.normalizedTier}</span>
           <span class="cta-badge" style="margin-left:8px">Pitch Paid Tier</span>
         </div>
@@ -1293,7 +1364,7 @@ function actionCSRescueHTML() {
     : accounts.map(a => `
       <div class="ticket-row" style="pointer-events:none">
         <div class="ticket-line1">
-          <span class="ticket-id">${a.accountName}</span>
+          <span class="ticket-title">${a.accountName}</span>
           <span class="tier-pill" style="margin-left:auto">${a.normalizedTier}</span>
           <span class="cta-badge" style="margin-left:8px;background:#FFF8ED;color:#B76E00;">No CIWP yet</span>
         </div>
@@ -1322,7 +1393,7 @@ function actionProductFrictionHTML() {
       </div>
       <div class="ticket-row" style="pointer-events:none">
         <div class="ticket-line1">
-          <span class="ticket-id">${pf.topDropOffStep}</span>
+          <span class="ticket-title">${pf.topDropOffStep}</span>
           <span class="cta-badge" style="margin-left:auto;background:#FFF0F0;color:#B00000;">${pf.dropOffPct}% drop-off</span>
         </div>
         ${pf.dropOffCount == null && pf.dropOffCountReason
@@ -1331,7 +1402,7 @@ function actionProductFrictionHTML() {
       </div>
       <div class="ticket-row" style="pointer-events:none">
         <div class="ticket-line1">
-          <span class="ticket-id" style="color:var(--text-muted)">Sentry account correlation</span>
+          <span class="ticket-title" style="color:var(--text-muted)">Sentry account correlation</span>
           <span class="kpi-pending-badge" style="margin-left:auto">Blocked</span>
         </div>
         <div class="ticket-meta"><span class="ticket-meta-item">${pf.sentryBlockedReason}</span></div>
