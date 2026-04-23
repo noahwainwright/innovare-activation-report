@@ -226,12 +226,6 @@ function buildAdoptionHTML() {
       <div id="activation-pipeline"></div>
     </div>
 
-    <div class="section" id="sentry-health-section"></div>
-
-    <div class="section" id="century-section">
-      <div id="century-card-container"></div>
-    </div>
-
     <div style="height: 100px; flex-shrink: 0;"></div>
 `;
 }
@@ -247,8 +241,6 @@ function renderAdoptionData() {
   renderRescueList(accounts);
   renderActivationPipeline(accounts);
   renderChartSection();
-  renderSentryHealthCard();
-  renderCenturyCard();
   const badge = document.getElementById('kpi-tier-badge');
   if (badge) badge.style.display = currentTier !== 'all' ? 'block' : 'none';
 }
@@ -493,25 +485,7 @@ function renderActivationPipeline(accounts) {
           <div class="pipeline-bar bar-converted" style="width: ${convertedPct}%"></div>
         </div>
       </div>
-    </div>` : '') + `
-    <div class="pipeline-step pipeline-step-blocked">
-      <div class="pipeline-connector">
-        <span class="pipeline-dropoff"></span>
-      </div>
-      <div class="pipeline-row">
-        <div class="pipeline-left">
-          <span class="pipeline-event pipeline-event-muted">Dead End Rate</span>
-          <span class="pipeline-stage-label pipeline-label-muted">Pending instrumentation</span>
-        </div>
-        <div class="pipeline-right">
-          <span class="pipeline-pct pipeline-pct-muted">--</span>
-          <span class="pipeline-count pipeline-label-muted">ciwp_creation_started not fired</span>
-        </div>
-        <div class="pipeline-bar-track pipeline-bar-track-blocked">
-          <div class="pipeline-bar bar-default" style="width: 0%"></div>
-        </div>
-      </div>
-    </div>`;
+    </div>` : '');
 }
 
 // ── Chart + Metric ────────────────────────────
@@ -675,13 +649,13 @@ function buildQualityHTML() {
       </div>
     </div>
 
+    <div class="section" id="bug-velocity-section"></div>
+
     <div class="section" id="tickets-section">
       <div id="ticket-categories"></div>
     </div>
 
     <div class="section" id="sentry-section"></div>
-    <div class="section" id="bug-velocity-section"></div>
-    <div class="section" id="sentry-ignored-section"></div>
     <div class="section" id="cs-closed-loop-section"></div>
     <div style="height: 100px; flex-shrink: 0;"></div>`;
 }
@@ -691,7 +665,6 @@ function bindQuality() {
   renderTickets();
   renderSentryCard();
   renderBugVelocityChart();
-  renderSentryIgnoredRate();
   renderCSClosedLoopCard();
 }
 
@@ -866,6 +839,31 @@ function renderSentryCard() {
           </div>` : ''}
 
           ${resolved.map(i => sentryIssueRow(i)).join('')}
+
+          ${(() => {
+            const sir = DATA.sentryIgnoredRate;
+            if (!sir) return '';
+            const isLive = sir.status === 'live';
+            if (!isLive) return '';
+            const ignoredIssues = sir.ignoredIssues || [];
+            if (ignoredIssues.length === 0) return '';
+            return `<div class="sentry-account-block" style="margin-top:8px;border-top:1px solid var(--card-border);padding-top:8px;">
+              <div class="sentry-account-row">
+                <span class="sentry-sev-dot high"></span>
+                <span class="sentry-account-name sentry-pending-name">Ignored (${sir.ignored} · ${sir.ignoredPct}% of open)</span>
+              </div>
+              ${ignoredIssues.map(issue => `
+                <div class="sentry-issue-row sentry-issue-sub">
+                  <div class="sentry-issue-body">
+                    <div class="sentry-issue-row-top">
+                      <span class="sentry-issue-title"><span class="sentry-title-text">${issue.id}</span></span>
+                      <span class="sentry-queue">${issue.daysFiring}d</span>
+                      <span class="sentry-unlinked-badge">${issue.occurrences} occ.</span>
+                    </div>
+                  </div>
+                </div>`).join('')}
+            </div>`;
+          })()}
 
         </div>
       </div>
@@ -1222,206 +1220,121 @@ function renderCSClosedLoopCard() {
 
 function buildActionHTML() {
   return `
-    <div class="section" id="hot-leads-section"></div>
-    <div class="section" id="cs-rescue-section"></div>
-    <div class="section" id="product-friction-section"></div>
+    <div class="section" id="action-summary-section">
+      <div class="testing-summary-wrap">
+        <div class="testing-summary-sentence" id="action-summary"></div>
+      </div>
+    </div>
+    <div class="section" id="action-lists-section">
+      <div id="action-lists-container"></div>
+    </div>
     <div style="height: 100px; flex-shrink: 0;"></div>`;
 }
 
 function renderActionData() {
-  renderHotLeads();
-  renderCSRescue();
-  renderProductFriction();
+  renderActionSummary();
+  renderActionLists();
 }
 
-function renderHotLeads() {
-  const el = document.getElementById('hot-leads-section');
+function renderActionSummary() {
+  const el = document.getElementById('action-summary');
   if (!el) return;
-
   const leads = DATA.hitLists?.salesHotLeads?.accounts || [];
-  const N = leads.length;
-  const dotClass = N > 0 ? 'clear' : 'muted';
+  const rescue = DATA.hitLists?.csRescue?.accounts || [];
+  const pf = DATA.hitLists?.productFriction;
+  const parts = [];
+  if (leads.length > 0) parts.push(`${leads.length} free account${leads.length !== 1 ? 's' : ''} ready to pitch`);
+  if (rescue.length > 0) parts.push(`${rescue.length} paid account${rescue.length !== 1 ? 's' : ''} need CS outreach`);
+  if (pf?.topDropOffStep) parts.push(`${pf.dropOffPct}% drop-off at ${pf.topDropOffStep}`);
+  el.textContent = parts.length > 0 ? parts.join('. ') + '.' : 'No action items at this time.';
+}
 
+function renderActionLists() {
+  const el = document.getElementById('action-lists-container');
+  if (!el) return;
+  el.innerHTML = actionHotLeadsHTML() + actionCSRescueHTML() + actionProductFrictionHTML();
+}
+
+function actionHotLeadsHTML() {
+  const leads = DATA.hitLists?.salesHotLeads?.accounts || [];
   const hasInternalCaveat = (DATA.sourceMeta?.limitations || []).some(l =>
     l.toLowerCase().includes('base account') || l.toLowerCase().includes('is_internal')
   );
-
-  el.innerHTML = `
-    <div class="rescue-card" id="hot-leads-card">
-      <button class="rescue-pill" id="hot-leads-trigger">
-        <span class="sev-dot ${dotClass}"></span>
-        <div class="rescue-pill-text">
-          <span class="rescue-pill-label">Sales Hot Leads</span>
-          <span class="rescue-pill-sub">${N} account${N !== 1 ? 's' : ''} ready to pitch</span>
+  const rows = leads.length === 0
+    ? `<div class="ticket-row" style="pointer-events:none"><div class="ticket-line1"><span class="ticket-id" style="color:var(--text-muted)">No free accounts have generated a CIWP yet.</span></div></div>`
+    : leads.map(a => `
+      <div class="ticket-row" style="pointer-events:none">
+        <div class="ticket-line1">
+          <span class="ticket-id">${a.accountName}</span>
+          <span class="tier-pill" style="margin-left:auto">${a.normalizedTier}</span>
+          <span class="cta-badge" style="margin-left:8px">Pitch Paid Tier</span>
         </div>
-        <svg class="rescue-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-      ${hasInternalCaveat ? `<div class="kpi-note" style="padding: 0 16px 8px;">Internal accounts excluded (best-effort)</div>` : ''}
-      <div class="rescue-body" id="hot-leads-body">
-        <div class="rescue-body-inner" id="hot-leads-body-inner">
-          ${N === 0
-            ? `<div class="rescue-row"><span class="rescue-name" style="color:var(--text-muted)">No free accounts have generated a CIWP yet.</span></div>`
-            : `<table class="hit-list-table">
-                <thead>
-                  <tr>
-                    <th class="hit-list-cell" style="color:var(--text-muted);font-weight:500;text-align:left">Account</th>
-                    <th class="hit-list-cell" style="color:var(--text-muted);font-weight:500;text-align:left">Tier</th>
-                    <th class="hit-list-cell" style="color:var(--text-muted);font-weight:500;text-align:left">First CIWP</th>
-                    <th class="hit-list-cell" style="color:var(--text-muted);font-weight:500;text-align:left">CTA</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${leads.map(a => `
-                    <tr class="hit-list-row">
-                      <td class="hit-list-cell">${a.accountName}</td>
-                      <td class="hit-list-cell"><span class="tier-pill">${a.normalizedTier}</span></td>
-                      <td class="hit-list-cell">${a.firstCiwpDate || '--'}</td>
-                      <td class="hit-list-cell"><span class="cta-badge">Pitch Paid Tier</span></td>
-                    </tr>`).join('')}
-                </tbody>
-              </table>`
-          }
+        <div class="ticket-meta">
+          <span class="ticket-meta-item">First CIWP: ${a.firstCiwpDate || '--'}</span>
+          <span class="ticket-meta-item">${a.ciwpsCreated || 0} generated</span>
         </div>
+      </div>`).join('');
+  return `
+    <div class="ticket-category">
+      <div class="ticket-category-header">
+        <span class="ticket-category-label">Sales Hot Leads</span>
+        <span class="ticket-category-count">${leads.length}</span>
       </div>
+      ${hasInternalCaveat ? `<div class="kpi-note" style="margin:0 0 8px">Internal accounts excluded (best-effort \u2014 is_internal not yet instrumented)</div>` : ''}
+      ${rows}
     </div>`;
-
-  const card = document.getElementById('hot-leads-card');
-  const trigger = document.getElementById('hot-leads-trigger');
-  const body = document.getElementById('hot-leads-body');
-  const inner = document.getElementById('hot-leads-body-inner');
-
-  trigger.addEventListener('click', () => {
-    const isOpen = body.classList.contains('expanded');
-    if (isOpen) {
-      const currentHeight = body.getBoundingClientRect().height;
-      body.style.height = currentHeight + 'px';
-      requestAnimationFrame(() => { body.style.height = '0'; });
-      body.classList.remove('expanded');
-      card.classList.remove('expanded');
-    } else {
-      const innerMaxHeight = 280;
-      const innerPadding = 24;
-      const targetHeight = Math.min(inner.scrollHeight, innerMaxHeight) + innerPadding;
-      body.style.height = targetHeight + 'px';
-      body.classList.add('expanded');
-      card.classList.add('expanded');
-    }
-  });
 }
 
-function renderCSRescue() {
-  const el = document.getElementById('cs-rescue-section');
-  if (!el) return;
-
+function actionCSRescueHTML() {
   const accounts = DATA.hitLists?.csRescue?.accounts || [];
   const caveat = DATA.hitLists?.csRescueCaveat || DATA.hitLists?.csRescue?.csRescueCaveat || '';
-  const N = accounts.length;
-  const dotClass = N > 0 ? 'high' : 'muted';
-
-  el.innerHTML = `
-    <div class="rescue-card" id="cs-rescue-card">
-      <button class="rescue-pill" id="cs-rescue-trigger">
-        <span class="sev-dot ${dotClass}"></span>
-        <div class="rescue-pill-text">
-          <span class="rescue-pill-label">CS Rescue</span>
-          <span class="rescue-pill-sub">${N} paid account${N !== 1 ? 's' : ''} not yet activated</span>
+  const rows = accounts.length === 0
+    ? `<div class="ticket-row" style="pointer-events:none"><div class="ticket-line1"><span class="ticket-id" style="color:var(--text-muted)">All paid accounts have generated a CIWP.</span></div></div>`
+    : accounts.map(a => `
+      <div class="ticket-row" style="pointer-events:none">
+        <div class="ticket-line1">
+          <span class="ticket-id">${a.accountName}</span>
+          <span class="tier-pill" style="margin-left:auto">${a.normalizedTier}</span>
+          <span class="cta-badge" style="margin-left:8px;background:#FFF8ED;color:#B76E00;">No CIWP yet</span>
         </div>
-        <svg class="rescue-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-      <div class="rescue-body" id="cs-rescue-body">
-        <div class="rescue-body-inner" id="cs-rescue-body-inner">
-          ${caveat ? `<div class="kpi-note" style="margin-bottom:8px;">${caveat}</div>` : ''}
-          ${N === 0
-            ? `<div class="rescue-row"><span class="rescue-name" style="color:var(--text-muted)">All paid accounts have generated a CIWP.</span></div>`
-            : `<table class="hit-list-table">
-                <thead>
-                  <tr>
-                    <th class="hit-list-cell" style="color:var(--text-muted);font-weight:500;text-align:left">Account</th>
-                    <th class="hit-list-cell" style="color:var(--text-muted);font-weight:500;text-align:left">Tier</th>
-                    <th class="hit-list-cell" style="color:var(--text-muted);font-weight:500;text-align:left">Days Since Enabled</th>
-                    <th class="hit-list-cell" style="color:var(--text-muted);font-weight:500;text-align:left">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${accounts.map(a => `
-                    <tr class="hit-list-row">
-                      <td class="hit-list-cell">${a.accountName}</td>
-                      <td class="hit-list-cell"><span class="tier-pill">${a.normalizedTier}</span></td>
-                      <td class="hit-list-cell">${a.daysSinceEnabled != null ? a.daysSinceEnabled + 'd' : 'Date unknown'}</td>
-                      <td class="hit-list-cell"><span class="cta-badge" style="background:#FFF8ED;color:#B76E00;">No CIWP yet</span></td>
-                    </tr>`).join('')}
-                </tbody>
-              </table>`
-          }
+        <div class="ticket-meta">
+          <span class="ticket-meta-item">Since enabled: ${a.daysSinceEnabled != null ? a.daysSinceEnabled + 'd' : 'Date unknown'}</span>
         </div>
+      </div>`).join('');
+  return `
+    <div class="ticket-category">
+      <div class="ticket-category-header">
+        <span class="ticket-category-label">CS Rescue</span>
+        <span class="ticket-category-count">${accounts.length}</span>
       </div>
+      ${caveat ? `<div class="kpi-note" style="margin:0 0 8px">${caveat}</div>` : ''}
+      ${rows}
     </div>`;
-
-  const card = document.getElementById('cs-rescue-card');
-  const trigger = document.getElementById('cs-rescue-trigger');
-  const body = document.getElementById('cs-rescue-body');
-  const inner = document.getElementById('cs-rescue-body-inner');
-
-  trigger.addEventListener('click', () => {
-    const isOpen = body.classList.contains('expanded');
-    if (isOpen) {
-      const currentHeight = body.getBoundingClientRect().height;
-      body.style.height = currentHeight + 'px';
-      requestAnimationFrame(() => { body.style.height = '0'; });
-      body.classList.remove('expanded');
-      card.classList.remove('expanded');
-    } else {
-      const innerMaxHeight = 280;
-      const innerPadding = 24;
-      const targetHeight = Math.min(inner.scrollHeight, innerMaxHeight) + innerPadding;
-      body.style.height = targetHeight + 'px';
-      body.classList.add('expanded');
-      card.classList.add('expanded');
-    }
-  });
 }
 
-function renderProductFriction() {
-  const el = document.getElementById('product-friction-section');
-  if (!el) return;
-
+function actionProductFrictionHTML() {
   const pf = DATA.hitLists?.productFriction;
-  if (!pf) {
-    el.innerHTML = `<div class="kpi-note">Product friction data unavailable.</div>`;
-    return;
-  }
-
-  el.innerHTML = `
-    <div class="century-card">
-      <div class="century-pill-row">
-        <div class="century-pill-text">
-          <span class="century-pill-label">Product Friction \u2014 Top Drop-off</span>
-        </div>
+  if (!pf) return `<div class="ticket-category"><div class="ticket-category-header"><span class="ticket-category-label">Product Friction</span></div><div class="kpi-note">Data unavailable.</div></div>`;
+  return `
+    <div class="ticket-category">
+      <div class="ticket-category-header">
+        <span class="ticket-category-label">Product Friction</span>
       </div>
-      <div class="century-blocked-body">
-        <div style="margin-bottom:12px;">
-          <div style="font-size:22px;font-weight:700;letter-spacing:-0.02em;color:var(--text-primary);">
-            ${pf.topDropOffStep}
-          </div>
-          <div style="font-size:13px;color:var(--text-secondary);margin-top:2px;">
-            ${pf.dropOffPct}% drop-off
-          </div>
-          ${pf.dropOffCount == null && pf.dropOffCountReason
-            ? `<div class="kpi-note" style="margin-top:6px;">${pf.dropOffCountReason}</div>`
-            : ''}
+      <div class="ticket-row" style="pointer-events:none">
+        <div class="ticket-line1">
+          <span class="ticket-id">${pf.topDropOffStep}</span>
+          <span class="cta-badge" style="margin-left:auto;background:#FFF0F0;color:#B00000;">${pf.dropOffPct}% drop-off</span>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--card-bg);border-radius:12px;border:1px solid var(--card-border);">
-          <span class="sentry-sev-dot muted"></span>
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:12px;font-weight:600;color:var(--text-primary);">Sentry account correlation</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">${pf.sentryBlockedReason}</div>
-          </div>
-          <span class="kpi-pending-badge">Blocked</span>
+        ${pf.dropOffCount == null && pf.dropOffCountReason
+          ? `<div class="ticket-meta"><span class="ticket-meta-item">${pf.dropOffCountReason}</span></div>`
+          : ''}
+      </div>
+      <div class="ticket-row" style="pointer-events:none">
+        <div class="ticket-line1">
+          <span class="ticket-id" style="color:var(--text-muted)">Sentry account correlation</span>
+          <span class="kpi-pending-badge" style="margin-left:auto">Blocked</span>
         </div>
+        <div class="ticket-meta"><span class="ticket-meta-item">${pf.sentryBlockedReason}</span></div>
       </div>
     </div>`;
 }
