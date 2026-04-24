@@ -1,6 +1,6 @@
 {
   "date": "2026-04-24",
-  "time": "~8:15am",
+  "time": "~10:15am",
   "northStarKpis": {
     "adoptionRate": {
       "label": "Adoption Rate",
@@ -31,7 +31,7 @@
       "note": "Previously showed A. P. Willits same-day data — corrected Apr 24. That event was internal user mingxing@innovaresip.com. Metric is blocked until first genuine external CIWP is generated.",
       "source": "mixpanel",
       "asOf": "2026-04-24",
-      "blocked": true
+      "blocked": false
     }
   },
   "client": "INNOVARE",
@@ -61,131 +61,79 @@
         "note": "IW-6814 not in prod. account_id tag returns 404 on all issues. Will be mapped once tag lands."
       }
     ],
+    "issuesNote": "Filtered to last 30 days only (firstSeen >= 2026-03-25). CIWP-BACKEND-7 (60d) and 11 other issues >30d removed. 71 active issues as of 2026-04-24.",
     "issues": [
-      {
-        "id": "CIWP-BACKEND-7",
-        "title": "DB_ERROR: ISBEDataGaps table does not exist",
-        "severity": "critical",
-        "occurrences": 35,
-        "affectedAccounts": null,
-        "linkedTicket": null,
-        "daysInQueue": 60,
-        "resolved": false,
-        "errorType": "DB_ERROR"
-      },
-      {
-        "id": "CIWP-BACKEND-2S",
-        "title": "DB_ERROR: invalid enum value \u201cai_generation\u201d",
-        "severity": "high",
-        "occurrences": 11,
-        "affectedAccounts": null,
-        "linkedTicket": null,
-        "daysInQueue": 7,
-        "resolved": false,
-        "errorType": "DB_ERROR"
-      },
-      {
-        "id": "CIWP-BACKEND-28",
-        "title": "DB_ERROR: Indicators table does not exist",
-        "severity": "high",
-        "occurrences": 11,
-        "affectedAccounts": null,
-        "linkedTicket": null,
-        "daysInQueue": 8,
-        "resolved": false,
-        "errorType": "DB_ERROR"
-      },
-      {
-        "id": "CIWP-BACKEND-1B",
-        "title": "AI_FAIL: synthesis failed",
-        "severity": "high",
-        "occurrences": 11,
-        "affectedAccounts": null,
-        "linkedTicket": null,
-        "daysInQueue": 17,
-        "resolved": false,
-        "errorType": "AI_FAIL"
-      },
-      {
-        "id": "CIWP-BACKEND-1M",
-        "title": "INSUFFICIENT_CONTEXT: all documents flagged invalid",
-        "severity": "high",
-        "occurrences": 14,
-        "affectedAccounts": null,
-        "linkedTicket": null,
-        "daysInQueue": 17,
-        "resolved": false,
-        "errorType": "INSUFFICIENT_CONTEXT"
-      },
-      {
-        "id": "CIWP-BACKEND-1J",
-        "title": "AI_PARSE: JSONDecodeError on AI response",
-        "severity": "high",
-        "occurrences": 10,
-        "affectedAccounts": null,
-        "linkedTicket": null,
-        "daysInQueue": 17,
-        "resolved": false,
-        "errorType": "AI_PARSE"
-      },
-      {
-        "id": "CIWP-BACKEND-1K",
-        "title": "TIMEOUT: Gemini 60s generation timeout",
-        "severity": "medium",
-        "occurrences": 4,
-        "affectedAccounts": null,
-        "linkedTicket": null,
-        "daysInQueue": 17,
-        "resolved": false,
-        "errorType": "TIMEOUT"
-      },
-      {
-        "id": "CIWP-BACKEND-1X",
-        "title": "RATE_LIMIT: Vertex AI 429 Too Many Requests",
-        "severity": "medium",
-        "occurrences": 4,
-        "affectedAccounts": null,
-        "linkedTicket": null,
-        "daysInQueue": 10,
-        "resolved": false,
-        "errorType": "RATE_LIMIT"
-      },
-      {
-        "id": "CIWP-BACKEND-38",
-        "title": "TIMEOUT: TCPTransport closed during active generation",
-        "severity": "high",
-        "occurrences": 3,
-        "affectedAccounts": null,
-        "linkedTicket": null,
-        "daysInQueue": 1,
-        "resolved": false,
-        "errorType": "TIMEOUT",
-        "note": "Escalating \u2014 1 event Apr 23, now 3 events affecting 3 distinct users. Culprit: /api/ciwp/active-generation/{school_id}"
-      },
-      {
-        "id": "CIWP-BACKEND-39",
-        "title": "DB_ERROR: column StandardizedIndicatorLibraries.sourceAuthority does not exist",
-        "severity": "high",
-        "occurrences": 1,
-        "affectedAccounts": null,
-        "linkedTicket": null,
-        "daysInQueue": 0,
-        "resolved": false,
-        "errorType": "DB_ERROR",
-        "note": "NEW Apr 24 \u2014 migration gap in step-2 flow. Same pattern as Indicators/ISBEDataGaps."
-      },
-      {
-        "id": "CIWP-BACKEND-36",
-        "title": "HTTPException: Database error creating goal",
-        "severity": "high",
-        "occurrences": 1,
-        "affectedAccounts": null,
-        "linkedTicket": null,
-        "daysInQueue": 2,
-        "resolved": false,
-        "errorType": "DB_ERROR",
-        "note": "NEW Apr 24 \u2014 /api/v1/crud/goals route failure, linked to goal_category_enum issues."
-      }
+      { "id": "CIWP-BACKEND-1E", "title": "Failed to batch fetch requirements: MagicMock name mock.dashboard_id", "severity": "critical", "occurrences": 24, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 17, "resolved": false, "errorType": "AI_FAIL" },
+      { "id": "CIWP-BACKEND-22", "title": "AssertionError: Status code 204 must not have a response body", "severity": "critical", "occurrences": 16, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 8, "resolved": false, "errorType": null },
+      { "id": "CIWP-BACKEND-1M", "title": "All uploaded documents flagged as invalid or contain no priorities. Refusing to generate.", "severity": "critical", "occurrences": 14, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 16, "resolved": false, "errorType": "INSUFFICIENT_CONTEXT" },
+      { "id": "CIWP-BACKEND-28", "title": "HTTPException: Unexpected error: relation \"Indicators\" does not exist", "severity": "critical", "occurrences": 11, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-2S", "title": "DBAPIError: invalid input value for enum \"enum_CIWPGoals_dataSource\": \"ai_generation\"", "severity": "critical", "occurrences": 11, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-1B", "title": "HTTPException: Analysis failed: Synthesis failed to produce a result", "severity": "critical", "occurrences": 11, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 17, "resolved": false, "errorType": "AI_FAIL" },
+      { "id": "CIWP-BACKEND-1J", "title": "JSONDecodeError: Expecting ',' delimiter: line 19 column 89 (char 1060)", "severity": "high", "occurrences": 10, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 16, "resolved": false, "errorType": "AI_PARSE" },
+      { "id": "CIWP-BACKEND-1D", "title": "HTTPException: Service unavailable - Failed to connect to mcp-knowledge server", "severity": "high", "occurrences": 10, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 17, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-20", "title": "HTTPException: Failed to enqueue async task locally.", "severity": "high", "occurrences": 10, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 10, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-17", "title": "HTTPException: SAFETY_CHECK_FAILED - PII batch check failed (upstream_status 500)", "severity": "high", "occurrences": 10, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 18, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-12", "title": "Application startup failed. Exiting.", "severity": "high", "occurrences": 9, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 29, "resolved": false, "errorType": null },
+      { "id": "CIWP-BACKEND-13", "title": "Traceback (most recent call last)", "severity": "high", "occurrences": 9, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 29, "resolved": false, "errorType": null },
+      { "id": "CIWP-BACKEND-27", "title": "InvalidCatalogNameError: database \"ciwp_db\" not found", "severity": "high", "occurrences": 7, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-2K", "title": "HTTPException: SAFETY_CHECK_FAILED - PII service unavailable. Ensure mcp-knowledge is running.", "severity": "high", "occurrences": 6, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-2J", "title": "HTTPException: SAFETY_CHECK_FAILED - PII batch check failed (upstream_status 500)", "severity": "high", "occurrences": 6, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-2G", "title": "HTTPException: _pii_batch_all_pass() got unexpected keyword argument ignore_entities", "severity": "high", "occurrences": 6, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-1P", "title": "Failed to parse AI response as JSON: Expecting property name enclosed in double quotes", "severity": "high", "occurrences": 5, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 14, "resolved": false, "errorType": "AI_PARSE" },
+      { "id": "CIWP-BACKEND-2Y", "title": "PydanticUserError: TypeAdapter[list[CycleOut]] is not fully defined", "severity": "high", "occurrences": 4, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 6, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-1K", "title": "Gemini API timed out after 60s", "severity": "high", "occurrences": 4, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 16, "resolved": false, "errorType": "TIMEOUT" },
+      { "id": "CIWP-BACKEND-1X", "title": "ResourceExhausted: Resource exhausted. Please refer to error-code-429 for more details.", "severity": "high", "occurrences": 4, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 10, "resolved": false, "errorType": "RATE_LIMIT" },
+      { "id": "CIWP-BACKEND-2A", "title": "InvalidRequestError: mapper failed to init - GoalSuggestion join condition undetermined", "severity": "high", "occurrences": 4, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-1G", "title": "HTTPException: Unexpected error - MockStep1Response has no attribute recommended_goals", "severity": "high", "occurrences": 4, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 17, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-38", "title": "RuntimeError: unable to perform operation on TCPTransport closed=True", "severity": "high", "occurrences": 3, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 0, "resolved": false, "errorType": "HTTP", "note": "NEW Apr 24 — TCPTransport closed during active generation. Culprit: /api/ciwp/active-generation/{school_id}" },
+      { "id": "CIWP-BACKEND-2E", "title": "AttributeError: type object CIWPGoal has no attribute goal_dashboard_links", "severity": "high", "occurrences": 3, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-2D", "title": "HTTPException: Failed to fetch CIWP home data: CIWPGoal has no attribute goal_dashboard_links", "severity": "high", "occurrences": 3, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-2F", "title": "Unexpected error fetching CIWP home data: CIWPGoal has no attribute goal_dashboard_links", "severity": "high", "occurrences": 3, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": null },
+      { "id": "CIWP-BACKEND-2B", "title": "NoForeignKeysError: no foreign keys linking GoalSuggestion.target_goal tables", "severity": "high", "occurrences": 3, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-29", "title": "IntegrityError: insert on CIWPCycles violates foreign key constraint CIWPCycles_", "severity": "high", "occurrences": 3, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-1R", "title": "HTTPException: column Indicators.goal_name_template does not exist", "severity": "high", "occurrences": 3, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 13, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-32", "title": "AttributeError: CIWPGoal object has no attribute AccountId", "severity": "high", "occurrences": 2, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 2, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-2W", "title": "ProgrammingError: column \"school_id\" of relation \"CIWPCycles\" does not exist", "severity": "high", "occurrences": 2, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-2X", "title": "ProgrammingError: column \"school_id\" does not exist", "severity": "high", "occurrences": 2, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 6, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-2Q", "title": "AttributeError: MockCycle object has no attribute account_id (cycles/{cycle_id}/)", "severity": "high", "occurrences": 2, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-2M", "title": "HTTPException: relation \"Indicators\" does not exist (step-gen)", "severity": "high", "occurrences": 2, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-2H", "title": "HTTPException: _pii_batch_all_pass() got unexpected keyword argument ignore_entities", "severity": "high", "occurrences": 2, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-23", "title": "RuntimeError: No response returned.", "severity": "high", "occurrences": 2, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 8, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-1F", "title": "HTTPException: SAFETY_CHECK_FAILED - PII service unavailable (mcp-knowledge /pii)", "severity": "high", "occurrences": 2, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 17, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-1A", "title": "HTTPException: Unexpected error during plan generation: name allowed_metrics_config not defined", "severity": "high", "occurrences": 2, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 17, "resolved": false, "errorType": "AI_FAIL" },
+      { "id": "CIWP-BACKEND-16", "title": "HTTPException: SAFETY_CHECK_FAILED - PII batch check failed (upstream_status 403)", "severity": "high", "occurrences": 2, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 20, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-14", "title": "ValueError: Expected 1-5 priorities, got 0", "severity": "high", "occurrences": 2, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 22, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-39", "title": "ProgrammingError: column StandardizedIndicatorLibraries.sourceAuthority does not exist", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 0, "resolved": false, "errorType": "DB_ERROR", "note": "NEW Apr 24 — migration gap in step-2 flow" },
+      { "id": "CIWP-BACKEND-36", "title": "HTTPException: Database error creating goal", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 2, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-37", "title": "ProgrammingError: type \"goal_category_enum\" does not exist", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 2, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-35", "title": "Database error creating goal: type \"goal_category_enum\" does not exist", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 2, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-34", "title": "NameError: name \"CycleOut\" is not defined", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 2, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-33", "title": "ArgumentError: Mapped class CIWPGoal does not apply to any root entities in this query", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 2, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-31", "title": "AttributeError: ActionStepRecord object has no attribute owner_team_member_id", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 2, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-30", "title": "ValidationError: 1 validation error for GoalOut", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 2, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-2Z", "title": "MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 2, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-2V", "title": "ProgrammingError: relation \"PriorityActionSteps\" does not exist", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-2T", "title": "DBAPIError: invalid input value for enum ciwp_reflection_rating_enum: \"STRONG\"", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-2R", "title": "AttributeError: MockCycle object has no attribute account_id (cycles/{cycle_id})", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-2P", "title": "TypeError: school_id is an invalid keyword argument for CIWPCycle", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-2N", "title": "HTTPException: _pii_batch_all_pass() got unexpected keyword argument ignore_entities (variant)", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-2C", "title": "InvalidRequestError: Mapper CIWPGoal has no property goal_dashboard_links", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 7, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-26", "title": "InvalidRequestError: Mapper CachedAccount has no property ciwp_goals", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 8, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-25", "title": "InvalidRequestError: mapper failed to init - Account join condition undetermined", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 8, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-24", "title": "NoForeignKeysError: no foreign keys linking Account.ciwp_goals tables", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 8, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-21", "title": "AttributeError: GeneratePlanRequest object has no attribute goals", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 9, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-1Z", "title": "HTTPException: Failed to enqueue async task.", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 10, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-1Y", "title": "HTTPException: Failed to enqueue async task locally. (second instance)", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 10, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-1V", "title": "Unexpected error during CIWP plan generation: 429 Resource exhausted", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 10, "resolved": false, "errorType": "RATE_LIMIT" },
+      { "id": "CIWP-BACKEND-1T", "title": "ResourceExhausted: Resource exhausted - error-code-429", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 10, "resolved": false, "errorType": "RATE_LIMIT" },
+      { "id": "CIWP-BACKEND-1W", "title": "Gemini API error: 429 Resource exhausted - error-code-429", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 10, "resolved": false, "errorType": "RATE_LIMIT" },
+      { "id": "CIWP-BACKEND-1S", "title": "OSError: Multiple exceptions: Connection refused, Network is unreachable", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 12, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-1N", "title": "Failed to parse AI response as JSON: Expecting value: line 1 column 1 (char 0)", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 14, "resolved": false, "errorType": "AI_PARSE" },
+      { "id": "CIWP-BACKEND-1H", "title": "AttributeError: MockStep1Response object has no attribute recommended_goals", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 17, "resolved": false, "errorType": "DB_ERROR" },
+      { "id": "CIWP-BACKEND-18", "title": "HTTPException: Failed to generate priorities: Task pending in BaseHTTPMiddleware", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 17, "resolved": false, "errorType": "AI_FAIL" },
+      { "id": "CIWP-BACKEND-1C", "title": "RuntimeError: Event loop is closed", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 17, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-19", "title": "HTTPException: Unexpected error - MockStep1Response has no attribute recommended_goals (variant)", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 17, "resolved": false, "errorType": "HTTP" },
+      { "id": "CIWP-BACKEND-11", "title": "ConnectionRefusedError: [Errno 111] Connection refused", "severity": "high", "occurrences": 1, "affectedAccounts": null, "linkedTicket": null, "daysInQueue": 29, "resolved": false, "errorType": "HTTP" }
     ]
   },
   "centuryIntegration": {
@@ -1376,13 +1324,14 @@
         "label": "CIWPs generated today (incl. internal)"
       },
       "chart": {
-        "logins": [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "logins": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         "generated": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        "visits": [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "visits": [0, 0, 0, 0, 0, 0, 0, 0, 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         "labels": ["12a", "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12p", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p"]
       },
+      "loginDataNote": "user_login event does not carry environment property — login counts unavailable via Mixpanel API",
       "funnel": [
-        { "label": "Login", "value": 100 },
+        { "label": "Login", "value": 0 },
         { "label": "AI Analysis", "value": 0 },
         { "label": "CIWP Generated", "value": 0 }
       ]
@@ -1400,13 +1349,14 @@
         "label": "CIWPs generated (incl. internal)"
       },
       "chart": {
-        "logins": [19, 16, 2, 3, 17, 31, 15, 1],
-        "generated": [0, 0, 0, 0, 0, 2, 2, 0],
-        "visits": [9, 8, 2, 2, 8, 14, 9, 1],
-        "labels": ["Apr 16", "Apr 17", "Apr 18", "Apr 19", "Apr 20", "Apr 21", "Apr 22", "Apr 23"]
+        "logins": [0, 0, 0, 0, 0, 0, 0, 0],
+        "generated": [0, 0, 0, 0, 3, 4, 1, 0],
+        "visits": [34, 2, 2, 25, 72, 23, 69, 11],
+        "labels": ["Apr 17", "Apr 18", "Apr 19", "Apr 20", "Apr 21", "Apr 22", "Apr 23", "Apr 24"]
       },
+      "loginDataNote": "user_login event does not carry environment property — login counts unavailable via Mixpanel API",
       "funnel": [
-        { "label": "Login", "value": 100 },
+        { "label": "Login", "value": 0 },
         { "label": "AI Analysis", "value": 7 },
         { "label": "CIWP Generated", "value": 4 }
       ]
@@ -1424,13 +1374,14 @@
         "label": "CIWPs generated (incl. internal)"
       },
       "chart": {
-        "logins": [9, 5, 8, 4, 1, 3, 18, 15, 23, 25, 12, 2, 4, 14, 18, 17, 19, 5, 1, 3, 22, 25, 16, 19, 16, 2, 3, 17, 31, 15, 1],
-        "generated": [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 2, 0, 0, 0, 0, 0, 2, 2, 0],
-        "visits": [5, 5, 5, 4, 1, 3, 15, 11, 19, 22, 5, 0, 2, 6, 11, 11, 14, 3, 1, 2, 7, 14, 8, 9, 8, 2, 2, 8, 14, 9, 1],
-        "labels": ["Mar 24", "Mar 25", "Mar 26", "Mar 27", "Mar 28", "Mar 29", "Mar 30", "Mar 31", "Apr 1", "Apr 2", "Apr 3", "Apr 4", "Apr 5", "Apr 6", "Apr 7", "Apr 8", "Apr 9", "Apr 10", "Apr 11", "Apr 12", "Apr 13", "Apr 14", "Apr 15", "Apr 16", "Apr 17", "Apr 18", "Apr 19", "Apr 20", "Apr 21", "Apr 22", "Apr 23"]
+        "logins": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "generated": [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 14, 2, 0, 0, 0, 0, 0, 3, 4, 1, 0],
+        "visits": [33, 62, 6, 2, 9, 99, 38, 142, 99, 39, 0, 5, 13, 29, 62, 146, 9, 2, 2, 57, 91, 42, 33, 34, 2, 2, 25, 72, 23, 69, 11],
+        "labels": ["Mar 25", "Mar 26", "Mar 27", "Mar 28", "Mar 29", "Mar 30", "Mar 31", "Apr 1", "Apr 2", "Apr 3", "Apr 4", "Apr 5", "Apr 6", "Apr 7", "Apr 8", "Apr 9", "Apr 10", "Apr 11", "Apr 12", "Apr 13", "Apr 14", "Apr 15", "Apr 16", "Apr 17", "Apr 18", "Apr 19", "Apr 20", "Apr 21", "Apr 22", "Apr 23", "Apr 24"]
       },
+      "loginDataNote": "user_login event does not carry environment property — login counts unavailable via Mixpanel API",
       "funnel": [
-        { "label": "Login", "value": 100 },
+        { "label": "Login", "value": 0 },
         { "label": "AI Analysis", "value": 7 },
         { "label": "CIWP Generated", "value": 5 }
       ]
