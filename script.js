@@ -6,7 +6,7 @@ let currentTier = 'all';
 // ── Boot ──────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const res = await fetch('./data.json');
+  const res = await fetch('./data.json', { cache: 'no-store' });
   DATA = await res.json();
   renderFreshness();
   renderView('adoption');

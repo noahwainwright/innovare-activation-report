@@ -741,20 +741,20 @@
     {
       "account": "A. P. Willits Elementary School",
       "tier": "Free",
-      "ciwpsCreated": 1,
-      "activationStage": 3,
+      "ciwpsCreated": 0,
+      "activationStage": 0,
       "events": {
-        "user_login": true,
-        "ciwp_ai_analysis_completed": true,
-        "ciwp_generated": true
+        "user_login": false,
+        "ciwp_ai_analysis_completed": false,
+        "ciwp_generated": false
       },
       "daysSinceEnabled": null,
       "ciwpEnabledDate": null,
-      "firstCiwpDate": "2026-04-13",
-      "healthStatus": "active",
-      "lastActivityDate": "2026-04-22",
+      "firstCiwpDate": null,
+      "healthStatus": "dormant",
+      "lastActivityDate": null,
       "century": null,
-      "ciwpsCreatedNote": "Mixpanel 1M breakdown shows 8 unique ciwp_generated users \u2014 all internal (Innovare=6, Prod test QA=1, Prod-Automation=1). Willits not attributed in Mixpanel. 1 confirmed external generation retained from Apr 13."
+      "ciwpsCreatedNote": "CORRECTED Apr 24: Apr 13 ciwp_generated event was mingxing@innovaresip.com (internal) operating in this account context. No external user has self-activated. Activation stage reset to 0."
     }
   ],
   "ciwpTesting": {
@@ -1435,6 +1435,15 @@
         { "label": "CIWP Generated", "value": 5 }
       ]
     }
+  },
+  "bugVelocity": {
+    "labels": ["Apr 15", "Apr 16", "Apr 17", "Apr 18", "Apr 19", "Apr 20", "Apr 21", "Apr 22", "Apr 23", "Apr 24"],
+    "opened": [0, 6, 0, 0, 1, 1, 1, 2, 0, 0],
+    "closed": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    "mttrStatus": null,
+    "mttrDays": null,
+    "openedStatus": "derived_from_daysOpen",
+    "note": "Opened counts derived from ticket daysOpen field as of Apr 24. Apr 16 spike: IW-6807, IW-6796, IW-6798, IW-6809, IW-6808, IW-6810 all opened that day. Closed count unavailable — Jira transition history not accessible (CIWP_Launch label returns 0 results)."
   },
   "dataQuality": {
     "internalAccountsFiltered": false,
