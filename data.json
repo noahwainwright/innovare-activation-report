@@ -1327,7 +1327,7 @@
       "chart": {
         "logins": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         "generated": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        "visits": [0, 0, 0, 0, 0, 0, 0, 0, 1, 10, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "visits": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         "labels": ["12a", "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12p", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p"]
       },
       "loginDataNote": "user_login event does not carry environment property — login counts unavailable via Mixpanel API",
@@ -1352,7 +1352,7 @@
       "chart": {
         "logins": [0, 0, 0, 0, 0, 0, 0, 0],
         "generated": [0, 0, 0, 0, 3, 4, 1, 0],
-        "visits": [34, 2, 2, 25, 72, 23, 69, 14],
+        "visits": [0, 0, 0, 0, 0, 0, 0, 0],
         "labels": ["Apr 17", "Apr 18", "Apr 19", "Apr 20", "Apr 21", "Apr 22", "Apr 23", "Apr 24"]
       },
       "loginDataNote": "user_login event does not carry environment property — login counts unavailable via Mixpanel API",
@@ -1377,7 +1377,7 @@
       "chart": {
         "logins": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         "generated": [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 11, 2, 0, 0, 0, 0, 0, 3, 4, 1, 0],
-        "visits": [33, 62, 6, 2, 9, 99, 38, 142, 99, 39, 0, 5, 13, 29, 62, 146, 9, 2, 2, 57, 91, 42, 33, 34, 2, 2, 25, 72, 23, 69, 14],
+        "visits": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         "labels": ["Mar 25", "Mar 26", "Mar 27", "Mar 28", "Mar 29", "Mar 30", "Mar 31", "Apr 1", "Apr 2", "Apr 3", "Apr 4", "Apr 5", "Apr 6", "Apr 7", "Apr 8", "Apr 9", "Apr 10", "Apr 11", "Apr 12", "Apr 13", "Apr 14", "Apr 15", "Apr 16", "Apr 17", "Apr 18", "Apr 19", "Apr 20", "Apr 21", "Apr 22", "Apr 23", "Apr 24"]
       },
       "loginDataNote": "user_login event does not carry environment property — login counts unavailable via Mixpanel API",
