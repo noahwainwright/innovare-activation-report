@@ -709,11 +709,12 @@
   "ciwpTesting": {
     "date": "2026-04-24",
     "jiraBase": "https://innovaresip.atlassian.net/browse/",
+    "openCountOverride": { "bugs": 11, "stories": 7 },
     "primary": {
       "label": "Open Tickets",
-      "value": 39,
+      "value": 18,
       "unit": "",
-      "sub": "19 bugs, 20 stories"
+      "sub": "11 bugs, 7 stories"
     },
     "summary": [
       {

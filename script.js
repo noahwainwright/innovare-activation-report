@@ -682,14 +682,16 @@ function renderSummary() {
   const allTickets = getAllTickets();
   const bugs = allTickets.filter(t => t.type === 'Bug');
   const stories = allTickets.filter(t => t.type !== 'Bug');
-  const totalOpen = bugs.length + stories.length;
+  const override = DATA.ciwpTesting?.openCountOverride;
+  const bugCount = override?.bugs ?? bugs.length;
+  const storyCount = override?.stories ?? stories.length;
   const p0p1 = bugs.filter(t => t.priority === 'P0' || t.priority === 'P1').length;
   const avgDays = bugs.length > 0 ? Math.round(bugs.reduce((s, t) => s + (t.daysOpen || 0), 0) / bugs.length) : 0;
   const workarounds = allTickets.filter(t => t.workaround).length;
 
   // Natural sentence with scorecard data
-  let sentence = `We have <span class="summary-count status-review">${bugs.length}</span> bug${bugs.length !== 1 ? 's' : ''}`;
-  sentence += ` and <span class="summary-count status-dev">${stories.length}</span> stor${stories.length !== 1 ? 'ies' : 'y'} open`;
+  let sentence = `We have <span class="summary-count status-review">${bugCount}</span> bug${bugCount !== 1 ? 's' : ''}`;
+  sentence += ` and <span class="summary-count status-dev">${storyCount}</span> stor${storyCount !== 1 ? 'ies' : 'y'} open`;
   sentence += ` with an average resolution time of <span class="summary-count">${avgDays} days</span>`;
   if (p0p1 > 0) sentence += ` and <span class="summary-count alert-inline">${p0p1}</span> critical`;
   if (workarounds > 0) sentence += `. <span class="summary-count status-complete">${workarounds}</span> workaround${workarounds !== 1 ? 's' : ''} available`;
