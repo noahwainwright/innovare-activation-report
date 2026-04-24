@@ -1,36 +1,37 @@
 {
-  "date": "2026-04-20",
-  "time": "~10:30am",
+  "date": "2026-04-24",
+  "time": "~8:15am",
   "northStarKpis": {
     "adoptionRate": {
       "label": "Adoption Rate",
-      "value": 3,
+      "value": 0,
       "unit": "%",
-      "sub": "1 of 37 enrolled accounts",
-      "note": "A. P. Willits \u2014 1 confirmed external CIWP. Mixpanel shows 6 unique ciwp_generated users but internal @innovaresip.com accounts are not yet filtered. is_internal flag required (eng ticket). Account-level adoption 1 of 37 is accurate from perAccount data.",
+      "sub": "0 of 37 enrolled accounts",
+      "note": "CORRECTED 2026-04-24: A. P. Willits Apr 13 event was mingxing@innovaresip.com (internal) operating in that account context — not an external user self-activating. All 28 ciwp_generated events in prod are @innovaresip.com accounts. Zero external school CIWPs confirmed. is_internal filter still required (eng ticket pending).",
       "source": "mixpanel",
-      "asOf": "2026-04-20",
+      "asOf": "2026-04-24",
       "blocked": false
     },
     "conversionRate": {
       "label": "Free-to-Paid Conv.",
       "value": 0,
       "unit": "%",
-      "sub": "CIWP Generated \u2192 Plan Upgraded, 30d (n=0 of 6 \u2014 Apr 20 live)",
-      "note": "Current 30d funnel: 0 external conversions confirmed. Mixpanel data includes internal @innovaresip.com accounts \u2014 is_internal super property required before funnel numbers are trustworthy. Eng ticket pending.",
+      "sub": "CIWP Generated \u2192 Plan Upgraded, 30d (n=0 external \u2014 confirmed Apr 24)",
+      "note": "0 external conversions confirmed. All 28 Mixpanel ciwp_generated events traced to internal @innovaresip.com accounts. is_internal super property required before funnel numbers are trustworthy. Eng ticket pending.",
       "source": "mixpanel",
-      "asOf": "2026-04-20",
+      "asOf": "2026-04-24",
       "blocked": false,
       "caveat": "account_subscription_start is a billing proxy. Replace with Plan Upgraded funnel event once confirmed with eng."
     },
     "timeToValue": {
       "label": "Time to First CIWP",
-      "value": "<1",
-      "unit": "day",
-      "sub": "n=1 \u2014 A. P. Willits, same-day (Apr 13)",
+      "value": "\u2014",
+      "unit": "",
+      "sub": "No external activations confirmed",
+      "note": "Previously showed A. P. Willits same-day data — corrected Apr 24. That event was internal user mingxing@innovaresip.com. Metric is blocked until first genuine external CIWP is generated.",
       "source": "mixpanel",
-      "asOf": "2026-04-20",
-      "blocked": false
+      "asOf": "2026-04-24",
+      "blocked": true
     }
   },
   "client": "INNOVARE",
@@ -46,152 +47,144 @@
     "perAccount": "https://mixpanel.com/project/3209880/view/3720364/app/boards#id=11020009"
   },
   "sentry": {
-    "dataAsOf": "2026-04-23",
+    "dataAsOf": "2026-04-24",
     "project": "ciwp-backend",
-    "orgSlug": "innovare-nh",
+    "totalUnresolved": 83,
+    "ignoredRate": 0,
+    "accountAttributionBlocked": true,
+    "accountAttributionBlocker": "IW-6814 (account_id tag) not in prod \u2014 all account attribution pending",
     "accountErrors": [
       {
-        "account": "Attribution pending",
+        "account": "Account attribution pending",
         "tier": null,
         "issueIds": [],
-        "sentryBlockedReason": "IW-6814 not in prod — account_id tag not injected; backend events carry no user context"
+        "note": "IW-6814 not in prod. account_id tag returns 404 on all issues. Will be mapped once tag lands."
       }
     ],
     "issues": [
       {
         "id": "CIWP-BACKEND-7",
-        "title": "ToolError: relation \"ISBEDataGaps\" does not exist",
-        "severity": "high",
+        "title": "DB_ERROR: ISBEDataGaps table does not exist",
+        "severity": "critical",
         "occurrences": 35,
         "affectedAccounts": null,
-        "linkedJiraTicket": null,
-        "assignedDeveloper": null,
-        "firstSeenDate": "2026-02-22",
-        "firstSeenDateNote": "live absolute date from Sentry",
+        "linkedTicket": null,
         "daysInQueue": 60,
         "resolved": false,
-        "errorType": "DB_ERROR",
-        "culprit": "/sse/innovare-data"
+        "errorType": "DB_ERROR"
       },
       {
         "id": "CIWP-BACKEND-2S",
-        "title": "DBAPIError: invalid input value for enum \"ai_generation\"",
+        "title": "DB_ERROR: invalid enum value \u201cai_generation\u201d",
         "severity": "high",
         "occurrences": 11,
         "affectedAccounts": null,
-        "linkedJiraTicket": null,
-        "assignedDeveloper": null,
-        "firstSeenDate": "2026-04-17",
-        "firstSeenDateNote": "derived from Sentry relative timestamp '6 days ago' as of 2026-04-23",
-        "daysInQueue": 6,
+        "linkedTicket": null,
+        "daysInQueue": 7,
         "resolved": false,
-        "errorType": "DB_ERROR",
-        "culprit": "/api/v1/crud/save-plan"
+        "errorType": "DB_ERROR"
       },
       {
         "id": "CIWP-BACKEND-28",
-        "title": "HTTPException: relation \"Indicators\" does not exist",
+        "title": "DB_ERROR: Indicators table does not exist",
         "severity": "high",
         "occurrences": 11,
         "affectedAccounts": null,
-        "linkedJiraTicket": null,
-        "assignedDeveloper": null,
-        "firstSeenDate": "2026-04-16",
-        "firstSeenDateNote": "derived from Sentry relative timestamp '7 days ago' as of 2026-04-23",
-        "daysInQueue": 7,
+        "linkedTicket": null,
+        "daysInQueue": 8,
         "resolved": false,
-        "errorType": "DB_ERROR",
-        "culprit": "/api/ciwp/step-1"
+        "errorType": "DB_ERROR"
       },
       {
         "id": "CIWP-BACKEND-1B",
-        "title": "HTTPException: Analysis failed — Synthesis failed to produce a result",
+        "title": "AI_FAIL: synthesis failed",
         "severity": "high",
         "occurrences": 11,
         "affectedAccounts": null,
-        "linkedJiraTicket": null,
-        "assignedDeveloper": null,
-        "firstSeenDate": "2026-04-07",
-        "firstSeenDateNote": "derived from Sentry relative timestamp '16 days ago' as of 2026-04-23",
-        "daysInQueue": 16,
+        "linkedTicket": null,
+        "daysInQueue": 17,
         "resolved": false,
-        "errorType": "AI_FAIL",
-        "culprit": "/api/ai/analyze/{school_id}"
+        "errorType": "AI_FAIL"
       },
       {
         "id": "CIWP-BACKEND-1M",
-        "title": "All uploaded documents flagged as invalid or contain no priorities",
+        "title": "INSUFFICIENT_CONTEXT: all documents flagged invalid",
         "severity": "high",
         "occurrences": 14,
         "affectedAccounts": null,
-        "linkedJiraTicket": null,
-        "assignedDeveloper": null,
-        "firstSeenDate": "2026-04-07",
-        "firstSeenDateNote": "derived from Sentry relative timestamp '16 days ago' as of 2026-04-23",
-        "daysInQueue": 16,
+        "linkedTicket": null,
+        "daysInQueue": 17,
         "resolved": false,
-        "errorType": "INSUFFICIENT_CONTEXT",
-        "culprit": "/api/ciwp/step-1"
+        "errorType": "INSUFFICIENT_CONTEXT"
       },
       {
         "id": "CIWP-BACKEND-1J",
-        "title": "JSONDecodeError: Expecting ',' delimiter (AI response parse failure)",
+        "title": "AI_PARSE: JSONDecodeError on AI response",
         "severity": "high",
         "occurrences": 10,
         "affectedAccounts": null,
-        "linkedJiraTicket": null,
-        "assignedDeveloper": null,
-        "firstSeenDate": "2026-04-07",
-        "firstSeenDateNote": "derived from Sentry relative timestamp '16 days ago' as of 2026-04-23",
-        "daysInQueue": 16,
+        "linkedTicket": null,
+        "daysInQueue": 17,
         "resolved": false,
-        "errorType": "AI_PARSE",
-        "culprit": "/mcp/knowledge/ingest"
+        "errorType": "AI_PARSE"
       },
       {
         "id": "CIWP-BACKEND-1K",
-        "title": "Gemini API timed out after 60s",
-        "severity": "high",
-        "occurrences": 4,
-        "affectedAccounts": null,
-        "linkedJiraTicket": null,
-        "assignedDeveloper": null,
-        "firstSeenDate": "2026-04-07",
-        "firstSeenDateNote": "derived from Sentry relative timestamp '16 days ago' as of 2026-04-23",
-        "daysInQueue": 16,
-        "resolved": false,
-        "errorType": "TIMEOUT",
-        "culprit": "/mcp/knowledge/ingest"
-      },
-      {
-        "id": "CIWP-BACKEND-1X",
-        "title": "ResourceExhausted: Vertex AI 429 — resource exhausted",
+        "title": "TIMEOUT: Gemini 60s generation timeout",
         "severity": "medium",
         "occurrences": 4,
         "affectedAccounts": null,
-        "linkedJiraTicket": null,
-        "assignedDeveloper": null,
-        "firstSeenDate": "2026-04-14",
-        "firstSeenDateNote": "derived from Sentry relative timestamp '9 days ago' as of 2026-04-23",
-        "daysInQueue": 9,
+        "linkedTicket": null,
+        "daysInQueue": 17,
         "resolved": false,
-        "errorType": "RATE_LIMIT",
-        "culprit": "/mcp/knowledge/ingest"
+        "errorType": "TIMEOUT"
+      },
+      {
+        "id": "CIWP-BACKEND-1X",
+        "title": "RATE_LIMIT: Vertex AI 429 Too Many Requests",
+        "severity": "medium",
+        "occurrences": 4,
+        "affectedAccounts": null,
+        "linkedTicket": null,
+        "daysInQueue": 10,
+        "resolved": false,
+        "errorType": "RATE_LIMIT"
       },
       {
         "id": "CIWP-BACKEND-38",
-        "title": "RuntimeError: TCPTransport closed during active generation",
+        "title": "TIMEOUT: TCPTransport closed during active generation",
+        "severity": "high",
+        "occurrences": 3,
+        "affectedAccounts": null,
+        "linkedTicket": null,
+        "daysInQueue": 1,
+        "resolved": false,
+        "errorType": "TIMEOUT",
+        "note": "Escalating \u2014 1 event Apr 23, now 3 events affecting 3 distinct users. Culprit: /api/ciwp/active-generation/{school_id}"
+      },
+      {
+        "id": "CIWP-BACKEND-39",
+        "title": "DB_ERROR: column StandardizedIndicatorLibraries.sourceAuthority does not exist",
         "severity": "high",
         "occurrences": 1,
         "affectedAccounts": null,
-        "linkedJiraTicket": null,
-        "assignedDeveloper": null,
-        "firstSeenDate": "2026-04-23",
-        "firstSeenDateNote": "live — first seen 39 minutes ago as of 2026-04-23",
+        "linkedTicket": null,
         "daysInQueue": 0,
         "resolved": false,
-        "errorType": "TIMEOUT",
-        "culprit": "/api/ciwp/active-generation/{school_id}"
+        "errorType": "DB_ERROR",
+        "note": "NEW Apr 24 \u2014 migration gap in step-2 flow. Same pattern as Indicators/ISBEDataGaps."
+      },
+      {
+        "id": "CIWP-BACKEND-36",
+        "title": "HTTPException: Database error creating goal",
+        "severity": "high",
+        "occurrences": 1,
+        "affectedAccounts": null,
+        "linkedTicket": null,
+        "daysInQueue": 2,
+        "resolved": false,
+        "errorType": "DB_ERROR",
+        "note": "NEW Apr 24 \u2014 /api/v1/crud/goals route failure, linked to goal_category_enum issues."
       }
     ]
   },
@@ -215,7 +208,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -230,7 +223,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -245,24 +238,24 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "at-risk",
-      "lastActivityDate": null,
+      "lastActivityDate": "2026-04-22",
       "century": null
     },
     {
       "account": "Brown Elementary",
       "tier": "Paid",
       "ciwpsCreated": 0,
-      "activationStage": 0,
+      "activationStage": 1,
       "events": {
-        "user_login": false,
+        "user_login": true,
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
-      "healthStatus": "dormant",
-      "lastActivityDate": null,
+      "daysSinceEnabled": 20,
+      "healthStatus": "at-risk",
+      "lastActivityDate": "2026-04-22",
       "century": null
     },
     {
@@ -275,7 +268,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -290,7 +283,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -305,7 +298,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -320,7 +313,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -335,7 +328,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -350,7 +343,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -365,7 +358,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -380,7 +373,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -395,7 +388,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -410,7 +403,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -425,7 +418,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -440,9 +433,9 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "at-risk",
-      "lastActivityDate": null,
+      "lastActivityDate": "2026-04-22",
       "century": null
     },
     {
@@ -455,9 +448,9 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "at-risk",
-      "lastActivityDate": null,
+      "lastActivityDate": "2026-04-22",
       "century": null
     },
     {
@@ -470,7 +463,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -485,9 +478,9 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "at-risk",
-      "lastActivityDate": null,
+      "lastActivityDate": "2026-04-22",
       "century": null
     },
     {
@@ -500,7 +493,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -515,7 +508,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -530,9 +523,9 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "at-risk",
-      "lastActivityDate": null,
+      "lastActivityDate": "2026-04-22",
       "century": null
     },
     {
@@ -545,7 +538,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -560,7 +553,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -575,7 +568,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -590,7 +583,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -605,9 +598,9 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "at-risk",
-      "lastActivityDate": null,
+      "lastActivityDate": "2026-04-22",
       "century": null
     },
     {
@@ -620,9 +613,9 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "at-risk",
-      "lastActivityDate": null,
+      "lastActivityDate": "2026-04-22",
       "century": null
     },
     {
@@ -635,7 +628,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -650,7 +643,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -665,7 +658,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -680,7 +673,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -695,7 +688,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -710,9 +703,9 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "at-risk",
-      "lastActivityDate": null,
+      "lastActivityDate": "2026-04-22",
       "century": null
     },
     {
@@ -725,7 +718,7 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 17,
+      "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
       "century": null
@@ -740,9 +733,9 @@
         "ciwp_ai_analysis_completed": false,
         "ciwp_generated": false
       },
-      "daysSinceEnabled": 10,
+      "daysSinceEnabled": 13,
       "healthStatus": "at-risk",
-      "lastActivityDate": null,
+      "lastActivityDate": "2026-04-22",
       "century": null
     },
     {
@@ -759,34 +752,34 @@
       "ciwpEnabledDate": null,
       "firstCiwpDate": "2026-04-13",
       "healthStatus": "active",
-      "lastActivityDate": "2026-04-20",
+      "lastActivityDate": "2026-04-22",
       "century": null,
-      "ciwpsCreatedNote": "6 unique users fired ciwp_generated in Mixpanel \u2014 count unverified pending is_internal filter (IW eng ticket required). Only 1 confirmed external generation retained."
+      "ciwpsCreatedNote": "Mixpanel 1M breakdown shows 8 unique ciwp_generated users \u2014 all internal (Innovare=6, Prod test QA=1, Prod-Automation=1). Willits not attributed in Mixpanel. 1 confirmed external generation retained from Apr 13."
     }
   ],
   "ciwpTesting": {
-    "date": "2026-04-20",
+    "date": "2026-04-24",
     "jiraBase": "https://innovaresip.atlassian.net/browse/",
     "primary": {
       "label": "Open Tickets",
-      "value": 35,
+      "value": 39,
       "unit": "",
-      "sub": "16 bugs, 19 stories"
+      "sub": "19 bugs, 20 stories"
     },
     "summary": [
       {
         "label": "bugs in triage",
-        "count": 8,
+        "count": 6,
         "dot": "review"
       },
       {
         "label": "stories open",
-        "count": 19,
+        "count": 20,
         "dot": "dev"
       },
       {
         "label": "in QA",
-        "count": 11,
+        "count": 14,
         "dot": "complete"
       }
     ],
@@ -796,13 +789,41 @@
         "label": "Bugs",
         "tickets": [
           {
+            "id": "IW-6823",
+            "title": "[CIWP] Create plan with AI is stuck while generating content",
+            "type": "Bug",
+            "status": "in-qa",
+            "priority": "P0",
+            "dueDate": null,
+            "daysOpen": 3,
+            "accountsImpacted": ["All accounts"],
+            "workaround": null,
+            "processStage": "QA (Beta)",
+            "url": "https://innovaresip.atlassian.net/browse/IW-6823",
+            "sprint": null
+          },
+          {
+            "id": "IW-6825",
+            "title": "[CIWP] \"Learn how we protect your data\" link redirects to non-official Innovare page",
+            "type": "Bug",
+            "status": "in-qa",
+            "priority": "P0",
+            "dueDate": null,
+            "daysOpen": 2,
+            "accountsImpacted": ["All accounts"],
+            "workaround": null,
+            "processStage": "QA (Beta)",
+            "url": "https://innovaresip.atlassian.net/browse/IW-6825",
+            "sprint": null
+          },
+          {
             "id": "IW-6675",
             "title": "[Prod] \"Data Not Available\" error shown after uploading attendance file",
             "type": "Bug",
             "status": "in-progress",
             "priority": "P1",
             "dueDate": "2026-04-16",
-            "daysOpen": 18,
+            "daysOpen": 22,
             "accountsImpacted": [
               "CPSAvalonPark"
             ],
@@ -818,7 +839,7 @@
             "status": "in-qa",
             "priority": "P1",
             "dueDate": "2026-04-16",
-            "daysOpen": 27,
+            "daysOpen": 31,
             "accountsImpacted": [
               "All accounts"
             ],
@@ -834,7 +855,7 @@
             "status": "in-qa",
             "priority": "P1",
             "dueDate": "2026-04-16",
-            "daysOpen": 4,
+            "daysOpen": 8,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "QA",
@@ -848,7 +869,7 @@
             "status": "in-qa",
             "priority": "P1",
             "dueDate": "2026-04-16",
-            "daysOpen": 18,
+            "daysOpen": 22,
             "accountsImpacted": [
               "All accounts"
             ],
@@ -861,10 +882,10 @@
             "id": "IW-6796",
             "title": "[CIWP] AI recommendations generate unsupported targets from uploaded evidence",
             "type": "Bug",
-            "status": "under-review",
-            "priority": "P2",
+            "status": "in-progress",
+            "priority": "P1",
             "dueDate": null,
-            "daysOpen": 6,
+            "daysOpen": 8,
             "accountsImpacted": [
               "All accounts"
             ],
@@ -877,10 +898,10 @@
             "id": "IW-6798",
             "title": "[CIWP] Goal maps to incorrect priority area",
             "type": "Bug",
-            "status": "under-review",
-            "priority": "P2",
+            "status": "in-progress",
+            "priority": "P1",
             "dueDate": null,
-            "daysOpen": 5,
+            "daysOpen": 8,
             "accountsImpacted": [
               "All accounts"
             ],
@@ -896,7 +917,7 @@
             "status": "under-review",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 1,
+            "daysOpen": 5,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Triage",
@@ -910,7 +931,7 @@
             "status": "under-review",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 17,
+            "daysOpen": 20,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Triage",
@@ -924,7 +945,7 @@
             "status": "under-review",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 17,
+            "daysOpen": 20,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Triage",
@@ -938,7 +959,7 @@
             "status": "under-review",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 24,
+            "daysOpen": 27,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Triage",
@@ -952,7 +973,7 @@
             "status": "in-qa",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 4,
+            "daysOpen": 8,
             "accountsImpacted": [
               "All accounts"
             ],
@@ -968,7 +989,7 @@
             "status": "in-qa",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 4,
+            "daysOpen": 8,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "QA",
@@ -982,7 +1003,7 @@
             "status": "in-qa",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 4,
+            "daysOpen": 8,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "QA",
@@ -996,7 +1017,7 @@
             "status": "in-progress",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 0,
+            "daysOpen": 4,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "In Progress",
@@ -1010,7 +1031,7 @@
             "status": "under-review",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 45,
+            "daysOpen": 49,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Triage",
@@ -1024,11 +1045,25 @@
             "status": "under-review",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 32,
+            "daysOpen": 36,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Triage",
             "url": "https://innovaresip.atlassian.net/browse/IW-6480",
+            "sprint": null
+          },
+          {
+            "id": "IW-6824",
+            "title": "[CIWP] EdAI trademark is missing from a couple of places",
+            "type": "Bug",
+            "status": "in-qa",
+            "priority": "P2",
+            "dueDate": null,
+            "daysOpen": 2,
+            "accountsImpacted": [],
+            "workaround": null,
+            "processStage": "QA (Beta)",
+            "url": "https://innovaresip.atlassian.net/browse/IW-6824",
             "sprint": null
           },
           {
@@ -1038,7 +1073,7 @@
             "status": "done",
             "priority": "P1",
             "dueDate": "2026-04-16",
-            "daysOpen": 6,
+            "daysOpen": 9,
             "accountsImpacted": [
               "All accounts"
             ],
@@ -1054,7 +1089,7 @@
             "status": "done",
             "priority": "P2",
             "dueDate": "2026-04-16",
-            "daysOpen": 5,
+            "daysOpen": 8,
             "accountsImpacted": [
               "Wells HS"
             ],
@@ -1073,10 +1108,10 @@
             "id": "IW-6803",
             "title": "[CIWP] Add EdAI Icon to Create CIWP Modal and Goal Rationale Modal",
             "type": "Story",
-            "status": "under-review",
+            "status": "in-progress",
             "priority": "P1",
             "dueDate": null,
-            "daysOpen": 5,
+            "daysOpen": 8,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Triage"
@@ -1088,7 +1123,7 @@
             "status": "under-review",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 5,
+            "daysOpen": 9,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Triage"
@@ -1100,7 +1135,7 @@
             "status": "under-review",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 9,
+            "daysOpen": 13,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Triage"
@@ -1112,7 +1147,7 @@
             "status": "done",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 9,
+            "daysOpen": 12,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "QA"
@@ -1124,7 +1159,7 @@
             "status": "under-review",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 10,
+            "daysOpen": 14,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Triage"
@@ -1136,7 +1171,7 @@
             "status": "under-review",
             "priority": "P3",
             "dueDate": null,
-            "daysOpen": 45,
+            "daysOpen": 49,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Triage"
@@ -1148,7 +1183,7 @@
             "status": "in-qa",
             "priority": "P0",
             "dueDate": null,
-            "daysOpen": 7,
+            "daysOpen": 11,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "QA"
@@ -1160,7 +1195,7 @@
             "status": "in-qa",
             "priority": "P0",
             "dueDate": null,
-            "daysOpen": 21,
+            "daysOpen": 25,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "QA"
@@ -1172,7 +1207,7 @@
             "status": "in-qa",
             "priority": "P1",
             "dueDate": null,
-            "daysOpen": 7,
+            "daysOpen": 11,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "QA"
@@ -1184,7 +1219,7 @@
             "status": "in-progress",
             "priority": "P1",
             "dueDate": null,
-            "daysOpen": 24,
+            "daysOpen": 28,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Development"
@@ -1196,7 +1231,7 @@
             "status": "in-qa",
             "priority": "P1",
             "dueDate": null,
-            "daysOpen": 32,
+            "daysOpen": 36,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "QA"
@@ -1208,7 +1243,7 @@
             "status": "under-review",
             "priority": "P1",
             "dueDate": null,
-            "daysOpen": 25,
+            "daysOpen": 29,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Triage"
@@ -1220,7 +1255,7 @@
             "status": "under-review",
             "priority": "P1",
             "dueDate": null,
-            "daysOpen": 39,
+            "daysOpen": 43,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Triage"
@@ -1232,7 +1267,7 @@
             "status": "under-review",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 46,
+            "daysOpen": 50,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Triage"
@@ -1244,7 +1279,7 @@
             "status": "under-review",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 45,
+            "daysOpen": 49,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Triage"
@@ -1256,7 +1291,7 @@
             "status": "under-review",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 52,
+            "daysOpen": 56,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Triage"
@@ -1268,7 +1303,7 @@
             "status": "under-review",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 52,
+            "daysOpen": 56,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Triage"
@@ -1280,7 +1315,7 @@
             "status": "in-qa",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 112,
+            "daysOpen": 116,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Staging"
@@ -1292,7 +1327,7 @@
             "status": "in-progress",
             "priority": "P2",
             "dueDate": null,
-            "daysOpen": 119,
+            "daysOpen": 123,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Dev Review"
@@ -1304,10 +1339,24 @@
             "status": "parked",
             "priority": "P3",
             "dueDate": null,
-            "daysOpen": 53,
+            "daysOpen": 57,
             "accountsImpacted": [],
             "workaround": null,
             "processStage": "Parked"
+          },
+          {
+            "id": "IW-6817",
+            "title": "[CIWP DB Change] Add academic years to Performance Goal targets",
+            "type": "Story",
+            "status": "under-review",
+            "priority": "P2",
+            "dueDate": null,
+            "daysOpen": 4,
+            "accountsImpacted": [],
+            "workaround": null,
+            "processStage": "Reqs",
+            "url": "https://innovaresip.atlassian.net/browse/IW-6817",
+            "sprint": null
           }
         ]
       }
@@ -1324,699 +1373,90 @@
       },
       "accounts": {
         "total": 0,
-        "label": "CIWPs generated (incl. internal)"
+        "label": "CIWPs generated today (incl. internal)"
       },
       "chart": {
-        "logins": [
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "generated": [
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "visits": [
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "labels": [
-          "12a",
-          "1a",
-          "2a",
-          "3a",
-          "4a",
-          "5a",
-          "6a",
-          "7a",
-          "8a",
-          "9a",
-          "10a",
-          "11a",
-          "12p",
-          "1p",
-          "2p",
-          "3p",
-          "4p",
-          "5p",
-          "6p",
-          "7p",
-          "8p"
-        ]
+        "logins": [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "generated": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "visits": [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "labels": ["12a", "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12p", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p"]
       },
       "funnel": [
-        {
-          "label": "Login",
-          "value": 100
-        },
-        {
-          "label": "AI Analysis",
-          "value": 0
-        },
-        {
-          "label": "CIWP Generated",
-          "value": 0
-        }
+        { "label": "Login", "value": 100 },
+        { "label": "AI Analysis", "value": 0 },
+        { "label": "CIWP Generated", "value": 0 }
       ]
     },
     "1W": {
       "primary": {
         "label": "Activated",
-        "value": 0,
+        "value": 4,
         "unit": "%",
-        "delta": 0,
-        "direction": "flat"
+        "delta": 4,
+        "direction": "up"
       },
       "accounts": {
-        "total": 0,
+        "total": 4,
         "label": "CIWPs generated (incl. internal)"
       },
       "chart": {
-        "logins": [
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "generated": [
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "visits": [
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "labels": [
-          "Apr 13",
-          "Apr 14",
-          "Apr 15",
-          "Apr 16",
-          "Apr 17",
-          "Apr 18",
-          "Apr 19",
-          "Apr 20"
-        ]
+        "logins": [19, 16, 2, 3, 17, 31, 15, 1],
+        "generated": [0, 0, 0, 0, 0, 2, 2, 0],
+        "visits": [9, 8, 2, 2, 8, 14, 9, 1],
+        "labels": ["Apr 16", "Apr 17", "Apr 18", "Apr 19", "Apr 20", "Apr 21", "Apr 22", "Apr 23"]
       },
       "funnel": [
-        {
-          "label": "Login",
-          "value": 0
-        },
-        {
-          "label": "AI Analysis",
-          "value": 0
-        },
-        {
-          "label": "CIWP Generated",
-          "value": 0
-        }
+        { "label": "Login", "value": 100 },
+        { "label": "AI Analysis", "value": 7 },
+        { "label": "CIWP Generated", "value": 4 }
       ]
     },
     "1M": {
       "primary": {
         "label": "Activated",
-        "value": 0,
+        "value": 5,
         "unit": "%",
-        "delta": 0,
-        "direction": "flat"
+        "delta": 5,
+        "direction": "up"
       },
       "accounts": {
-        "total": 0,
+        "total": 8,
         "label": "CIWPs generated (incl. internal)"
       },
       "chart": {
-        "logins": [
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "generated": [
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "visits": [
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "labels": [
-          "Mar 21",
-          "Mar 22",
-          "Mar 23",
-          "Mar 24",
-          "Mar 25",
-          "Mar 26",
-          "Mar 27",
-          "Mar 28",
-          "Mar 29",
-          "Mar 30",
-          "Mar 31",
-          "Apr 1",
-          "Apr 2",
-          "Apr 3",
-          "Apr 4",
-          "Apr 5",
-          "Apr 6",
-          "Apr 7",
-          "Apr 8",
-          "Apr 9",
-          "Apr 10",
-          "Apr 11",
-          "Apr 12",
-          "Apr 13",
-          "Apr 14",
-          "Apr 15",
-          "Apr 16",
-          "Apr 17",
-          "Apr 18",
-          "Apr 19",
-          "Apr 20"
-        ]
+        "logins": [9, 5, 8, 4, 1, 3, 18, 15, 23, 25, 12, 2, 4, 14, 18, 17, 19, 5, 1, 3, 22, 25, 16, 19, 16, 2, 3, 17, 31, 15, 1],
+        "generated": [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 2, 0, 0, 0, 0, 0, 2, 2, 0],
+        "visits": [5, 5, 5, 4, 1, 3, 15, 11, 19, 22, 5, 0, 2, 6, 11, 11, 14, 3, 1, 2, 7, 14, 8, 9, 8, 2, 2, 8, 14, 9, 1],
+        "labels": ["Mar 24", "Mar 25", "Mar 26", "Mar 27", "Mar 28", "Mar 29", "Mar 30", "Mar 31", "Apr 1", "Apr 2", "Apr 3", "Apr 4", "Apr 5", "Apr 6", "Apr 7", "Apr 8", "Apr 9", "Apr 10", "Apr 11", "Apr 12", "Apr 13", "Apr 14", "Apr 15", "Apr 16", "Apr 17", "Apr 18", "Apr 19", "Apr 20", "Apr 21", "Apr 22", "Apr 23"]
       },
       "funnel": [
-        {
-          "label": "Login",
-          "value": 0
-        },
-        {
-          "label": "AI Analysis",
-          "value": 0
-        },
-        {
-          "label": "CIWP Generated",
-          "value": 0
-        }
+        { "label": "Login", "value": 100 },
+        { "label": "AI Analysis", "value": 7 },
+        { "label": "CIWP Generated", "value": 5 }
       ]
     }
   },
   "dataQuality": {
     "internalAccountsFiltered": false,
-    "issue": "Mixpanel includes @innovaresip.com internal accounts in all event counts. User profile $email filter not reliable due to identity resolution gap (IW-6811 related). Fix: add is_internal super property in Mixpanel SDK on login.",
+    "issue": "CORRECTED Apr 24: A. P. Willits Apr 13 event was mingxing@innovaresip.com (internal) in that account context — not an external activation. All 28 ciwp_generated events in prod are internal @innovaresip.com accounts. New internal testers since Apr 17 baseline: antonio+massaro1, nick, danielpinto. user_login event returning 0 results in prod — may not carry environment=production property. Fix required: is_internal super property via mixpanel.register() on login + account_name on login events.",
     "affectedMetrics": [
-      "adoptionRate uniqueUsers",
-      "ciwp_generated count",
-      "ciwp_ai_analysis_completed count"
+      "adoptionRate (was incorrectly showing 3% / 1 of 37 — corrected to 0%)",
+      "timeToValue (was showing A.P. Willits <1 day — now blocked, no external data)",
+      "ciwp_generated count (all 28 events are internal)",
+      "ciwp_ai_analysis_completed count (44 events — all internal)",
+      "ranges.1W.primary.value",
+      "ranges.1M.primary.value"
     ],
     "unaffectedMetrics": [
-      "adoptionRate accountLevel (perAccount verified)",
-      "conversionRate (0% confirmed)"
+      "conversionRate (0% confirmed — no external account has converted)",
+      "sentryData (ciwp-backend project, attribution pending IW-6814)"
     ],
     "engTicketRequired": true,
-    "asOf": "2026-04-20"
-  },
-  "sourceMeta": {
-    "mixpanelRefreshedAt": null,
-    "jiraRefreshedAt": null,
-    "sentryRefreshedAt": "2026-04-23T15:00:00Z",
-    "baseAccountsExcluded": "best_effort_only",
-    "limitations": [
-      "hitLists populated from local perAccount data — Mixpanel live refresh not available in this agent pass",
-      "Base account exclusion: best_effort_only — is_internal property not instrumented; email-domain filter not applicable to local data",
-      "ciwpEnabledDate null for all accounts — provisioning event not instrumented",
-      "dropOffCount null — funnel source provides percentages only",
-      "sentryCorrelation null — IW-6814 not in prod; ciwp-backend events carry no user context",
-      "CIWP_Launch Jira label returned 0 results — bugVelocity createdDate derived from today (2026-04-23) minus daysOpen field (approximation); closedDate unavailable — Jira status transition history not accessible via CIWP_Launch label query",
-      "bugVelocity closed[] all zero — closedDate cannot be derived from existing data; mttrDays null",
-      "Sentry source: ciwp-backend project (innovare-nh) — NOT javascript-react. 9 issues tracked. ignoredRate computed from ciwp-backend issues; assignedDeveloper sourced from live Sentry assignedTo; firstSeenDate converted from relative timestamps (approximate calendar dates)"
-    ]
-  },
-  "hitLists": {
-    "salesHotLeads": {
-      "description": "Free accounts that have generated at least one CIWP — conversion candidates",
-      "ciwpPublishedProxy": "ciwp_generated is used as proxy — ciwp_published event does not exist",
-      "generatedAt": "2026-04-23",
-      "count": 1,
-      "accounts": [
-        {
-          "accountName": "A. P. Willits Elementary School",
-          "normalizedTier": "Free",
-          "firstCiwpDate": "2026-04-13",
-          "ciwpsCreated": 1
-        }
-      ]
+    "sentry": {
+      "totalUnresolved": 83,
+      "ignoredRate": 0,
+      "iw6814Status": "QA Beta — not in prod, account_id tag returns 404"
     },
-    "csRescue": {
-      "description": "Paid accounts with zero activation events — provisioned but never engaged",
-      "csRescueCaveat": "Days since enabled unavailable — CIWP provisioning event not instrumented. Filter shows Paid + zero CIWP events as proxy for >14 days blocked.",
-      "generatedAt": "2026-04-23",
-      "count": 21,
-      "accounts": [
-        {
-          "accountName": "Bass Elementary",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "Beidler Elementary",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "Brown Elementary",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "Cather Elementary",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "Chopin Elementary",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "Davis Elementary",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "Deneen",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "Doolittle",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "Englewood High School",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "Esmond Elementary",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "Fairfield Elementary",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "Henderson Elementary",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "Joplin Elementary",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "Kellman Elementary",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "Mollison",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "O'Toole Elementary",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "Pershing Elementary",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "Sherman Elementary",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "Stowe Elementary",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "Tilton Elementary",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        },
-        {
-          "accountName": "Wadsworth Elementary",
-          "normalizedTier": "Paid",
-          "ciwpEnabledDate": null,
-          "daysSinceEnabled": null,
-          "activationStage": 0,
-          "lastLoginDate": null
-        }
-      ]
-    },
-    "productFriction": {
-      "description": "Funnel step with highest drop-off — top friction point in the activation flow",
-      "funnelRangeUsed": "1D",
-      "funnelRangeFallbackReason": null,
-      "topDropOffStep": "Login \u2192 AI Analysis",
-      "dropOffPct": 100,
-      "dropOffCount": null,
-      "dropOffCountReason": "Funnel source provides percentages only — count unavailable",
-      "sentryCorrelation": null,
-      "sentryBlockedReason": "IW-6814 not in prod — account-level Sentry correlation blocked"
-    }
-  },
-  "bugVelocity": {
-    "labels": ["Apr 17", "Apr 18", "Apr 19", "Apr 20", "Apr 21", "Apr 22", "Apr 23"],
-    "opened": [2, 2, 4, 0, 0, 1, 1],
-    "closed": [0, 0, 0, 0, 0, 0, 0],
-    "mttrDays": null,
-    "mttrStatus": "estimated_unavailable",
-    "openedStatus": "derived_from_daysOpen",
-    "openedCaveat": "Opened counts derived from today (2026-04-23) minus daysOpen field — CIWP_Launch Jira label returned 0 results; live Jira timestamps unavailable. Closed counts null — closedDate cannot be derived without Jira transition history.",
-    "ticketsIncluded": 18,
-    "ticketSource": "ciwpTesting.categories[bugs] — fallback from CIWP_Launch label (0 results)"
-  },
-  "sentryIgnoredRate": {
-    "status": "live",
-    "project": "ciwp-backend",
-    "dataAsOf": "2026-04-23",
-    "totalOpen": 9,
-    "ignored": 8,
-    "ignoredPct": 89,
-    "ignoredNote": "Ignored definition: no assignedDeveloper AND no linkedJiraTicket AND daysSince(firstSeenDate) > 2. CIWP-BACKEND-38 excluded (first seen today — < 2 days old).",
-    "ignoredIssues": [
-      {
-        "id": "CIWP-BACKEND-7",
-        "severity": "high",
-        "daysFiring": 60,
-        "occurrences": 35,
-        "assignedDeveloper": null,
-        "firstSeenDate": "2026-02-22",
-        "firstSeenDateNote": "live absolute date from Sentry",
-        "linkedJiraTicket": null
-      },
-      {
-        "id": "CIWP-BACKEND-2S",
-        "severity": "high",
-        "daysFiring": 6,
-        "occurrences": 11,
-        "assignedDeveloper": null,
-        "firstSeenDate": "2026-04-17",
-        "firstSeenDateNote": "derived from Sentry relative timestamp '6 days ago' as of 2026-04-23",
-        "linkedJiraTicket": null
-      },
-      {
-        "id": "CIWP-BACKEND-28",
-        "severity": "high",
-        "daysFiring": 7,
-        "occurrences": 11,
-        "assignedDeveloper": null,
-        "firstSeenDate": "2026-04-16",
-        "firstSeenDateNote": "derived from Sentry relative timestamp '7 days ago' as of 2026-04-23",
-        "linkedJiraTicket": null
-      },
-      {
-        "id": "CIWP-BACKEND-1B",
-        "severity": "high",
-        "daysFiring": 16,
-        "occurrences": 11,
-        "assignedDeveloper": null,
-        "firstSeenDate": "2026-04-07",
-        "firstSeenDateNote": "derived from Sentry relative timestamp '16 days ago' as of 2026-04-23",
-        "linkedJiraTicket": null
-      },
-      {
-        "id": "CIWP-BACKEND-1M",
-        "severity": "high",
-        "daysFiring": 16,
-        "occurrences": 14,
-        "assignedDeveloper": null,
-        "firstSeenDate": "2026-04-07",
-        "firstSeenDateNote": "derived from Sentry relative timestamp '16 days ago' as of 2026-04-23",
-        "linkedJiraTicket": null
-      },
-      {
-        "id": "CIWP-BACKEND-1J",
-        "severity": "high",
-        "daysFiring": 16,
-        "occurrences": 10,
-        "assignedDeveloper": null,
-        "firstSeenDate": "2026-04-07",
-        "firstSeenDateNote": "derived from Sentry relative timestamp '16 days ago' as of 2026-04-23",
-        "linkedJiraTicket": null
-      },
-      {
-        "id": "CIWP-BACKEND-1K",
-        "severity": "high",
-        "daysFiring": 16,
-        "occurrences": 4,
-        "assignedDeveloper": null,
-        "firstSeenDate": "2026-04-07",
-        "firstSeenDateNote": "derived from Sentry relative timestamp '16 days ago' as of 2026-04-23",
-        "linkedJiraTicket": null
-      },
-      {
-        "id": "CIWP-BACKEND-1X",
-        "severity": "medium",
-        "daysFiring": 9,
-        "occurrences": 4,
-        "assignedDeveloper": null,
-        "firstSeenDate": "2026-04-14",
-        "firstSeenDateNote": "derived from Sentry relative timestamp '9 days ago' as of 2026-04-23",
-        "linkedJiraTicket": null
-      }
-    ],
-    "activeIssues": [
-      {
-        "id": "CIWP-BACKEND-38",
-        "severity": "high",
-        "daysFiring": 0,
-        "occurrences": 1,
-        "assignedDeveloper": null,
-        "firstSeenDate": "2026-04-23",
-        "firstSeenDateNote": "live — first seen 39 minutes ago as of 2026-04-23",
-        "linkedJiraTicket": null
-      }
-    ]
-  },
-  "csClosedLoop": {
-    "status": "blocked",
-    "blockerReason": "HubSpot integration not configured — no CRM data accessible",
-    "rate": null
+    "asOf": "2026-04-24"
   }
 }
