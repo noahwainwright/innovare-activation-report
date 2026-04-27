@@ -139,11 +139,21 @@
   },
   "centuryIntegration": {
     "status": "pending",
-    "blockedReason": "Data source and schema unknown \u2014 developer sync required",
+    "blockedReason": "Century alert source and schema unknown -- developer sync required. CIWP backend alert list is currently derived from captured Sentry ciwp-backend issues.",
+    "lastCheckedAt": "2026-04-27",
+    "refreshCadence": "Manual static refresh until Century backend alert connector is available.",
+    "backendAlerts": {
+      "source": "Sentry ciwp-backend captured feed",
+      "status": "derived_static",
+      "filters": ["open", "critical/high", "unresolved"],
+      "blockedReason": "No callable Century backend alert connector is exposed in this Codex session."
+    },
     "fields": [
       "centuryActive",
       "centuryLastSync",
-      "centuryEngagementScore"
+      "centuryEngagementScore",
+      "centuryAlertStatus",
+      "centuryLastBackendAlertAt"
     ]
   },
   "perAccount": [
@@ -709,12 +719,11 @@
   "ciwpTesting": {
     "date": "2026-04-24",
     "jiraBase": "https://innovaresip.atlassian.net/browse/",
-    "openCountOverride": { "bugs": 11, "stories": 7 },
     "primary": {
-      "label": "Open Tickets",
-      "value": 18,
+      "label": "Open Ticket Feed",
+      "value": 39,
       "unit": "",
-      "sub": "11 bugs, 7 stories"
+      "sub": "19 bugs, 20 stories/tasks"
     },
     "summary": [
       {
@@ -1420,5 +1429,176 @@
       "iw6814Status": "QA Beta — not in prod, account_id tag returns 404"
     },
     "asOf": "2026-04-24"
+  },
+  "sourceMeta": {
+    "activationDefinition": "Generated CIWP plan + viewed sample dashboard within 28 days",
+    "hubspotMcp": {
+      "status": "not_connected",
+      "mode": "read_only",
+      "requiredSetup": [
+        "HubSpot setup user has App Marketplace access",
+        "Create/connect HubSpot MCP auth app",
+        "Install through an MCP-compatible client",
+        "Grant CRM object and activity permissions"
+      ],
+      "readableObjects": [
+        "companies",
+        "contacts",
+        "deals",
+        "owners/users",
+        "calls",
+        "emails",
+        "meetings",
+        "tasks",
+        "notes"
+      ],
+      "countedActivityTypes": [
+        "call",
+        "email",
+        "meeting",
+        "task"
+      ],
+      "note": "Codex session does not currently expose a callable HubSpot MCP tool. Keep dashboard read-only until connector is installed."
+    },
+    "limitations": [
+      "HubSpot MCP not connected in this session; CS/Sales outreach proof is pending integration.",
+      "Internal account filtering is required before GTM action lists are production-trustworthy.",
+      "Sentry account attribution is blocked until account_id tag reaches production."
+    ]
+  },
+  "hitLists": {
+    "salesHotLeads": {
+      "source": "Mixpanel + HubSpot MCP",
+      "rule": "Free external accounts with a validated CIWP value event. CIWP Published, sample dashboard viewed, share, or download is required before treating the account as sales-ready.",
+      "accounts": [],
+      "blockedReason": "Waiting on is_internal/account identity filter and a validated value event before surfacing Sales leads."
+    },
+    "csRescue": {
+      "source": "Mixpanel + HubSpot MCP",
+      "rule": "Paid accounts with CIWP enabled >14 days and no CIWP event. Eligible accounts can be derived from perAccount; owner and touchpoint proof require HubSpot MCP.",
+      "accounts": [],
+      "blockedReason": "HubSpot MCP not connected; outreach owner and recent touchpoints unavailable. Eligibility is derived from current per-account data."
+    },
+    "productFriction": {
+      "source": "Mixpanel + Sentry + Jira + HubSpot MCP",
+      "topDropOffStep": "Sentry blocker, Mixpanel correlation pending",
+      "dropOffPct": null,
+      "dropOffCount": null,
+      "dropOffCountReason": "CORRECTED Apr 24: A. P. Willits Apr 13 event was mingxing@innovaresip.com (internal) in that account context — not an external activation. All 28 ciwp_generated events in prod are internal @innovaresip.com accounts. New internal testers since Apr 17 baseline: antonio+massaro1, nick, danielpinto. user_login event returning 0 results in prod — may not carry environment=production property. Fix required: is_internal super property via mixpanel.register() on login + account_name on login events.",
+      "sentryBlockedReason": "IW-6814 (account_id tag) not in prod — all account attribution pending",
+      "topBlocker": {
+        "id": "CIWP-BACKEND-1E",
+        "title": "Failed to batch fetch requirements: MagicMock name mock.dashboard_id",
+        "severity": "critical",
+        "occurrences": 18,
+        "linkedTicket": null
+      },
+      "jiraStatus": "Needs Jira owner/link",
+      "affectedAccounts": []
+    }
+  },
+  "csClosedLoop": {
+    "source": "HubSpot MCP activities",
+    "status": "blocked",
+    "rate": null,
+    "eligibleAccounts": 0,
+    "contactedWithin24h": 0,
+    "countedActivityTypes": [
+      "call",
+      "email",
+      "meeting",
+      "task"
+    ],
+    "excludedActivityTypes": [
+      "note"
+    ],
+    "blockerReason": "Pending HubSpot MCP integration; no CRM activity data accessible in this Codex session.",
+    "lastSyncedAt": null
+  },
+  "roadmap": {
+    "source": "Jira ticket feed pending CIWP / CIWP_Launch label validation",
+    "blockedReason": "Jira label query needs validation; showing normalized dashboard ticket feed, not an approved roadmap.",
+    "items": [
+      {
+        "id": "IW-6825",
+        "title": "[CIWP] \"Learn how we protect your data\" link redirects to non-official Innovare page",
+        "type": "Bug",
+        "status": "In QA/Beta",
+        "sourceStatus": "in-qa",
+        "targetReleaseWindow": "TBD",
+        "priority": "P0",
+        "url": "https://innovaresip.atlassian.net/browse/IW-6825"
+      },
+      {
+        "id": "IW-6823",
+        "title": "[CIWP] Create plan with AI is stuck while generating content",
+        "type": "Bug",
+        "status": "In QA/Beta",
+        "sourceStatus": "in-qa",
+        "targetReleaseWindow": "TBD",
+        "priority": "P0",
+        "url": "https://innovaresip.atlassian.net/browse/IW-6823"
+      },
+      {
+        "id": "IW-6748",
+        "title": "EdAI Branding: Update all AI copy to \"EdAI\" across CIWP platform",
+        "type": "Story",
+        "status": "In QA/Beta",
+        "sourceStatus": "in-qa",
+        "targetReleaseWindow": "TBD",
+        "priority": "P0",
+        "url": "https://innovaresip.atlassian.net/browse/IW-6748"
+      },
+      {
+        "id": "IW-6628",
+        "title": "[LAUNCH] Manual CIWP backend rollback process",
+        "type": "Story",
+        "status": "In QA/Beta",
+        "sourceStatus": "in-qa",
+        "targetReleaseWindow": "TBD",
+        "priority": "P0",
+        "url": "https://innovaresip.atlassian.net/browse/IW-6628"
+      },
+      {
+        "id": "IW-6807",
+        "title": "User invitation status becomes \"SEND INVITE\" for every user",
+        "type": "Bug",
+        "status": "In QA/Beta",
+        "sourceStatus": "in-qa",
+        "targetReleaseWindow": "2026-04-16",
+        "priority": "P1",
+        "url": "https://innovaresip.atlassian.net/browse/IW-6807"
+      },
+      {
+        "id": "IW-6796",
+        "title": "[CIWP] AI recommendations generate unsupported targets from uploaded evidence",
+        "type": "Bug",
+        "status": "In Development",
+        "sourceStatus": "in-progress",
+        "targetReleaseWindow": "Lumos",
+        "priority": "P1",
+        "url": "https://innovaresip.atlassian.net/browse/IW-6796"
+      },
+      {
+        "id": "IW-6798",
+        "title": "[CIWP] Goal maps to incorrect priority area",
+        "type": "Bug",
+        "status": "In Development",
+        "sourceStatus": "in-progress",
+        "targetReleaseWindow": "Lumos",
+        "priority": "P1",
+        "url": "https://innovaresip.atlassian.net/browse/IW-6798"
+      },
+      {
+        "id": "IW-6803",
+        "title": "[CIWP] Add EdAI Icon to Create CIWP Modal and Goal Rationale Modal",
+        "type": "Story",
+        "status": "In Development",
+        "sourceStatus": "in-progress",
+        "targetReleaseWindow": "TBD",
+        "priority": "P1",
+        "url": "https://innovaresip.atlassian.net/browse/IW-6803"
+      }
+    ]
   }
 }

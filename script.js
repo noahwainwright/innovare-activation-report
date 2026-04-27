@@ -139,6 +139,74 @@ function computeRescue(accounts) {
     });
 }
 
+function escapeHTML(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function formatOptional(value, fallback = '--') {
+  return value == null || value === '' ? fallback : escapeHTML(value);
+}
+
+function externalLinkHTML(url, label) {
+  if (!url) return '';
+  return `<a class="action-link" href="${escapeHTML(url)}" target="_blank" rel="noopener">${escapeHTML(label)}</a>`;
+}
+
+function touchpointStatusHTML(account) {
+  if (account.within24h === true) return `<span class="status-pill status-good">Closed loop</span>`;
+  if (account.within24h === false) return `<span class="status-pill status-warn">Outside 24h</span>`;
+  return `<span class="status-pill status-muted">HubSpot pending</span>`;
+}
+
+function sourceBlockedNote(source) {
+  const reason = source?.blockedReason || source?.blockerReason;
+  return reason ? `<div class="kpi-note action-source-note">${escapeHTML(reason)}</div>` : '';
+}
+
+function sourceBlockedLabel(source) {
+  const reason = source?.blockedReason || source?.blockerReason;
+  return reason ? 'Blocked' : null;
+}
+
+function actionEmptyRow(message) {
+  return `
+    <div class="ticket-row no-expand">
+      <div class="ticket-line1">
+        <span class="ticket-id" style="color:var(--text-muted)">${escapeHTML(message)}</span>
+      </div>
+    </div>`;
+}
+
+function accountHasCiwpEvent(account) {
+  const events = account?.events || {};
+  return Boolean(account?.ciwpsCreated > 0 || events.ciwp_generated || events.ciwp_ai_analysis_completed);
+}
+
+function derivedCSRescueAccounts() {
+  return (DATA.perAccount || [])
+    .filter(account =>
+      String(account.tier || '').toLowerCase() === 'paid' &&
+      account.daysSinceEnabled > 14 &&
+      !accountHasCiwpEvent(account)
+    )
+    .map(account => ({
+      accountName: account.account,
+      normalizedTier: account.tier,
+      daysSinceEnabled: account.daysSinceEnabled,
+      lastTouchpointAt: null,
+      touchpointType: null,
+      touchpointOwner: null,
+      hubspotUrl: null,
+      within24h: null,
+      dataSource: 'derived_from_per_account'
+    }));
+}
+
 
 // ── North Star KPI Cards ──────────────────────
 
@@ -306,6 +374,7 @@ function renderCenturyCard() {
       </div>
     </div>`;
 }
+
 
 // ── Tier Filter ───────────────────────────────
 
@@ -680,21 +749,21 @@ function renderSummary() {
   if (!el) return;
 
   const allTickets = getAllTickets();
-  const bugs = allTickets.filter(t => t.type === 'Bug');
-  const stories = allTickets.filter(t => t.type !== 'Bug');
-  const override = DATA.ciwpTesting?.openCountOverride;
-  const bugCount = override?.bugs ?? bugs.length;
-  const storyCount = override?.stories ?? stories.length;
-  const p0p1 = bugs.filter(t => t.priority === 'P0' || t.priority === 'P1').length;
-  const avgDays = bugs.length > 0 ? Math.round(bugs.reduce((s, t) => s + (t.daysOpen || 0), 0) / bugs.length) : 0;
-  const workarounds = allTickets.filter(t => t.workaround).length;
+  const openTickets = allTickets.filter(t => t.status !== 'done');
+  const doneTickets = allTickets.filter(t => t.status === 'done');
+  const openBugs = openTickets.filter(t => t.type === 'Bug');
+  const openStories = openTickets.filter(t => t.type !== 'Bug');
+  const p0p1 = openBugs.filter(t => t.priority === 'P0' || t.priority === 'P1').length;
+  const avgDays = openBugs.length > 0 ? Math.round(openBugs.reduce((s, t) => s + (t.daysOpen || 0), 0) / openBugs.length) : 0;
+  const workarounds = openTickets.filter(t => t.workaround).length;
 
   // Natural sentence with scorecard data
-  let sentence = `We have <span class="summary-count status-review">${bugCount}</span> bug${bugCount !== 1 ? 's' : ''}`;
-  sentence += ` and <span class="summary-count status-dev">${storyCount}</span> stor${storyCount !== 1 ? 'ies' : 'y'} open`;
+  let sentence = `We have <span class="summary-count status-review">${openBugs.length}</span> bug${openBugs.length !== 1 ? 's' : ''}`;
+  sentence += ` and <span class="summary-count status-dev">${openStories.length}</span> stor${openStories.length !== 1 ? 'ies' : 'y'}/tasks open`;
   sentence += ` with an average resolution time of <span class="summary-count">${avgDays} days</span>`;
   if (p0p1 > 0) sentence += ` and <span class="summary-count alert-inline">${p0p1}</span> critical`;
   if (workarounds > 0) sentence += `. <span class="summary-count status-complete">${workarounds}</span> workaround${workarounds !== 1 ? 's' : ''} available`;
+  if (doneTickets.length > 0) sentence += `. <span class="summary-count status-complete">${doneTickets.length}</span> closed/done`;
   sentence += '.';
 
   el.innerHTML = `<span class="summary-clause"><span class="howdy-trigger">Howdy.</span> ${sentence}</span>`;
@@ -728,7 +797,7 @@ function renderTickets() {
     <div class="ticket-category">
       <div class="ticket-category-header">
         <span class="ticket-category-label">${cat.label}</span>
-        <span class="ticket-category-count">${cat.tickets.length}</span>
+        <span class="ticket-category-count">${ticketCategoryStatusLabel(cat.tickets)}</span>
       </div>
       ${cat.tickets.map(t => ticketRow(t, jiraBase)).join('')}
     </div>`).join('');
@@ -755,6 +824,26 @@ function renderTickets() {
       }
     });
   });
+}
+
+function ticketCategoryStatusLabel(tickets) {
+  const open = tickets.filter(t => t.status !== 'done').length;
+  const done = tickets.filter(t => t.status === 'done').length;
+  return done > 0 ? `${open} open · ${done} done` : `${open} open`;
+}
+
+function ticketStatusPill(ticket) {
+  const status = String(ticket?.status || '').toLowerCase();
+  const label = status
+    .split('-')
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+  const cls = status === 'done'
+    ? 'status-good'
+    : status === 'in-progress'
+      ? 'status-warn'
+      : 'status-muted';
+  return `<span class="status-pill ${cls} ticket-status-pill">${escapeHTML(label || 'Unknown')}</span>`;
 }
 
 function stripCiwpPrefix(title) {
@@ -795,7 +884,6 @@ function renderSentryCard() {
   const unattributed = issues.filter(i => !attributedIds.has(i.id) && !i.resolved)
     .sort((a, b) => (sevOrder[a.severity] ?? 4) - (sevOrder[b.severity] ?? 4));
   const resolved = issues.filter(i => i.resolved);
-
   function accountBlock(ae) {
     const acctIssues = ae.issueIds.map(id => issueMap[id]).filter(Boolean)
       .sort((a, b) => (sevOrder[a.severity] ?? 4) - (sevOrder[b.severity] ?? 4));
@@ -983,6 +1071,7 @@ function ticketRow(t, jiraBase) {
         <span class="priority-label ${priorityClass}">${t.priority || ''}</span>
         ${idHTML}
         <span class="ticket-title">${title}</span>
+        ${ticketStatusPill(t)}
         <span class="ticket-days">${daysStr}</span>
       </div>
       ${hasDetail ? `
@@ -1297,33 +1386,44 @@ function renderCSClosedLoopCard() {
 
 function buildActionHTML() {
   return `
-    <div class="section" id="action-summary-section">
-      <div class="testing-summary-wrap">
-        <div class="testing-summary-sentence" id="action-summary"></div>
-      </div>
-    </div>
+    <div class="section" id="action-closed-loop-section"></div>
     <div class="section" id="action-lists-section">
       <div id="action-lists-container"></div>
     </div>
+    <div class="section" id="action-roadmap-section"></div>
     <div style="height: 100px; flex-shrink: 0;"></div>`;
 }
 
 function renderActionData() {
-  renderActionSummary();
+  renderActionClosedLoop();
   renderActionLists();
+  renderActionRoadmap();
 }
 
-function renderActionSummary() {
-  const el = document.getElementById('action-summary');
+function renderActionClosedLoop() {
+  const el = document.getElementById('action-closed-loop-section');
   if (!el) return;
-  const leads = DATA.hitLists?.salesHotLeads?.accounts || [];
-  const rescue = DATA.hitLists?.csRescue?.accounts || [];
-  const pf = DATA.hitLists?.productFriction;
-  const parts = [];
-  if (leads.length > 0) parts.push(`${leads.length} free account${leads.length !== 1 ? 's' : ''} ready to pitch`);
-  if (rescue.length > 0) parts.push(`${rescue.length} paid account${rescue.length !== 1 ? 's' : ''} need CS outreach`);
-  if (pf?.topDropOffStep) parts.push(`${pf.dropOffPct}% drop-off at ${pf.topDropOffStep}`);
-  el.textContent = parts.length > 0 ? parts.join('. ') + '.' : 'No action items at this time.';
+  const cscl = DATA.csClosedLoop || {};
+  const rate = cscl.rate == null ? '--' : `${cscl.rate}%`;
+  const pending = cscl.status === 'blocked' || cscl.rate == null;
+  const activityTypes = (cscl.countedActivityTypes || []).join(', ');
+  el.innerHTML = `
+    <div class="action-closed-loop-card ${pending ? 'is-blocked' : ''}">
+      <div class="action-card-main">
+        <span class="section-label">CS Closed Loop Rate</span>
+        <div class="action-rate">${rate}</div>
+        <div class="action-rate-sub">
+          ${pending
+            ? escapeHTML(cscl.blockerReason || 'Pending HubSpot integration')
+            : `${cscl.contactedWithin24h || 0} of ${cscl.eligibleAccounts || 0} eligible accounts contacted within 24h`}
+        </div>
+      </div>
+      <div class="action-card-side">
+        <span class="status-pill ${pending ? 'status-muted' : 'status-good'}">${pending ? 'Pending HubSpot MCP' : 'Live'}</span>
+        <span class="action-card-meta">Counts: ${escapeHTML(activityTypes || 'call, email, meeting, task')}</span>
+        <span class="action-card-meta">Last sync: ${formatOptional(cscl.lastSyncedAt, 'Not connected')}</span>
+      </div>
+    </div>`;
 }
 
 function renderActionLists() {
@@ -1333,49 +1433,64 @@ function renderActionLists() {
 }
 
 function actionHotLeadsHTML() {
-  const leads = DATA.hitLists?.salesHotLeads?.accounts || [];
+  const list = DATA.hitLists?.salesHotLeads || {};
+  const leads = list.accounts || [];
+  const countLabel = sourceBlockedLabel(list) || leads.length;
   const hasInternalCaveat = (DATA.sourceMeta?.limitations || []).some(l =>
     l.toLowerCase().includes('base account') || l.toLowerCase().includes('is_internal')
   );
-  const rows = leads.length === 0
-    ? `<div class="ticket-row" style="pointer-events:none"><div class="ticket-line1"><span class="ticket-id" style="color:var(--text-muted)">No free accounts have generated a CIWP yet.</span></div></div>`
+  const rows = sourceBlockedLabel(list)
+    ? actionEmptyRow('Hidden until internal account filtering and value-event identity are validated.')
+    : leads.length === 0
+      ? actionEmptyRow('No validated free external accounts have reached a sales-ready CIWP value event.')
     : leads.map(a => `
-      <div class="ticket-row" style="pointer-events:none">
+      <div class="ticket-row no-expand">
         <div class="ticket-line1">
-          <span class="ticket-title">${a.accountName}</span>
-          <span class="tier-pill" style="margin-left:auto">${a.normalizedTier}</span>
-          <span class="cta-badge" style="margin-left:8px">Pitch Paid Tier</span>
+          <span class="ticket-title">${escapeHTML(a.accountName)}</span>
+          <span class="tier-pill" style="margin-left:auto">${formatOptional(a.normalizedTier || a.tier)}</span>
+          <span class="cta-badge" style="margin-left:8px">Validate Sales Signal</span>
         </div>
         <div class="ticket-meta">
-          <span class="ticket-meta-item">First CIWP: ${a.firstCiwpDate || '--'}</span>
+          <span class="ticket-meta-item">Value event: ${formatOptional(a.valueEvent || a.firstCiwpEvent || 'CIWP Published / share signal required')}</span>
+          <span class="ticket-meta-item">First CIWP: ${formatOptional(a.firstCiwpDate)}</span>
           <span class="ticket-meta-item">${a.ciwpsCreated || 0} generated</span>
+          <span class="ticket-meta-item">Owner: ${formatOptional(a.touchpointOwner || a.owner)}</span>
+          ${externalLinkHTML(a.hubspotUrl, 'HubSpot')}
         </div>
       </div>`).join('');
   return `
     <div class="ticket-category">
       <div class="ticket-category-header">
         <span class="ticket-category-label">Sales Hot Leads</span>
-        <span class="ticket-category-count">${leads.length}</span>
+        <span class="ticket-category-count">${countLabel}</span>
       </div>
-      ${hasInternalCaveat ? `<div class="kpi-note" style="margin:0 0 8px">Internal accounts excluded (best-effort \u2014 is_internal not yet instrumented)</div>` : ''}
+      ${hasInternalCaveat ? `<div class="kpi-note" style="margin:0 0 8px">Internal accounts excluded once identity filtering is live.</div>` : ''}
+      ${sourceBlockedNote(list)}
       ${rows}
     </div>`;
 }
 
 function actionCSRescueHTML() {
-  const accounts = DATA.hitLists?.csRescue?.accounts || [];
-  const caveat = DATA.hitLists?.csRescueCaveat || DATA.hitLists?.csRescue?.csRescueCaveat || '';
+  const list = DATA.hitLists?.csRescue || {};
+  const listedAccounts = list.accounts || [];
+  const accounts = listedAccounts.length > 0 ? listedAccounts : derivedCSRescueAccounts();
+  const caveat = DATA.hitLists?.csRescueCaveat || list.csRescueCaveat || 'Derived from paid accounts enabled more than 14 days with no CIWP event. HubSpot owner and activity fields are pending.';
   const rows = accounts.length === 0
-    ? `<div class="ticket-row" style="pointer-events:none"><div class="ticket-line1"><span class="ticket-id" style="color:var(--text-muted)">All paid accounts have generated a CIWP.</span></div></div>`
+    ? actionEmptyRow('No paid accounts meet the enabled >14 days with no CIWP event rule in the current static data.')
     : accounts.map(a => `
-      <div class="ticket-row" style="pointer-events:none">
+      <div class="ticket-row no-expand">
         <div class="ticket-line1">
-          <span class="ticket-title">${a.accountName}</span>
-          <span class="tier-pill" style="margin-left:auto">${a.normalizedTier}</span>
+          <span class="ticket-title">${escapeHTML(a.accountName)}</span>
+          <span class="tier-pill" style="margin-left:auto">${formatOptional(a.normalizedTier || a.tier)}</span>
           <span class="cta-badge" style="margin-left:8px;background:#FFF8ED;color:#B76E00;">No CIWP yet</span>
+          ${touchpointStatusHTML(a)}
         </div>
         <div class="ticket-meta">
           <span class="ticket-meta-item">Since enabled: ${a.daysSinceEnabled != null ? a.daysSinceEnabled + 'd' : 'Date unknown'}</span>
+          <span class="ticket-meta-item">Last touch: ${formatOptional(a.lastTouchpointAt, 'No HubSpot activity')}</span>
+          <span class="ticket-meta-item">Type: ${formatOptional(a.touchpointType)}</span>
+          <span class="ticket-meta-item">Owner: ${formatOptional(a.touchpointOwner)}</span>
+          ${externalLinkHTML(a.hubspotUrl, 'HubSpot')}
         </div>
       </div>`).join('');
   return `
@@ -1385,6 +1500,7 @@ function actionCSRescueHTML() {
         <span class="ticket-category-count">${accounts.length}</span>
       </div>
       ${caveat ? `<div class="kpi-note" style="margin:0 0 8px">${caveat}</div>` : ''}
+      ${sourceBlockedNote(list)}
       ${rows}
     </div>`;
 }
@@ -1392,26 +1508,73 @@ function actionCSRescueHTML() {
 function actionProductFrictionHTML() {
   const pf = DATA.hitLists?.productFriction;
   if (!pf) return `<div class="ticket-category"><div class="ticket-category-header"><span class="ticket-category-label">Product Friction</span></div><div class="kpi-note">Data unavailable.</div></div>`;
+  const blocker = pf.topBlocker;
+  const dropLabel = pf.dropOffPct == null ? 'Correlation pending' : `${pf.dropOffPct}% drop-off`;
   return `
     <div class="ticket-category">
       <div class="ticket-category-header">
         <span class="ticket-category-label">Product Friction</span>
+        <span class="ticket-category-count">Blocked</span>
       </div>
-      <div class="ticket-row" style="pointer-events:none">
+      <div class="kpi-note action-source-note">Sentry blocker is visible, but Mixpanel drop-off and account correlation are not yet validated.</div>
+      <div class="ticket-row no-expand">
         <div class="ticket-line1">
-          <span class="ticket-title">${pf.topDropOffStep}</span>
-          <span class="cta-badge" style="margin-left:auto;background:#FFF0F0;color:#B00000;">${pf.dropOffPct}% drop-off</span>
+          <span class="ticket-title">${escapeHTML(pf.topDropOffStep || 'Friction source pending')}</span>
+          <span class="cta-badge" style="margin-left:auto;background:#FFF0F0;color:#B00000;">${escapeHTML(dropLabel)}</span>
         </div>
         ${pf.dropOffCount == null && pf.dropOffCountReason
-          ? `<div class="ticket-meta"><span class="ticket-meta-item">${pf.dropOffCountReason}</span></div>`
+          ? `<div class="ticket-meta"><span class="ticket-meta-item">${escapeHTML(pf.dropOffCountReason)}</span></div>`
           : ''}
       </div>
-      <div class="ticket-row" style="pointer-events:none">
+      ${blocker ? `
+      <div class="ticket-row no-expand">
+        <div class="ticket-line1">
+          <span class="ticket-title">${escapeHTML(blocker.title)}</span>
+          <span class="status-pill status-warn" style="margin-left:auto">${escapeHTML(blocker.severity)}</span>
+        </div>
+        <div class="ticket-meta">
+          <span class="ticket-meta-item">${escapeHTML(blocker.id)}</span>
+          <span class="ticket-meta-item">${blocker.occurrences || 0} occurrences</span>
+          <span class="ticket-meta-item">${escapeHTML(pf.jiraStatus || 'Jira status pending')}</span>
+        </div>
+      </div>` : ''}
+      <div class="ticket-row no-expand">
         <div class="ticket-line1">
           <span class="ticket-title" style="color:var(--text-muted)">Sentry account correlation</span>
           <span class="kpi-pending-badge" style="margin-left:auto">Blocked</span>
         </div>
-        <div class="ticket-meta"><span class="ticket-meta-item">${pf.sentryBlockedReason}</span></div>
+        <div class="ticket-meta"><span class="ticket-meta-item">${escapeHTML(pf.sentryBlockedReason)}</span></div>
       </div>
+    </div>`;
+}
+
+function renderActionRoadmap() {
+  const el = document.getElementById('action-roadmap-section');
+  if (!el) return;
+  const roadmap = DATA.roadmap || {};
+  const items = roadmap.items || [];
+  const rows = items.length === 0
+    ? actionEmptyRow('No CIWP ticket-feed items available.')
+    : items.map(item => `
+      <div class="ticket-row no-expand">
+        <div class="ticket-line1">
+          <span class="ticket-title">${escapeHTML(item.title)}</span>
+          <span class="status-pill status-muted" style="margin-left:auto">${escapeHTML(item.status)}</span>
+        </div>
+        <div class="ticket-meta">
+          <span class="ticket-meta-item">${escapeHTML(item.id)}</span>
+          <span class="ticket-meta-item">${escapeHTML(item.type)}</span>
+          <span class="ticket-meta-item">Release: ${formatOptional(item.targetReleaseWindow, 'TBD')}</span>
+          ${externalLinkHTML(item.url, 'Jira')}
+        </div>
+      </div>`).join('');
+  el.innerHTML = `
+    <div class="ticket-category">
+      <div class="ticket-category-header">
+        <span class="ticket-category-label">Ticket Feed</span>
+        <span class="ticket-category-count">Jira unvalidated · ${items.length}</span>
+      </div>
+      ${sourceBlockedNote(roadmap)}
+      ${rows}
     </div>`;
 }

@@ -983,6 +983,11 @@ a.ticket-id:hover { color: #0088CC; }
   flex-shrink: 0;
 }
 
+.ticket-status-pill {
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
 /* Expand detail */
 
 .ticket-detail {
@@ -1016,9 +1021,14 @@ a.ticket-id:hover { color: #0088CC; }
 }
 
 .ticket-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
   font-size: 11px;
   font-weight: 500;
   color: var(--text-muted);
+  padding: 0 0 12px;
 }
 
 .workaround-badge {
@@ -1619,6 +1629,97 @@ a.ticket-id:hover { color: #0088CC; }
 
 /* ── Action View ─────────────────────────── */
 
+.action-closed-loop-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 24px;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.76);
+}
+
+.action-closed-loop-card.is-blocked {
+  background: var(--card-bg);
+}
+
+.action-card-main,
+.action-card-side {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.action-card-side {
+  align-items: flex-end;
+  justify-content: center;
+  min-width: 190px;
+}
+
+.action-rate {
+  font-size: 40px;
+  line-height: 1;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.action-rate-sub,
+.action-card-meta,
+.action-source-note {
+  max-width: 560px;
+}
+
+.action-rate-sub {
+  font-size: 13px;
+  line-height: 1.45;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.action-card-meta {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 3px 9px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.status-good {
+  background: rgba(45, 106, 79, 0.1);
+  color: var(--accent-up);
+}
+
+.status-warn {
+  background: #FFF8ED;
+  color: #B76E00;
+}
+
+.status-muted {
+  background: rgba(0,0,0,0.05);
+  color: var(--text-muted);
+}
+
+.action-link {
+  color: var(--text-secondary);
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.action-link:hover {
+  color: var(--text-primary);
+}
+
 .cta-badge {
   background: #E6F4EC;
   color: #1A7A3C;
@@ -1650,6 +1751,13 @@ a.ticket-id:hover { color: #0088CC; }
 @media (max-width: 480px) {
   .kpi-hero-section {
     flex-direction: column;
+  }
+  .action-closed-loop-card {
+    flex-direction: column;
+  }
+  .action-card-side {
+    align-items: flex-start;
+    min-width: 0;
   }
   .century-card { padding: 16px 16px 20px; }
   .sentry-error-type-badge { font-size: 9px; padding: 2px 6px; }
