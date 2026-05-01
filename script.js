@@ -333,7 +333,9 @@ function renderSentryHealthCard() {
 
   const subText = openTotal === 0
     ? 'All clear'
-    : `${openTotal} open · ${openUnlinked.length} unlinked`;
+    : openUnlinked.length === openTotal
+      ? `${openTotal} open`
+      : `${openTotal} open · ${openUnlinked.length} unlinked`;
 
   el.innerHTML = `
     <button class="sentry-pill" id="sentry-health-trigger">
@@ -876,10 +878,11 @@ function renderSentryCard() {
   }
 
   let subText = 'All clear';
-  if (openUnlinked.length > 0) {
-    const parts = [`${openUnlinked.length} unlinked`];
-    if (openLinked.length > 0) parts.push(`${openLinked.length} linked`);
-    subText = parts.join(' · ');
+  const openTotal = openUnlinked.length + openLinked.length;
+  if (openUnlinked.length > 0 && openLinked.length > 0) {
+    subText = `${openTotal} open · ${openLinked.length} linked`;
+  } else if (openUnlinked.length > 0) {
+    subText = `${openTotal} open`;
   } else if (openLinked.length > 0) {
     subText = `${openLinked.length} open, all linked`;
   }
