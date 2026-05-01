@@ -197,13 +197,16 @@ function derivedCSRescueAccounts() {
     .map(account => ({
       accountName: account.account,
       normalizedTier: account.tier,
+      csvTier: account.csvTier || null,
       daysSinceEnabled: account.daysSinceEnabled,
       lastTouchpointAt: null,
       touchpointType: null,
-      touchpointOwner: null,
+      touchpointOwner: account.owner || null,
+      execSponsor: account.execSponsor || null,
+      onboardingPhase: account.onboardingPhase || null,
       hubspotUrl: null,
       within24h: null,
-      dataSource: 'derived_from_per_account'
+      dataSource: 'derived_from_per_account + cs_classification_csv'
     }));
 }
 
@@ -486,10 +489,11 @@ function renderRescueList(accounts) {
 
 function rescueRow(a) {
   const days = a.daysSinceEnabled != null ? a.daysSinceEnabled + 'd' : '--';
+  const owner = a.owner ? `<span class="rescue-owner">${escapeHTML(a.owner)}</span>` : '';
   return `
     <div class="rescue-row" data-health="${a.healthStatus}" data-days="${a.daysSinceEnabled || 0}">
       <span class="health-dot ${a.healthStatus}"></span>
-      <span class="rescue-name">${a.account}</span>
+      <span class="rescue-name">${a.account}${owner ? ` <span class="rescue-name-sub">· ${escapeHTML(a.owner)}</span>` : ''}</span>
       <span class="rescue-days">${days}</span>
       <span class="tier-pill">${a.tier}</span>
     </div>`;
@@ -1386,6 +1390,7 @@ function renderCSClosedLoopCard() {
 
 function buildActionHTML() {
   return `
+    <div class="section" id="action-blockers-per-day-section"></div>
     <div class="section" id="action-closed-loop-section"></div>
     <div class="section" id="action-lists-section">
       <div id="action-lists-container"></div>
@@ -1395,6 +1400,7 @@ function buildActionHTML() {
 }
 
 function renderActionData() {
+  renderBlockersPerDay();
   renderActionClosedLoop();
   renderActionLists();
   renderActionRoadmap();
@@ -1405,23 +1411,63 @@ function renderActionClosedLoop() {
   if (!el) return;
   const cscl = DATA.csClosedLoop || {};
   const rate = cscl.rate == null ? '--' : `${cscl.rate}%`;
-  const pending = cscl.status === 'blocked' || cscl.rate == null;
+  const deferred = cscl.status === 'deferred' || cscl.status === 'blocked' || cscl.rate == null;
+  const isDeferred = cscl.status === 'deferred';
   const activityTypes = (cscl.countedActivityTypes || []).join(', ');
+  const deps = cscl.dependsOn || [];
   el.innerHTML = `
-    <div class="action-closed-loop-card ${pending ? 'is-blocked' : ''}">
+    <div class="action-closed-loop-card ${deferred ? 'is-blocked' : ''}">
       <div class="action-card-main">
         <span class="section-label">CS Closed Loop Rate</span>
         <div class="action-rate">${rate}</div>
         <div class="action-rate-sub">
-          ${pending
-            ? escapeHTML(cscl.blockerReason || 'Pending HubSpot integration')
+          ${deferred
+            ? escapeHTML(cscl.blockerReason || 'Awaiting CS data integration')
             : `${cscl.contactedWithin24h || 0} of ${cscl.eligibleAccounts || 0} eligible accounts contacted within 24h`}
+        </div>
+        ${isDeferred && deps.length ? `
+        <div class="action-rate-sub" style="margin-top: 8px; opacity: 0.7;">
+          Activates when: ${deps.map(d => escapeHTML(d)).join(' · ')}
+        </div>` : ''}
+      </div>
+      <div class="action-card-side">
+        <span class="status-pill ${deferred ? 'status-muted' : 'status-good'}">${isDeferred ? 'Deferred — see Blockers/Day' : (deferred ? 'Pending integration' : 'Live')}</span>
+        <span class="action-card-meta">Counts: ${escapeHTML(activityTypes || 'call, email, meeting, task')}</span>
+        <span class="action-card-meta">Last sync: ${formatOptional(cscl.lastSyncedAt, 'Not connected')}</span>
+      </div>
+    </div>`;
+}
+
+// Derived metric: Blockers Detected Per Day
+// Computes from existing Sentry ciwp-backend issue stream. Successor metric
+// for the deferred Closed Loop Rate — uses already-live data, no new source.
+function renderBlockersPerDay() {
+  const el = document.getElementById('action-blockers-per-day-section');
+  if (!el) return;
+  const issues = (DATA.sentry?.issues || []).filter(i => !i.resolved);
+  const totalOccurrences = issues.reduce((sum, i) => sum + (i.occurrences || 0), 0);
+  const sentryWindowDays = 14;
+  const perDay = sentryWindowDays > 0 ? (totalOccurrences / sentryWindowDays) : 0;
+  const top = [...issues].sort((a, b) => (b.occurrences || 0) - (a.occurrences || 0)).slice(0, 3);
+  const topLabel = top.length
+    ? top.map(i => `${escapeHTML(i.id)} (${i.occurrences})`).join(' · ')
+    : 'No unresolved blockers';
+  el.innerHTML = `
+    <div class="action-closed-loop-card">
+      <div class="action-card-main">
+        <span class="section-label">Blockers Detected Per Day</span>
+        <div class="action-rate">${perDay.toFixed(1)}</div>
+        <div class="action-rate-sub">
+          ${totalOccurrences} unresolved Sentry events across ${issues.length} issues over ${sentryWindowDays}-day window (ciwp-backend)
+        </div>
+        <div class="action-rate-sub" style="margin-top: 8px; opacity: 0.7;">
+          Top issues: ${topLabel}
         </div>
       </div>
       <div class="action-card-side">
-        <span class="status-pill ${pending ? 'status-muted' : 'status-good'}">${pending ? 'Pending HubSpot MCP' : 'Live'}</span>
-        <span class="action-card-meta">Counts: ${escapeHTML(activityTypes || 'call, email, meeting, task')}</span>
-        <span class="action-card-meta">Last sync: ${formatOptional(cscl.lastSyncedAt, 'Not connected')}</span>
+        <span class="status-pill status-good">Live</span>
+        <span class="action-card-meta">Source: Sentry ciwp-backend</span>
+        <span class="action-card-meta">As of: ${escapeHTML(DATA.sentry?.dataAsOf || '—')}</span>
       </div>
     </div>`;
 }
@@ -1474,7 +1520,7 @@ function actionCSRescueHTML() {
   const list = DATA.hitLists?.csRescue || {};
   const listedAccounts = list.accounts || [];
   const accounts = listedAccounts.length > 0 ? listedAccounts : derivedCSRescueAccounts();
-  const caveat = DATA.hitLists?.csRescueCaveat || list.csRescueCaveat || 'Derived from paid accounts enabled more than 14 days with no CIWP event. HubSpot owner and activity fields are pending.';
+  const caveat = DATA.hitLists?.csRescueCaveat || list.csRescueCaveat || 'Derived from paid accounts enabled more than 14 days with no CIWP event. Owner from CS classification CSV; HubSpot activity (last touch, touch type) still pending.';
   const rows = accounts.length === 0
     ? actionEmptyRow('No paid accounts meet the enabled >14 days with no CIWP event rule in the current static data.')
     : accounts.map(a => `

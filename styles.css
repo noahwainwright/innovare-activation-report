@@ -497,6 +497,13 @@ body {
   color: var(--text-primary);
 }
 
+.rescue-name-sub {
+  font-weight: 400;
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-left: 2px;
+}
+
 .rescue-days {
   font-size: 12px;
   font-weight: 500;

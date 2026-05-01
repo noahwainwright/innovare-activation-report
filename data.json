@@ -7,7 +7,7 @@
       "value": 0,
       "unit": "%",
       "sub": "0 of 37 enrolled accounts",
-      "note": "CORRECTED 2026-04-24: A. P. Willits Apr 13 event was mingxing@innovaresip.com (internal) operating in that account context \u2014 not an external user self-activating. All 28 ciwp_generated events in prod are @innovaresip.com accounts. Zero external school CIWPs confirmed. is_internal filter still required (eng ticket pending).",
+      "note": "CORRECTED 2026-04-24: A. P. Willits Apr 13 event was mingxing@innovaresip.com (internal) operating in that account context — not an external user self-activating. All 28 ciwp_generated events in prod are @innovaresip.com accounts. Zero external school CIWPs confirmed. is_internal filter still required (eng ticket pending).",
       "source": "mixpanel",
       "asOf": "2026-04-24",
       "blocked": false
@@ -16,7 +16,7 @@
       "label": "Free-to-Paid Conv.",
       "value": 0,
       "unit": "%",
-      "sub": "CIWP Generated \u2192 Plan Upgraded, 30d (n=0 external \u2014 confirmed Apr 24)",
+      "sub": "CIWP Generated → Plan Upgraded, 30d (n=0 external — confirmed Apr 24)",
       "note": "0 external conversions confirmed. All 28 Mixpanel ciwp_generated events traced to internal @innovaresip.com accounts. is_internal super property required before funnel numbers are trustworthy. Eng ticket pending.",
       "source": "mixpanel",
       "asOf": "2026-04-24",
@@ -25,10 +25,10 @@
     },
     "timeToValue": {
       "label": "Time to First CIWP",
-      "value": "\u2014",
+      "value": "—",
       "unit": "",
       "sub": "No external activations confirmed",
-      "note": "Previously showed A. P. Willits same-day data \u2014 corrected Apr 24. That event was internal user mingxing@innovaresip.com. Metric is blocked until first genuine external CIWP is generated.",
+      "note": "Previously showed A. P. Willits same-day data — corrected Apr 24. That event was internal user mingxing@innovaresip.com. Metric is blocked until first genuine external CIWP is generated.",
       "source": "mixpanel",
       "asOf": "2026-04-24",
       "blocked": false
@@ -52,7 +52,7 @@
     "totalUnresolved": 83,
     "ignoredRate": 0,
     "accountAttributionBlocked": true,
-    "accountAttributionBlocker": "IW-6814 (account_id tag) not in prod \u2014 all account attribution pending",
+    "accountAttributionBlocker": "IW-6814 (account_id tag) not in prod — all account attribution pending",
     "accountErrors": [
       {
         "account": "Account attribution pending",
@@ -73,7 +73,7 @@
         "daysInQueue": 14,
         "resolved": true,
         "errorType": "DB_ERROR",
-        "note": "RESOLVED \u2014 migration fix landed. Linked IW-6743."
+        "note": "RESOLVED — migration fix landed. Linked IW-6743."
       },
       {
         "id": "CIWP-BACKEND-1E",
@@ -327,7 +327,7 @@
         "daysInQueue": 0,
         "resolved": false,
         "errorType": "HTTP",
-        "note": "NEW Apr 24 \u2014 TCPTransport closed during active generation. Culprit: /api/ciwp/active-generation/{school_id}"
+        "note": "NEW Apr 24 — TCPTransport closed during active generation. Culprit: /api/ciwp/active-generation/{school_id}"
       },
       {
         "id": "CIWP-BACKEND-2E",
@@ -526,7 +526,7 @@
         "daysInQueue": 0,
         "resolved": false,
         "errorType": "DB_ERROR",
-        "note": "NEW Apr 24 \u2014 migration gap in step-2 flow"
+        "note": "NEW Apr 24 — migration gap in step-2 flow"
       },
       {
         "id": "CIWP-BACKEND-36",
@@ -897,7 +897,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Brandi Barrett",
+      "execSponsor": "Carolyn Jones",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Beidler Elementary",
@@ -912,7 +916,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Jorge Cruz",
+      "execSponsor": "Ursula Hoskins",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Bowen High School",
@@ -927,7 +935,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "at-risk",
       "lastActivityDate": "2026-04-22",
-      "century": null
+      "century": null,
+      "owner": "Adam Massie",
+      "execSponsor": "Pricilla Horton",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Brown Elementary",
@@ -942,7 +954,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "at-risk",
       "lastActivityDate": "2026-04-22",
-      "century": null
+      "century": null,
+      "owner": "Latoya Lyons",
+      "execSponsor": "Latoya Lyons",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Cather Elementary",
@@ -957,7 +973,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Dominique Hamilton",
+      "execSponsor": "Lakeya Poston",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Chopin Elementary",
@@ -972,7 +992,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Heather Baker",
+      "execSponsor": "Fredrick Williams",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Davis Elementary",
@@ -987,7 +1011,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Carla Ann Gurgone",
+      "execSponsor": "Oliva Gonzalez",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Deneen",
@@ -1002,7 +1030,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Kurtis Ellison",
+      "execSponsor": "Pavielle Driver",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Doolittle",
@@ -1017,7 +1049,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Aoko Omwony-Hope",
+      "execSponsor": "Iysha Jones",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Englewood High School",
@@ -1032,7 +1068,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Maximilian Cole",
+      "execSponsor": "Christopher Shelton",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Esmond Elementary",
@@ -1047,7 +1087,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Marquette McClinton",
+      "execSponsor": "Angela Tucker",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Fairfield Elementary",
@@ -1062,7 +1106,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Raven Daniels",
+      "execSponsor": "Claudia Lopez",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Henderson Elementary",
@@ -1077,7 +1125,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Candice Reeder",
+      "execSponsor": "Marvis Jackson-Ivy",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Joplin Elementary",
@@ -1092,7 +1144,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Jawanda Hairston",
+      "execSponsor": "Bridgett Earls",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Kellman Elementary",
@@ -1107,7 +1163,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "London Jones",
+      "execSponsor": null,
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Laura S. Ward Elementary",
@@ -1122,7 +1182,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "at-risk",
       "lastActivityDate": "2026-04-22",
-      "century": null
+      "century": null,
+      "owner": "Consuelo Gaines",
+      "execSponsor": "Shenann Finley-Jones",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Lawndale Elementary",
@@ -1137,7 +1201,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "at-risk",
       "lastActivityDate": "2026-04-22",
-      "century": null
+      "century": null,
+      "owner": "Natasha Jones",
+      "execSponsor": "Natasha Jones",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Mollison",
@@ -1152,7 +1220,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Kate Ebisi",
+      "execSponsor": "Shelagh Jackson",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Nash",
@@ -1167,7 +1239,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "at-risk",
       "lastActivityDate": "2026-04-22",
-      "century": null
+      "century": null,
+      "owner": "Lanada Avinger",
+      "execSponsor": "Marcie Byrd",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "O'Toole Elementary",
@@ -1182,7 +1258,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Cynthia Hill-Holmon",
+      "execSponsor": "King Hall",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Pershing Elementary",
@@ -1197,7 +1277,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Heather Ferguson",
+      "execSponsor": "Safurat Giwa",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Roosevelt High School",
@@ -1212,7 +1296,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "at-risk",
       "lastActivityDate": "2026-04-22",
-      "century": null
+      "century": null,
+      "owner": "Michael Sims",
+      "execSponsor": "Daniel Kramer",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Sherman Elementary",
@@ -1227,7 +1315,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Jeanine Rogers",
+      "execSponsor": "Regina Roberts",
+      "csvTier": "Premium",
+      "onboardingPhase": null
     },
     {
       "account": "Stowe Elementary",
@@ -1242,7 +1334,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Jimmy Lugo",
+      "execSponsor": null,
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Tilton Elementary",
@@ -1257,7 +1353,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Keia Thompson",
+      "execSponsor": "Quishun Elrod",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Wadsworth Elementary",
@@ -1272,11 +1372,15 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Rashid Shabazz",
+      "execSponsor": "Rashid Shabazz",
+      "csvTier": "Premium",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Wells HS",
-      "tier": "Free",
+      "tier": "Paid",
       "ciwpsCreated": 0,
       "activationStage": 0,
       "events": {
@@ -1287,11 +1391,15 @@
       "daysSinceEnabled": 20,
       "healthStatus": "at-risk",
       "lastActivityDate": "2026-04-22",
-      "century": null
+      "century": null,
+      "owner": null,
+      "execSponsor": "Frances Barnett",
+      "csvTier": "Basic",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Avalon Park Elementary",
-      "tier": "Free",
+      "tier": "Paid",
       "ciwpsCreated": 0,
       "activationStage": 0,
       "events": {
@@ -1302,11 +1410,15 @@
       "daysSinceEnabled": 20,
       "healthStatus": "at-risk",
       "lastActivityDate": "2026-04-22",
-      "century": null
+      "century": null,
+      "owner": "Jordan Body",
+      "execSponsor": "Takeshi James",
+      "csvTier": "Basic",
+      "onboardingPhase": null
     },
     {
       "account": "Bradwell School of Excellence",
-      "tier": "Free",
+      "tier": "Paid",
       "ciwpsCreated": 0,
       "activationStage": 0,
       "events": {
@@ -1317,11 +1429,15 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Jackie Walter",
+      "execSponsor": "Brittany Neal",
+      "csvTier": "Basic",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Chalmers",
-      "tier": "Free",
+      "tier": "Paid",
       "ciwpsCreated": 0,
       "activationStage": 0,
       "events": {
@@ -1332,11 +1448,15 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Romain Crockett",
+      "execSponsor": "Romain Crockett",
+      "csvTier": "Basic",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Graham Elementary",
-      "tier": "Free",
+      "tier": "Paid",
       "ciwpsCreated": 0,
       "activationStage": 0,
       "events": {
@@ -1347,11 +1467,15 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Sarah McNamara",
+      "execSponsor": "Deivi Aguilar",
+      "csvTier": "Basic",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Jesse Owens Elementary",
-      "tier": "Free",
+      "tier": "Paid",
       "ciwpsCreated": 0,
       "activationStage": 0,
       "events": {
@@ -1362,11 +1486,15 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": null,
+      "execSponsor": "Katina Stovall-Brown",
+      "csvTier": "Basic",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Powell Elementary",
-      "tier": "Free",
+      "tier": "Paid",
       "ciwpsCreated": 0,
       "activationStage": 0,
       "events": {
@@ -1377,11 +1505,15 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "V Cordero",
+      "execSponsor": "Sheila Barlow",
+      "csvTier": "Basic",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Westcott Elementary",
-      "tier": "Free",
+      "tier": "Paid",
       "ciwpsCreated": 0,
       "activationStage": 0,
       "events": {
@@ -1392,11 +1524,15 @@
       "daysSinceEnabled": 20,
       "healthStatus": "at-risk",
       "lastActivityDate": "2026-04-22",
-      "century": null
+      "century": null,
+      "owner": "Aryell Williams",
+      "execSponsor": "Monique Dockery",
+      "csvTier": "Basic",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Woodson Elementary",
-      "tier": "Free",
+      "tier": "Paid",
       "ciwpsCreated": 0,
       "activationStage": 0,
       "events": {
@@ -1407,7 +1543,11 @@
       "daysSinceEnabled": 20,
       "healthStatus": "dormant",
       "lastActivityDate": null,
-      "century": null
+      "century": null,
+      "owner": "Cheryl White",
+      "execSponsor": "Tamara Littlejohn",
+      "csvTier": "Basic",
+      "onboardingPhase": "Phase 5 - Onboarding, Activation, & First Value"
     },
     {
       "account": "Amethod Public Schools",
@@ -1422,7 +1562,11 @@
       "daysSinceEnabled": 13,
       "healthStatus": "at-risk",
       "lastActivityDate": "2026-04-22",
-      "century": null
+      "century": null,
+      "owner": "Maria Archiga",
+      "execSponsor": null,
+      "csvTier": null,
+      "onboardingPhase": null
     },
     {
       "account": "A. P. Willits Elementary School",
@@ -2171,7 +2315,7 @@
           "11p"
         ]
       },
-      "loginDataNote": "user_login event does not carry environment property \u2014 login counts unavailable via Mixpanel API",
+      "loginDataNote": "user_login event does not carry environment property — login counts unavailable via Mixpanel API",
       "funnel": [
         {
           "label": "Login",
@@ -2241,7 +2385,7 @@
           "Apr 24"
         ]
       },
-      "loginDataNote": "user_login event does not carry environment property \u2014 login counts unavailable via Mixpanel API",
+      "loginDataNote": "user_login event does not carry environment property — login counts unavailable via Mixpanel API",
       "funnel": [
         {
           "label": "Login",
@@ -2403,7 +2547,7 @@
           "Apr 24"
         ]
       },
-      "loginDataNote": "user_login event does not carry environment property \u2014 login counts unavailable via Mixpanel API",
+      "loginDataNote": "user_login event does not carry environment property — login counts unavailable via Mixpanel API",
       "funnel": [
         {
           "label": "Login",
@@ -2460,30 +2604,40 @@
     "mttrStatus": null,
     "mttrDays": null,
     "openedStatus": "derived_from_daysOpen",
-    "note": "Opened counts derived from ticket daysOpen field as of Apr 24. Apr 16 spike: IW-6807, IW-6796, IW-6798, IW-6809, IW-6808, IW-6810 all opened that day. Closed count unavailable \u2014 Jira transition history not accessible (CIWP_Launch label returns 0 results)."
+    "note": "Opened counts derived from ticket daysOpen field as of Apr 24. Apr 16 spike: IW-6807, IW-6796, IW-6798, IW-6809, IW-6808, IW-6810 all opened that day. Closed count unavailable — Jira transition history not accessible (CIWP_Launch label returns 0 results)."
   },
   "dataQuality": {
     "internalAccountsFiltered": false,
-    "issue": "CORRECTED Apr 24: A. P. Willits Apr 13 event was mingxing@innovaresip.com (internal) in that account context \u2014 not an external activation. All 28 ciwp_generated events in prod are internal @innovaresip.com accounts. New internal testers since Apr 17 baseline: antonio+massaro1, nick, danielpinto. user_login event returning 0 results in prod \u2014 may not carry environment=production property. Fix required: is_internal super property via mixpanel.register() on login + account_name on login events.",
+    "issue": "CORRECTED Apr 24: A. P. Willits Apr 13 event was mingxing@innovaresip.com (internal) in that account context — not an external activation. All 28 ciwp_generated events in prod are internal @innovaresip.com accounts. New internal testers since Apr 17 baseline: antonio+massaro1, nick, danielpinto. user_login event returning 0 results in prod — may not carry environment=production property. Fix required: is_internal super property via mixpanel.register() on login + account_name on login events.",
     "affectedMetrics": [
-      "adoptionRate (was incorrectly showing 3% / 1 of 37 \u2014 corrected to 0%)",
-      "timeToValue (was showing A.P. Willits <1 day \u2014 now blocked, no external data)",
+      "adoptionRate (was incorrectly showing 3% / 1 of 37 — corrected to 0%)",
+      "timeToValue (was showing A.P. Willits <1 day — now blocked, no external data)",
       "ciwp_generated count (all 28 events are internal)",
-      "ciwp_ai_analysis_completed count (44 events \u2014 all internal)",
+      "ciwp_ai_analysis_completed count (44 events — all internal)",
       "ranges.1W.primary.value",
       "ranges.1M.primary.value"
     ],
     "unaffectedMetrics": [
-      "conversionRate (0% confirmed \u2014 no external account has converted)",
+      "conversionRate (0% confirmed — no external account has converted)",
       "sentryData (ciwp-backend project, attribution pending IW-6814)"
     ],
     "engTicketRequired": true,
     "sentry": {
       "totalUnresolved": 83,
       "ignoredRate": 0,
-      "iw6814Status": "QA Beta \u2014 not in prod, account_id tag returns 404"
+      "iw6814Status": "QA Beta — not in prod, account_id tag returns 404"
     },
-    "asOf": "2026-04-24"
+    "closedLoopRate": {
+      "status": "deferred",
+      "reason": "Mathematically undefined until is_internal filter ships and external CIWPs start landing on the Rescue List. Routing around HubSpot MCP block (admin permission). v1 successor: Blockers Detected Per Day from Sentry ciwp-backend.",
+      "dependsOn": [
+        "is_internal_filter",
+        "first_external_activation",
+        "hubspot_egress_path"
+      ],
+      "revisitAfter": "is_internal ships + first external Rescue List entry"
+    },
+    "asOf": "2026-05-01"
   },
   "sourceMeta": {
     "activationDefinition": "Generated CIWP plan + viewed sample dashboard within 28 days",
@@ -2519,7 +2673,8 @@
       "HubSpot MCP not connected in this session; CS/Sales outreach proof is pending integration.",
       "Internal account filtering is required before GTM action lists are production-trustworthy.",
       "Sentry account attribution is blocked until account_id tag reaches production."
-    ]
+    ],
+    "tierSource": "Tier classification from CS-validated CSV (Amanda, Fernando-approved 2026-04-02). 9 accounts flipped Free → Paid (Basic) based on CSV; supersedes Mixpanel plan property until IW-6811 (plan=none on login bug) ships. CSV synced 2026-05-01."
   },
   "hitLists": {
     "salesHotLeads": {
@@ -2529,18 +2684,18 @@
       "blockedReason": "Waiting on is_internal/account identity filter and a validated value event before surfacing Sales leads."
     },
     "csRescue": {
-      "source": "Mixpanel + HubSpot MCP",
-      "rule": "Paid accounts with CIWP enabled >14 days and no CIWP event. Eligible accounts can be derived from perAccount; owner and touchpoint proof require HubSpot MCP.",
+      "source": "Mixpanel + CS classification CSV (Amanda, 2026-04-02)",
+      "rule": "Paid accounts with CIWP enabled >14 days and no CIWP event. Owner from CS classification CSV; touchpoint timestamps still pending HubSpot egress path.",
       "accounts": [],
-      "blockedReason": "HubSpot MCP not connected; outreach owner and recent touchpoints unavailable. Eligibility is derived from current per-account data."
+      "blockedReason": "Owner sourced from CS classification CSV. HubSpot activity (last touch timestamp, touch type) still pending egress path."
     },
     "productFriction": {
       "source": "Mixpanel + Sentry + Jira + HubSpot MCP",
       "topDropOffStep": "Sentry blocker, Mixpanel correlation pending",
       "dropOffPct": null,
       "dropOffCount": null,
-      "dropOffCountReason": "CORRECTED Apr 24: A. P. Willits Apr 13 event was mingxing@innovaresip.com (internal) in that account context \u2014 not an external activation. All 28 ciwp_generated events in prod are internal @innovaresip.com accounts. New internal testers since Apr 17 baseline: antonio+massaro1, nick, danielpinto. user_login event returning 0 results in prod \u2014 may not carry environment=production property. Fix required: is_internal super property via mixpanel.register() on login + account_name on login events.",
-      "sentryBlockedReason": "IW-6814 (account_id tag) not in prod \u2014 all account attribution pending",
+      "dropOffCountReason": "CORRECTED Apr 24: A. P. Willits Apr 13 event was mingxing@innovaresip.com (internal) in that account context — not an external activation. All 28 ciwp_generated events in prod are internal @innovaresip.com accounts. New internal testers since Apr 17 baseline: antonio+massaro1, nick, danielpinto. user_login event returning 0 results in prod — may not carry environment=production property. Fix required: is_internal super property via mixpanel.register() on login + account_name on login events.",
+      "sentryBlockedReason": "IW-6814 (account_id tag) not in prod — all account attribution pending",
       "topBlocker": {
         "id": "CIWP-BACKEND-1E",
         "title": "Failed to batch fetch requirements: MagicMock name mock.dashboard_id",
@@ -2553,8 +2708,8 @@
     }
   },
   "csClosedLoop": {
-    "source": "HubSpot MCP activities",
-    "status": "blocked",
+    "source": "HubSpot CS activity logs",
+    "status": "deferred",
     "rate": null,
     "eligibleAccounts": 0,
     "contactedWithin24h": 0,
@@ -2567,7 +2722,13 @@
     "excludedActivityTypes": [
       "note"
     ],
-    "blockerReason": "Pending HubSpot MCP integration; no CRM activity data accessible in this Codex session.",
+    "blockerReason": "Activates when external CIWPs reach the Rescue List. Currently undefined: 0 external activations × 0 blockers fired = no eligible accounts to measure.",
+    "dependsOn": [
+      "is_internal Mixpanel super-property (eng ticket pending)",
+      "First external CIWP activation reaching Rescue List",
+      "HubSpot egress path confirmed (Private App token, CSV bridge, or Form fallback)"
+    ],
+    "successor": "Blockers Detected Per Day (live, derived from Sentry ciwp-backend issue stream)",
     "lastSyncedAt": null
   },
   "roadmap": {
