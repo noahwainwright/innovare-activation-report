@@ -731,7 +731,6 @@ function buildQualityHTML() {
     </div>
 
     <div class="section" id="sentry-section"></div>
-    <div class="section" id="cs-closed-loop-section"></div>
     <div style="height: 100px; flex-shrink: 0;"></div>`;
 }
 
@@ -740,7 +739,6 @@ function bindQuality() {
   renderTickets();
   renderSentryCard();
   renderBugVelocityChart();
-  renderCSClosedLoopCard();
 }
 
 function getAllTickets() {
@@ -1362,39 +1360,11 @@ function renderSentryIgnoredRate() {
   });
 }
 
-// ── CS Closed Loop Card ───────────────────────
-
-function renderCSClosedLoopCard() {
-  const el = document.getElementById('cs-closed-loop-section');
-  if (!el) return;
-
-  const cscl = DATA.csClosedLoop;
-  const blockerReason = cscl?.blockerReason || 'HubSpot integration not configured \u2014 no CRM data accessible';
-
-  el.innerHTML = `
-    <div class="pipeline-step pipeline-step-blocked">
-      <div class="pipeline-row">
-        <div class="pipeline-left">
-          <span class="pipeline-event pipeline-event-muted">CS Closed Loop Rate</span>
-          <span class="pipeline-stage-label pipeline-label-muted">${blockerReason}</span>
-        </div>
-        <div class="pipeline-right">
-          <span class="pipeline-pct pipeline-pct-muted">--</span>
-          <span class="pipeline-count pipeline-label-muted">Pending integration</span>
-        </div>
-        <div class="pipeline-bar-track pipeline-bar-track-blocked">
-          <div class="pipeline-bar bar-default" style="width: 0%"></div>
-        </div>
-      </div>
-    </div>`;
-}
-
 // ── Action View ───────────────────────────────
 
 function buildActionHTML() {
   return `
     <div class="section" id="action-blockers-per-day-section"></div>
-    <div class="section" id="action-closed-loop-section"></div>
     <div class="section" id="action-lists-section">
       <div id="action-lists-container"></div>
     </div>
@@ -1403,40 +1373,7 @@ function buildActionHTML() {
 
 function renderActionData() {
   renderBlockersPerDay();
-  renderActionClosedLoop();
   renderActionLists();
-}
-
-function renderActionClosedLoop() {
-  const el = document.getElementById('action-closed-loop-section');
-  if (!el) return;
-  const cscl = DATA.csClosedLoop || {};
-  const rate = cscl.rate == null ? '--' : `${cscl.rate}%`;
-  const deferred = cscl.status === 'deferred' || cscl.status === 'blocked' || cscl.rate == null;
-  const isDeferred = cscl.status === 'deferred';
-  const activityTypes = (cscl.countedActivityTypes || []).join(', ');
-  const deps = cscl.dependsOn || [];
-  el.innerHTML = `
-    <div class="action-closed-loop-card ${deferred ? 'is-blocked' : ''}">
-      <div class="action-card-main">
-        <span class="section-label">CS Closed Loop Rate</span>
-        <div class="action-rate">${rate}</div>
-        <div class="action-rate-sub">
-          ${deferred
-            ? escapeHTML(cscl.blockerReason || 'Awaiting CS data integration')
-            : `${cscl.contactedWithin24h || 0} of ${cscl.eligibleAccounts || 0} eligible accounts contacted within 24h`}
-        </div>
-        ${isDeferred && deps.length ? `
-        <div class="action-rate-sub" style="margin-top: 8px; opacity: 0.7;">
-          Activates when: ${deps.map(d => escapeHTML(d)).join(' · ')}
-        </div>` : ''}
-      </div>
-      <div class="action-card-side">
-        <span class="status-pill ${deferred ? 'status-muted' : 'status-good'}">${isDeferred ? 'Deferred — see Blockers/Day' : (deferred ? 'Pending integration' : 'Live')}</span>
-        <span class="action-card-meta">Counts: ${escapeHTML(activityTypes || 'call, email, meeting, task')}</span>
-        <span class="action-card-meta">Last sync: ${formatOptional(cscl.lastSyncedAt, 'Not connected')}</span>
-      </div>
-    </div>`;
 }
 
 // Derived metric: Blockers Detected Per Day

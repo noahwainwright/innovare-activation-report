@@ -1652,29 +1652,5 @@
       "jiraStatus": "Needs Jira owner/link",
       "affectedAccounts": []
     }
-  },
-  "csClosedLoop": {
-    "source": "HubSpot CS activity logs",
-    "status": "deferred",
-    "rate": null,
-    "eligibleAccounts": 0,
-    "contactedWithin24h": 0,
-    "countedActivityTypes": [
-      "call",
-      "email",
-      "meeting",
-      "task"
-    ],
-    "excludedActivityTypes": [
-      "note"
-    ],
-    "blockerReason": "Activates when external CIWPs reach the Rescue List. Currently undefined: 0 external activations × 0 blockers fired = no eligible accounts to measure.",
-    "dependsOn": [
-      "is_internal Mixpanel super-property (eng ticket pending)",
-      "First external CIWP activation reaching Rescue List",
-      "HubSpot egress path confirmed (Private App token, CSV bridge, or Form fallback)"
-    ],
-    "successor": "Blockers Detected Per Day (live, derived from Sentry ciwp-backend issue stream)",
-    "lastSyncedAt": null
   }
 }
