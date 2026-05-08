@@ -1769,3 +1769,168 @@ a.ticket-id:hover { color: #0088CC; }
   .century-card { padding: 16px 16px 20px; }
   .sentry-error-type-badge { font-size: 9px; padding: 2px 6px; }
 }
+
+/* ── Account Activation Scorecard ──────────────── */
+
+#account-scorecard-section {
+  background: #FAFAFA;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.scorecard-subtitle {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-top: 4px;
+  margin-bottom: 20px;
+}
+
+.scorecard-headline {
+  margin: 16px 0 24px;
+  padding: 16px 20px;
+  background: var(--bg);
+  border-radius: 8px;
+  border: 1px solid #00000010;
+}
+
+.scorecard-headline-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+
+.scorecard-narrative {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.scorecard-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.scorecard-metric-tile {
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid #00000010;
+  text-align: left;
+}
+
+.scorecard-metric-value {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+
+.scorecard-metric-value.scorecard-zero {
+  color: var(--accent-down);
+}
+
+.scorecard-metric-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.scorecard-metric-sublabel {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.scorecard-accounts {
+  background: var(--bg);
+  border-radius: 8px;
+  border: 1px solid #00000010;
+  overflow: hidden;
+}
+
+.scorecard-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid #00000008;
+  font-size: 13px;
+}
+
+.scorecard-row:last-child {
+  border-bottom: none;
+}
+
+.scorecard-header-row {
+  background: #FAFAFA;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.scorecard-account {
+  color: var(--text-primary);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scorecard-cell {
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.scorecard-cell-visits {
+  font-weight: 600;
+}
+
+.scorecard-zero-cell {
+  color: var(--accent-down);
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
+}
+
+.scorecard-internal-badge {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: #00000010;
+  color: var(--text-muted);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.scorecard-footnote {
+  margin-top: 12px;
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+@media (max-width: 720px) {
+  #account-scorecard-section {
+    padding: 16px;
+  }
+  .scorecard-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .scorecard-row {
+    grid-template-columns: 1.5fr 0.6fr 0.6fr 0.6fr 0.6fr;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+  .scorecard-headline-text {
+    font-size: 15px;
+  }
+}

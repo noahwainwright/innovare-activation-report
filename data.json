@@ -44,7 +44,8 @@
     "firstEngagement": "https://mixpanel.com/project/3209880/view/3720364/app/insights#3w7qmD8D5oB8",
     "funnel": "https://mixpanel.com/project/3209880/view/3720364/app/insights#9zneGG9mKciZ",
     "cohorts": "https://mixpanel.com/project/3209880/view/3720364/app/boards#id=11020009",
-    "perAccount": "https://mixpanel.com/project/3209880/view/3720364/app/boards#id=11020009"
+    "perAccount": "https://mixpanel.com/project/3209880/view/3720364/app/boards#id=11020009",
+    "accountScorecard": "https://mixpanel.com/s/1q6UHM"
   },
   "sentry": {
     "asOf": "2026-05-08",
@@ -1652,5 +1653,129 @@
       "jiraStatus": "Needs Jira owner/link",
       "affectedAccounts": []
     }
+  },
+  "accountScorecard": {
+    "title": "Account Activation Scorecard",
+    "subtitle": "Last 5 weeks · CIWP-cohort accounts only",
+    "source": "Mixpanel: SIP/CIWP Activation board · 'Account Activation Scorecard' report",
+    "asOf": "2026-05-08",
+    "windowWeeks": 5,
+    "metrics": [
+      {
+        "key": "ciwp_generated_builder",
+        "label": "CIWPs Generated",
+        "subLabel": "Builders",
+        "totalUsers": 0
+      },
+      {
+        "key": "ciwp_viewed_consumer",
+        "label": "CIWPs Viewed",
+        "subLabel": "Consumers",
+        "totalUsers": 0
+      },
+      {
+        "key": "registration_user_account_joined_team",
+        "label": "Joined Team",
+        "subLabel": "New registrations",
+        "totalUsers": 0
+      },
+      {
+        "key": "dashboard_visit",
+        "label": "Dashboard Visits",
+        "subLabel": "Unique users",
+        "totalUsers": 74
+      }
+    ],
+    "totalAccounts": 12,
+    "headlineGap": "12 accounts in the product · 74 unique users visited · 0 CIWPs generated",
+    "accounts": [
+      {
+        "account": "CICS Northtown",
+        "ciwpGenerated": 0,
+        "ciwpViewed": 0,
+        "registrations": 0,
+        "dashboardVisits": 4
+      },
+      {
+        "account": "CICS Irving Park",
+        "ciwpGenerated": 0,
+        "ciwpViewed": 0,
+        "registrations": 0,
+        "dashboardVisits": 1
+      },
+      {
+        "account": "Steans Family Foundation",
+        "ciwpGenerated": 0,
+        "ciwpViewed": 0,
+        "registrations": 0,
+        "dashboardVisits": 3
+      },
+      {
+        "account": "Cristo Rey",
+        "ciwpGenerated": 0,
+        "ciwpViewed": 0,
+        "registrations": 0,
+        "dashboardVisits": 1
+      },
+      {
+        "account": "Local School Council",
+        "ciwpGenerated": 0,
+        "ciwpViewed": 0,
+        "registrations": 0,
+        "dashboardVisits": 1
+      },
+      {
+        "account": "Innovare",
+        "ciwpGenerated": 0,
+        "ciwpViewed": 0,
+        "registrations": 0,
+        "dashboardVisits": 7,
+        "internal": true
+      },
+      {
+        "account": "CICS West Belden",
+        "ciwpGenerated": 0,
+        "ciwpViewed": 0,
+        "registrations": 0,
+        "dashboardVisits": 2
+      },
+      {
+        "account": "Avalon Park Elementary",
+        "ciwpGenerated": 0,
+        "ciwpViewed": 0,
+        "registrations": 0,
+        "dashboardVisits": 1
+      },
+      {
+        "account": "ReGeneration Schools",
+        "ciwpGenerated": 0,
+        "ciwpViewed": 0,
+        "registrations": 0,
+        "dashboardVisits": 4
+      },
+      {
+        "account": "CICS Longwood",
+        "ciwpGenerated": 0,
+        "ciwpViewed": 0,
+        "registrations": 0,
+        "dashboardVisits": 1
+      },
+      {
+        "account": "Farmer",
+        "ciwpGenerated": 0,
+        "ciwpViewed": 0,
+        "registrations": 0,
+        "dashboardVisits": 3
+      },
+      {
+        "account": "Synergy Academies",
+        "ciwpGenerated": 0,
+        "ciwpViewed": 0,
+        "registrations": 0,
+        "dashboardVisits": 1
+      }
+    ],
+    "filterNote": "Mixpanel cohort 'Users in CIWP Accounts' — does NOT exclude Innovare internal account (1 row marked internal: true). External-only sum: 11 accounts · 67 unique visits.",
+    "narrativeTakeaway": "Engagement without activation. Eleven external accounts (74-7=67 unique users) opened the product in the last 5 weeks; zero generated a CIWP, viewed a shared CIWP, or registered new team members. The funnel breaks at 'first action,' not 'first arrival.'"
   }
 }

@@ -282,6 +282,8 @@ function buildAdoptionHTML() {
       </div>
     </div>
 
+    <div class="section" id="account-scorecard-section"></div>
+
     <div class="section" id="rescue-section">
       <div id="rescue-list"></div>
     </div>
@@ -312,8 +314,79 @@ function renderAdoptionData() {
   renderRescueList(accounts);
   renderActivationPipeline(accounts);
   renderChartSection();
+  renderAccountScorecard();
   const badge = document.getElementById('kpi-tier-badge');
   if (badge) badge.style.display = currentTier !== 'all' ? 'block' : 'none';
+}
+
+// ── Account Activation Scorecard ──────────────
+// Sourced from Mixpanel "Account Activation Scorecard" report
+// (SIP/CIWP Activation board). Shows 5-week engagement-vs-activation
+// gap: who's visiting the product but not generating CIWPs.
+function renderAccountScorecard() {
+  const el = document.getElementById('account-scorecard-section');
+  if (!el) return;
+  const sc = DATA.accountScorecard;
+  if (!sc) { el.innerHTML = ''; return; }
+
+  const link = DATA.mixpanelLinks?.accountScorecard || '#';
+  const accounts = (sc.accounts || []).slice().sort((a, b) => b.dashboardVisits - a.dashboardVisits);
+
+  const metricTiles = (sc.metrics || []).map(m => {
+    const isVisits = m.key === 'dashboard_visit';
+    const valueClass = isVisits ? 'scorecard-metric-value' : 'scorecard-metric-value scorecard-zero';
+    return `
+      <div class="scorecard-metric-tile">
+        <div class="${valueClass}">${m.totalUsers}</div>
+        <div class="scorecard-metric-label">${escapeHTML(m.label)}</div>
+        <div class="scorecard-metric-sublabel">${escapeHTML(m.subLabel)}</div>
+      </div>`;
+  }).join('');
+
+  const rows = accounts.map(a => {
+    const internalBadge = a.internal ? '<span class="scorecard-internal-badge">internal</span>' : '';
+    const zeroCell = (n) => n === 0
+      ? '<span class="scorecard-cell scorecard-zero-cell">0</span>'
+      : `<span class="scorecard-cell">${n}</span>`;
+    return `
+      <div class="scorecard-row">
+        <span class="scorecard-account">${escapeHTML(a.account)}${internalBadge}</span>
+        <span class="scorecard-cell scorecard-cell-visits">${a.dashboardVisits}</span>
+        ${zeroCell(a.ciwpGenerated)}
+        ${zeroCell(a.ciwpViewed)}
+        ${zeroCell(a.registrations)}
+      </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="section-label-row">
+      <span class="section-label">${escapeHTML(sc.title)}</span>
+      <a class="mixpanel-link" href="${link}" target="_blank" rel="noopener">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 1.5H2.25C1.836 1.5 1.5 1.836 1.5 2.25v7.5c0 .414.336.75.75.75h7.5c.414 0 .75-.336.75-.75V7.5M7.5 1.5h3m0 0v3m0-3L5.25 6.75" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Mixpanel
+      </a>
+    </div>
+    <div class="scorecard-subtitle">${escapeHTML(sc.subtitle)}</div>
+
+    <div class="scorecard-headline">
+      <div class="scorecard-headline-text">${escapeHTML(sc.headlineGap)}</div>
+      <div class="scorecard-narrative">${escapeHTML(sc.narrativeTakeaway)}</div>
+    </div>
+
+    <div class="scorecard-metrics">${metricTiles}</div>
+
+    <div class="scorecard-accounts">
+      <div class="scorecard-row scorecard-header-row">
+        <span class="scorecard-account">Account</span>
+        <span class="scorecard-cell">Visits</span>
+        <span class="scorecard-cell">Generated</span>
+        <span class="scorecard-cell">Viewed</span>
+        <span class="scorecard-cell">Joined</span>
+      </div>
+      ${rows}
+    </div>
+
+    <div class="scorecard-footnote">${escapeHTML(sc.filterNote)}</div>`;
 }
 
 function renderSentryHealthCard() {
