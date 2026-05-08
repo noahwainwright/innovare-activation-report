@@ -1,5 +1,5 @@
 {
-  "date": "May 1",
+  "date": "2026-05-08",
   "time": "afternoon refresh",
   "northStarKpis": {
     "adoptionRate": {
@@ -9,7 +9,7 @@
       "sub": "0 of 37 enrolled accounts",
       "note": "CORRECTED 2026-04-24: A. P. Willits Apr 13 event was mingxing@innovaresip.com (internal) operating in that account context — not an external user self-activating. All 28 ciwp_generated events in prod are @innovaresip.com accounts. Zero external school CIWPs confirmed. is_internal filter still required (eng ticket pending).",
       "source": "mixpanel",
-      "asOf": "2026-04-24",
+      "asOf": "2026-05-08",
       "blocked": false
     },
     "conversionRate": {
@@ -17,9 +17,9 @@
       "value": 0,
       "unit": "%",
       "sub": "CIWP Generated → Plan Upgraded, 30d (n=0 external — confirmed Apr 24)",
-      "note": "0 external conversions confirmed. All 28 Mixpanel ciwp_generated events traced to internal @innovaresip.com accounts. is_internal super property required before funnel numbers are trustworthy. Eng ticket pending.",
+      "note": "0 external free→paid conversions confirmed. All 31 ciwp_generated events in prod still trace to internal/pilot accounts (verified 2026-05-08). 1 win-back paid subscription today: Perez Elementary (returning customer, accountId 80) — reactivation, not new funnel conversion. is_internal super property still required before funnel numbers are trustworthy.",
       "source": "mixpanel",
-      "asOf": "2026-04-24",
+      "asOf": "2026-05-08",
       "blocked": false,
       "caveat": "account_subscription_start is a billing proxy. Replace with Plan Upgraded funnel event once confirmed with eng."
     },
@@ -30,7 +30,7 @@
       "sub": "No external activations confirmed",
       "note": "Previously showed A. P. Willits same-day data — corrected Apr 24. That event was internal user mingxing@innovaresip.com. Metric is blocked until first genuine external CIWP is generated.",
       "source": "mixpanel",
-      "asOf": "2026-04-24",
+      "asOf": "2026-05-08",
       "blocked": false
     }
   },
@@ -47,107 +47,270 @@
     "perAccount": "https://mixpanel.com/project/3209880/view/3720364/app/boards#id=11020009"
   },
   "sentry": {
-    "dataAsOf": "2026-05-01",
+    "asOf": "2026-05-08",
+    "windowDays": 14,
     "project": "ciwp-backend",
-    "totalUnresolved": 30,
+    "totalUnresolved": 16,
     "ignoredRate": 0,
-    "accountAttributionBlocked": true,
-    "accountAttributionBlocker": "IW-6814 (account_id tag) not in prod — all account attribution pending",
-    "accountErrors": [
-      {
-        "account": "Account attribution pending",
-        "tier": null,
-        "issueIds": [],
-        "note": "IW-6814 not in prod. account_id tag returns 404 on all issues. Will be mapped once tag lands."
-      }
-    ],
-    "issuesNote": "Sentry refresh 2026-05-01: 30 total unresolved, 6 new, 13 unhandled, 0 resolved. Top 5 issues displayed (3 new: 3A, 3B, 3D; 2 ongoing: 38, 28). Remaining 25 unresolved issues below the fold of the Sentry view; not individually tracked here.",
     "issues": [
+      {
+        "id": "CIWP-BACKEND-3B",
+        "title": "PermissionDenied: 'aiplatform.endpoints.predict' denied on resource gemini-2.5-flash",
+        "occurrences": 18,
+        "users": 0,
+        "lastSeen": "2wk ago",
+        "age": "2wk",
+        "endpoint": "/mcp/knowledge/ingest",
+        "unhandled": false,
+        "resolved": false,
+        "daysInQueue": 14,
+        "severity": "critical",
+        "errorType": "AUTH",
+        "affectedAccounts": 0,
+        "linkedTicket": null
+      },
       {
         "id": "CIWP-BACKEND-3D",
         "title": "ConnectionError: Error while reading from 10.128.0.26:6379 — Connection reset by peer",
-        "severity": "critical",
         "occurrences": 15,
-        "affectedAccounts": 2,
-        "linkedTicket": null,
-        "daysInQueue": 7,
-        "lastSeen": "2d ago",
-        "resolved": false,
-        "errorType": "CONNECTION",
+        "users": 2,
+        "lastSeen": "1wk ago",
+        "age": "2wk",
         "endpoint": "/api/ciwp/active-generation/{school_id}",
         "unhandled": true,
-        "lastVerified": "2026-05-01",
-        "note": "Redis connection reset by peer. Tied to active CIWP generation flow."
-      },
-      {
-        "id": "CIWP-BACKEND-3B",
-        "title": "PermissionDenied: 'aiplatform.endpoints.predict' denied on gemini-2.5-flash",
-        "severity": "critical",
-        "occurrences": 18,
-        "affectedAccounts": 0,
-        "linkedTicket": null,
-        "daysInQueue": 7,
-        "lastSeen": "7d ago",
         "resolved": false,
-        "errorType": "PERMISSION",
-        "endpoint": "/mcp/knowledge/ingest",
-        "unhandled": false,
-        "lastVerified": "2026-05-01",
-        "note": "GCP IAM permission missing for gemini-2.5-flash predict. /mcp/knowledge/ingest. 0 users impacted (MCP infra)."
+        "daysInQueue": 14,
+        "severity": "critical",
+        "errorType": "CONNECTION",
+        "affectedAccounts": 2,
+        "linkedTicket": null
       },
       {
         "id": "CIWP-BACKEND-3A",
-        "title": "DefaultCredentialsError: File ./gcp-keys/service-account.json was not found",
-        "severity": "critical",
+        "title": "DefaultCredentialsError: ./gcp-keys/service-account.json was not found",
         "occurrences": 15,
-        "affectedAccounts": 0,
-        "linkedTicket": null,
-        "daysInQueue": 7,
-        "lastSeen": "7d ago",
-        "resolved": false,
-        "errorType": "CREDENTIAL",
+        "users": 0,
+        "lastSeen": "2wk ago",
+        "age": "2wk",
         "endpoint": "/mcp/knowledge/ingest",
         "unhandled": true,
-        "lastVerified": "2026-05-01",
-        "note": "GCP service account file missing in deploy artifact. /mcp/knowledge/ingest."
+        "resolved": false,
+        "daysInQueue": 14,
+        "severity": "critical",
+        "errorType": "AUTH",
+        "affectedAccounts": 0,
+        "linkedTicket": null
       },
       {
         "id": "CIWP-BACKEND-38",
-        "title": "RuntimeError: unable to perform operation on <TCPTransport closed=True reading=False>; the handler is closed",
-        "severity": "critical",
-        "occurrences": 9,
-        "affectedAccounts": 8,
-        "linkedTicket": null,
-        "daysInQueue": 7,
-        "lastSeen": "37min ago",
-        "resolved": false,
-        "errorType": "RUNTIME",
+        "title": "RuntimeError: unable to perform operation on <TCPTransport closed=True>; the handler is closed",
+        "occurrences": 8,
+        "users": 7,
+        "lastSeen": "2d ago",
+        "age": "2wk",
         "endpoint": "/api/ciwp/active-generation/{school_id}",
         "unhandled": true,
-        "lastVerified": "2026-05-01",
-        "note": "TCPTransport closed during active generation. /api/ciwp/active-generation/{school_id}. Most users impacted of any current issue."
+        "resolved": false,
+        "daysInQueue": 14,
+        "severity": "critical",
+        "errorType": "RUNTIME",
+        "affectedAccounts": 7,
+        "linkedTicket": null
       },
       {
-        "id": "CIWP-BACKEND-28",
-        "title": "HTTPException: Unexpected error: relation 'Indicators' does not exist",
-        "severity": "critical",
-        "occurrences": 9,
-        "affectedAccounts": 3,
-        "linkedTicket": null,
-        "daysInQueue": 14,
-        "lastSeen": "1wk ago",
-        "resolved": false,
-        "errorType": "DB_ERROR",
+        "id": "CIWP-BACKEND-3C",
+        "title": "HTTPException: SAFETY_CHECK_FAILED — PII sanitize batch failed (upstream_status 503)",
+        "occurrences": 6,
+        "users": 1,
+        "lastSeen": "2wk ago",
+        "age": "2wk",
         "endpoint": "/api/ciwp/step-1",
         "unhandled": false,
-        "lastVerified": "2026-05-01",
-        "note": "Postgres UndefinedTable on Indicators table — migration gap on /api/ciwp/step-1."
+        "resolved": false,
+        "daysInQueue": 14,
+        "severity": "high",
+        "errorType": "SAFETY_CHECK",
+        "affectedAccounts": 1,
+        "linkedTicket": null
+      },
+      {
+        "id": "CIWP-BACKEND-3G",
+        "title": "PdfStreamError: Stream has ended unexpectedly",
+        "occurrences": 5,
+        "users": 1,
+        "lastSeen": "1wk ago",
+        "age": "1wk",
+        "endpoint": "/mcp/knowledge/ingest",
+        "unhandled": false,
+        "resolved": false,
+        "daysInQueue": 7,
+        "severity": "medium",
+        "errorType": "INPUT",
+        "affectedAccounts": 1,
+        "linkedTicket": null
+      },
+      {
+        "id": "CIWP-BACKEND-3F",
+        "title": "ValueError: Goal 'Increase MTSS Intervention Coverage to 25%' has implausible annual stretch (baseline=0.0, target=25.0, delta=25.0)",
+        "occurrences": 3,
+        "users": 2,
+        "lastSeen": "1wk ago",
+        "age": "1wk",
+        "endpoint": "/api/ciwp/step-1",
+        "unhandled": false,
+        "resolved": false,
+        "daysInQueue": 7,
+        "severity": "medium",
+        "errorType": "VALIDATION",
+        "affectedAccounts": 2,
+        "linkedTicket": null
+      },
+      {
+        "id": "CIWP-BACKEND-3E",
+        "title": "HTTPException: Failed to generate priorities — Failed to generate priorities after 2 attempts (school_id=33)",
+        "occurrences": 3,
+        "users": 2,
+        "lastSeen": "1wk ago",
+        "age": "1wk",
+        "endpoint": "/api/ciwp/step-1",
+        "unhandled": false,
+        "resolved": false,
+        "daysInQueue": 7,
+        "severity": "medium",
+        "errorType": "API_FAIL",
+        "affectedAccounts": 2,
+        "linkedTicket": null
+      },
+      {
+        "id": "CIWP-BACKEND-1X",
+        "title": "ResourceExhausted: Resource exhausted — vertex-ai error code 429",
+        "occurrences": 3,
+        "users": 1,
+        "lastSeen": "1d ago",
+        "age": "4wk",
+        "endpoint": "/mcp/knowledge/ingest",
+        "unhandled": false,
+        "resolved": false,
+        "daysInQueue": 28,
+        "severity": "high",
+        "errorType": "QUOTA",
+        "affectedAccounts": 1,
+        "linkedTicket": null
+      },
+      {
+        "id": "CIWP-BACKEND-13",
+        "title": "Traceback (most recent call last): (No error message)",
+        "occurrences": 3,
+        "users": 0,
+        "lastSeen": "1d ago",
+        "age": "1mo",
+        "endpoint": "uvicorn.error",
+        "unhandled": false,
+        "resolved": false,
+        "daysInQueue": 30,
+        "severity": "low",
+        "errorType": "UNCATEGORIZED",
+        "affectedAccounts": 0,
+        "linkedTicket": null
+      },
+      {
+        "id": "CIWP-BACKEND-12",
+        "title": "Application startup failed. Exiting.",
+        "occurrences": 3,
+        "users": 0,
+        "lastSeen": "1d ago",
+        "age": "1mo",
+        "endpoint": "uvicorn.error",
+        "unhandled": false,
+        "resolved": false,
+        "daysInQueue": 30,
+        "severity": "critical",
+        "errorType": "INFRASTRUCTURE",
+        "affectedAccounts": 0,
+        "linkedTicket": null
+      },
+      {
+        "id": "CIWP-BACKEND-11",
+        "title": "ConnectionRefusedError: [Errno 111] Connection refused",
+        "occurrences": 3,
+        "users": 0,
+        "lastSeen": "1d ago",
+        "age": "1mo",
+        "endpoint": "uvloop.loop",
+        "unhandled": true,
+        "resolved": false,
+        "daysInQueue": 30,
+        "severity": "critical",
+        "errorType": "CONNECTION",
+        "affectedAccounts": 0,
+        "linkedTicket": null
+      },
+      {
+        "id": "CIWP-BACKEND-1M",
+        "title": "All uploaded documents flagged as invalid or contain no priorities. Refusing to generate goals from empty data.",
+        "occurrences": 2,
+        "users": 1,
+        "lastSeen": "1wk ago",
+        "age": "1mo",
+        "endpoint": "/api/ciwp/step-1",
+        "unhandled": false,
+        "resolved": false,
+        "daysInQueue": 30,
+        "severity": "low",
+        "errorType": "INSUFFICIENT_CONTEXT",
+        "affectedAccounts": 1,
+        "linkedTicket": null
+      },
+      {
+        "id": "CIWP-BACKEND-1K",
+        "title": "Gemini API timed out after 60s",
+        "occurrences": 1,
+        "users": 1,
+        "lastSeen": "1d ago",
+        "age": "1mo",
+        "endpoint": "/mcp/knowledge/ingest",
+        "unhandled": false,
+        "resolved": false,
+        "daysInQueue": 30,
+        "severity": "high",
+        "errorType": "TIMEOUT",
+        "affectedAccounts": 1,
+        "linkedTicket": null
+      },
+      {
+        "id": "CIWP-BACKEND-1J",
+        "title": "JSONDecodeError: Expecting ',' delimiter: line 7 column 34 (char 181)",
+        "occurrences": 1,
+        "users": 0,
+        "lastSeen": "2wk ago",
+        "age": "1mo",
+        "endpoint": "/mcp/knowledge/ingest",
+        "unhandled": false,
+        "resolved": false,
+        "daysInQueue": 30,
+        "severity": "medium",
+        "errorType": "PARSE",
+        "affectedAccounts": 0,
+        "linkedTicket": null
+      },
+      {
+        "id": "CIWP-BACKEND-5",
+        "title": "Failed to parse AI response as JSON: Expecting ',' delimiter: line 7 column 34 (char 181)",
+        "occurrences": 1,
+        "users": 0,
+        "lastSeen": "2wk ago",
+        "age": "3mo",
+        "endpoint": "/mcp/knowledge/ingest",
+        "unhandled": false,
+        "resolved": false,
+        "daysInQueue": 90,
+        "severity": "medium",
+        "errorType": "PARSE",
+        "affectedAccounts": 0,
+        "linkedTicket": null
       }
     ],
-    "newIssues": 6,
-    "unhandled": 13,
-    "resolved": 0,
-    "regressed": 0
+    "sourceNote": "Sentry feed snapshot, 14-day window, ciwp-backend project (innovare-nh org). Replaces stale 2026-05-01 snapshot."
   },
   "centuryIntegration": {
     "status": "pending",
@@ -874,260 +1037,112 @@
       "lastActivityDate": null,
       "century": null,
       "ciwpsCreatedNote": "CORRECTED Apr 24: Apr 13 ciwp_generated event was mingxing@innovaresip.com (internal) operating in this account context. No external user has self-activated. Activation stage reset to 0."
+    },
+    {
+      "account": "Salazar",
+      "accountId": 316,
+      "tier": "Paid",
+      "ciwpsCreated": 0,
+      "activationStage": 0,
+      "events": {
+        "user_login": true,
+        "ciwp_ai_analysis_completed": false,
+        "ciwp_generated": false
+      },
+      "daysSinceEnabled": null,
+      "healthStatus": "win-back",
+      "lastActivityDate": "2026-05-08",
+      "century": null,
+      "owner": null,
+      "execSponsor": null,
+      "csvTier": "Paid",
+      "onboardingPhase": "Win-back / Reactivation",
+      "winBack": true,
+      "winBackNote": "Former client (March 2026 cohort). Last active March, dormant April, returned 2026-05-07 (4 dashboard visits) + 2026-05-08. 3 distinct external @cps.edu users active this week. No new account_subscription_start — pure reactivation. Source: CS announcement (Nicholas Freeman, 2026-05-08 9:42 AM)."
+    },
+    {
+      "account": "Perez Elementary",
+      "accountId": 80,
+      "tier": "Paid",
+      "ciwpsCreated": 0,
+      "activationStage": 0,
+      "events": {
+        "user_login": true,
+        "ciwp_ai_analysis_completed": false,
+        "ciwp_generated": false
+      },
+      "daysSinceEnabled": null,
+      "healthStatus": "win-back",
+      "lastActivityDate": "2026-05-08",
+      "century": null,
+      "owner": null,
+      "execSponsor": null,
+      "csvTier": "Paid",
+      "onboardingPhase": "Win-back / Reactivation",
+      "winBack": true,
+      "winBackNote": "Former client. Historical dashboard_visit activity May 2025–Feb 2026, dormant Mar–Apr 2026. NEW account_subscription_start event today (2026-05-08, paid, @cps.edu). Returning paid customer, not net-new. Source: CS announcement (Nicholas Freeman, 2026-05-08 9:42 AM)."
     }
   ],
   "ciwpTesting": {
-    "date": "2026-05-01",
+    "date": "2026-05-08",
     "jiraBase": "https://innovaresip.atlassian.net/browse/",
+    "scopeNote": "Project moved from IW board to Inno SIP / Track 2 (Engineering & QA Board). Showing visible Done (Production) tickets from sprint board snapshot 2026-05-08. Full SIP backlog not yet mirrored — partial view.",
     "primary": {
-      "label": "Open Ticket Feed",
-      "value": 24,
+      "label": "Recently Shipped (SIP board)",
+      "value": 4,
       "unit": "",
-      "sub": "9 bugs · 15 stories · 11 closed/done"
+      "sub": "4 Done (Production) tickets visible on SIP / Track 2 board"
     },
     "summary": [
       {
-        "label": "bugs in triage",
-        "count": 3,
-        "dot": "review"
-      },
-      {
-        "label": "stories open",
-        "count": 6,
-        "dot": "dev"
-      },
-      {
-        "label": "in QA",
+        "label": "Done (Production)",
         "count": 4,
         "dot": "complete"
       }
     ],
     "categories": [
       {
-        "key": "bugs",
-        "label": "Bugs",
+        "key": "shipped",
+        "label": "Done (Production)",
         "tickets": [
           {
-            "id": "IW-6811",
+            "id": "SIP-213",
             "type": "Bug",
             "status": "done",
-            "statusLabel": "Done",
-            "title": "[Mixpanel] Account data incomplete + plan shows as 'none'",
-            "tag": "CIWP-GAPS",
-            "lastVerified": "2026-05-01"
+            "statusLabel": "Done (Production)",
+            "title": "[CIWP] Unable to generate goals is shown after the doc is analyzed",
+            "tag": "BUGS",
+            "owner": "Antonio Massaro",
+            "parent": "SIP-228 Bugs",
+            "lastVerified": "2026-05-08"
           },
           {
-            "id": "IW-6798",
-            "type": "Bug",
-            "status": "in-qa",
-            "statusLabel": "Staging",
-            "title": "[CIWP] Goal maps to incorrect priority area",
-            "tag": "CIWP-BUGS",
-            "lastVerified": "2026-05-01"
-          },
-          {
-            "id": "IW-6796",
-            "type": "Bug",
-            "status": "in-progress",
-            "statusLabel": "In Progress",
-            "title": "[CIWP] AI recommendations generate unsupported targets from uploaded evidence",
-            "tag": "CIWP-BUGS",
-            "lastVerified": "2026-05-01"
-          },
-          {
-            "id": "IW-6816",
-            "type": "Bug",
-            "status": "in-qa",
-            "statusLabel": "Staging",
-            "title": "Remove '(XX words)' from the end of rationale",
-            "tag": "CIWP-BUGS",
-            "lastVerified": "2026-05-01"
-          },
-          {
-            "id": "IW-6598",
-            "type": "Bug",
-            "status": "in-qa",
-            "statusLabel": "QA Beta",
-            "title": "[CIWP] Upload screen error message renders inline instead of as a banner",
-            "tag": "CIWP-BUGS",
-            "lastVerified": "2026-05-01"
-          },
-          {
-            "id": "IW-6677",
-            "type": "Bug",
-            "status": "done",
-            "statusLabel": "Closed",
-            "title": "[CIWP] Upload screen spinner icon missing during file processing",
-            "tag": "CIWP-BUGS",
-            "lastVerified": "2026-05-01"
-          },
-          {
-            "id": "IW-6678",
-            "type": "Bug",
-            "status": "done",
-            "statusLabel": "Closed",
-            "title": "[CIWP] Upload screen empty state uses incorrect component — design confirmation required",
-            "tag": "CIWP-BUGS",
-            "lastVerified": "2026-05-01"
-          },
-          {
-            "id": "IW-6386",
-            "type": "Bug",
-            "status": "under-review",
-            "statusLabel": "Reqs",
-            "title": "Standardize delete confirmation UI pattern",
-            "tag": "CIWP-BUGS",
-            "lastVerified": "2026-05-01"
-          },
-          {
-            "id": "IW-6480",
-            "type": "Bug",
-            "status": "under-review",
-            "statusLabel": "Reqs",
-            "title": "[CIWP] Edit Goal and Create Goal modal badges display incorrect labels — should be 'Owner' and 'Metric'",
-            "tag": "CIWP-BUGS",
-            "lastVerified": "2026-05-01"
-          }
-        ]
-      },
-      {
-        "key": "stories",
-        "label": "Stories",
-        "tickets": [
-          {
-            "id": "IW-6803",
+            "id": "SIP-217",
             "type": "Story",
             "status": "done",
-            "statusLabel": "Closed",
-            "title": "[CIWP] Add EdAI Icon to Create CIWP Modal and Goal Rationale Modal",
-            "tag": "CIWP-FAST FOLLOW",
-            "lastVerified": "2026-05-01"
+            "statusLabel": "Done (Production)",
+            "title": "AI Agents Migration",
+            "tag": "FY24Q4 EPIC 10: AI INFRASTRUCTURE & MCP",
+            "owner": "Antonio Massaro",
+            "lastVerified": "2026-05-08"
           },
           {
-            "id": "IW-6601",
+            "id": "SIP-225",
             "type": "Story",
             "status": "done",
-            "statusLabel": "Closed",
-            "title": "Decoupled CIWP Data Architecture",
-            "tag": "TECH DEBT",
-            "lastVerified": "2026-05-01"
+            "statusLabel": "Done (Production)",
+            "title": "Set up the Agentic Harness engineering",
+            "tag": "FY26Q4 EPIC 8: PLATFORM TECH DEBT & ENG",
+            "lastVerified": "2026-05-08"
           },
           {
-            "id": "IW-6832",
+            "id": "SIP-216",
             "type": "Story",
             "status": "done",
-            "statusLabel": "Closed",
-            "title": "Dynamic Data Slicing: A Flexible, Attribute-Based Security Framework",
-            "tag": "TECH DEBT",
-            "lastVerified": "2026-05-01"
-          },
-          {
-            "id": "IW-6830",
-            "type": "Story",
-            "status": "done",
-            "statusLabel": "Closed",
-            "title": "CIWP Context Library - File Attachment UX Changes",
-            "tag": "CIWP-FAST FOLLOW",
-            "lastVerified": "2026-05-01"
-          },
-          {
-            "id": "IW-6787",
-            "type": "Story",
-            "status": "done",
-            "statusLabel": "Done",
-            "title": "Update AI Observability solution",
-            "tag": "COMPLIANCE",
-            "lastVerified": "2026-05-01"
-          },
-          {
-            "id": "IW-6485",
-            "type": "Story",
-            "status": "in-qa",
-            "statusLabel": "Pending Live Verification",
-            "title": "Refactor Flatfile upload File logic",
-            "tag": "TECH DEBT",
-            "lastVerified": "2026-05-01"
-          },
-          {
-            "id": "IW-6815",
-            "type": "Story",
-            "status": "done",
-            "statusLabel": "Closed",
-            "title": "Update File attachment flow",
-            "tag": "CIWP-FAST FOLLOW",
-            "lastVerified": "2026-05-01"
-          },
-          {
-            "id": "IW-6854",
-            "type": "Story",
-            "status": "done",
-            "statusLabel": "Done",
-            "title": "Standardizing the Synthetic Data Layer for Report Prototyping",
-            "tag": null,
-            "lastVerified": "2026-05-01"
-          },
-          {
-            "id": "IW-6855",
-            "type": "Story",
-            "status": "done",
-            "statusLabel": "Done",
-            "title": "Research for scalable ingestion for high-volume CPS data",
-            "tag": null,
-            "lastVerified": "2026-05-01"
-          },
-          {
-            "id": "IW-6818",
-            "type": "Story",
-            "status": "under-review",
-            "statusLabel": "Reqs",
-            "title": "Ability to Create Goal in Recommended Goals Page",
-            "tag": "CIWP-FAST FOLLOW",
-            "lastVerified": "2026-05-01"
-          },
-          {
-            "id": "IW-6817",
-            "type": "Story",
-            "status": "under-review",
-            "statusLabel": "Reqs",
-            "title": "[CIWP DB Change] Add academic years to Performance Goal targets",
-            "tag": "CIWP-FAST FOLLOW",
-            "lastVerified": "2026-05-01"
-          },
-          {
-            "id": "IW-6728",
-            "type": "Story",
-            "status": "under-review",
-            "statusLabel": "Reqs",
-            "title": "Handle edge case on goals limit during plan generation: CIWP turned off, goals created → CIWP turned on, AI Goals generated exceeds goals limit",
-            "tag": "CIWP-GAPS",
-            "lastVerified": "2026-05-01"
-          },
-          {
-            "id": "IW-6851",
-            "type": "Story",
-            "status": "under-review",
-            "statusLabel": "Reqs",
-            "title": "Dynamic Admin UI & Security Token Enforcement",
-            "tag": null,
-            "lastVerified": "2026-05-01"
-          },
-          {
-            "id": "IW-6439",
-            "type": "Story",
-            "status": "under-review",
-            "statusLabel": "Reqs",
-            "title": "CICS Pipeline Continuity: Product Scope & Dashboard Lineage",
-            "tag": "CICS DOCUMENTATION",
-            "lastVerified": "2026-05-01"
-          },
-          {
-            "id": "IW-6441",
-            "type": "Story",
-            "status": "under-review",
-            "statusLabel": "Reqs",
-            "title": "CICS Pipeline Continuity: Centralized Alerting & Incident Runbooks",
-            "tag": "CICS DOCUMENTATION",
-            "lastVerified": "2026-05-01"
+            "statusLabel": "Done (Production)",
+            "title": "VM to Cloud Run Migration",
+            "tag": "FY26Q4 EPIC 8: PLATFORM TECH DEBT & ENG",
+            "lastVerified": "2026-05-08"
           }
         ]
       }
@@ -1574,7 +1589,7 @@
       ],
       "revisitAfter": "is_internal ships + first external Rescue List entry"
     },
-    "asOf": "2026-05-01"
+    "asOf": "2026-05-08"
   },
   "sourceMeta": {
     "activationDefinition": "Generated CIWP plan + viewed sample dashboard within 28 days",
