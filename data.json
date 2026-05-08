@@ -1272,7 +1272,7 @@
       "funnel": [
         {
           "label": "Login",
-          "value": 0
+          "value": 12
         },
         {
           "label": "AI Analysis",
@@ -1342,7 +1342,7 @@
       "funnel": [
         {
           "label": "Login",
-          "value": 0
+          "value": 12
         },
         {
           "label": "AI Analysis",
@@ -1504,7 +1504,7 @@
       "funnel": [
         {
           "label": "Login",
-          "value": 0
+          "value": 12
         },
         {
           "label": "AI Analysis",
