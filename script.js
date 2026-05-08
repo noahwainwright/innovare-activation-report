@@ -1398,7 +1398,6 @@ function buildActionHTML() {
     <div class="section" id="action-lists-section">
       <div id="action-lists-container"></div>
     </div>
-    <div class="section" id="action-roadmap-section"></div>
     <div style="height: 100px; flex-shrink: 0;"></div>`;
 }
 
@@ -1406,7 +1405,6 @@ function renderActionData() {
   renderBlockersPerDay();
   renderActionClosedLoop();
   renderActionLists();
-  renderActionRoadmap();
 }
 
 function renderActionClosedLoop() {
@@ -1478,45 +1476,7 @@ function renderBlockersPerDay() {
 function renderActionLists() {
   const el = document.getElementById('action-lists-container');
   if (!el) return;
-  el.innerHTML = actionHotLeadsHTML() + actionCSRescueHTML() + actionProductFrictionHTML();
-}
-
-function actionHotLeadsHTML() {
-  const list = DATA.hitLists?.salesHotLeads || {};
-  const leads = list.accounts || [];
-  const countLabel = sourceBlockedLabel(list) || leads.length;
-  const hasInternalCaveat = (DATA.sourceMeta?.limitations || []).some(l =>
-    l.toLowerCase().includes('base account') || l.toLowerCase().includes('is_internal')
-  );
-  const rows = sourceBlockedLabel(list)
-    ? actionEmptyRow('Hidden until internal account filtering and value-event identity are validated.')
-    : leads.length === 0
-      ? actionEmptyRow('No validated free external accounts have reached a sales-ready CIWP value event.')
-    : leads.map(a => `
-      <div class="ticket-row no-expand">
-        <div class="ticket-line1">
-          <span class="ticket-title">${escapeHTML(a.accountName)}</span>
-          <span class="tier-pill" style="margin-left:auto">${formatOptional(a.normalizedTier || a.tier)}</span>
-          <span class="cta-badge" style="margin-left:8px">Validate Sales Signal</span>
-        </div>
-        <div class="ticket-meta">
-          <span class="ticket-meta-item">Value event: ${formatOptional(a.valueEvent || a.firstCiwpEvent || 'CIWP Published / share signal required')}</span>
-          <span class="ticket-meta-item">First CIWP: ${formatOptional(a.firstCiwpDate)}</span>
-          <span class="ticket-meta-item">${a.ciwpsCreated || 0} generated</span>
-          <span class="ticket-meta-item">Owner: ${formatOptional(a.touchpointOwner || a.owner)}</span>
-          ${externalLinkHTML(a.hubspotUrl, 'HubSpot')}
-        </div>
-      </div>`).join('');
-  return `
-    <div class="ticket-category">
-      <div class="ticket-category-header">
-        <span class="ticket-category-label">Sales Hot Leads</span>
-        <span class="ticket-category-count">${countLabel}</span>
-      </div>
-      ${hasInternalCaveat ? `<div class="kpi-note" style="margin:0 0 8px">Internal accounts excluded once identity filtering is live.</div>` : ''}
-      ${sourceBlockedNote(list)}
-      ${rows}
-    </div>`;
+  el.innerHTML = actionCSRescueHTML() + actionProductFrictionHTML();
 }
 
 function actionCSRescueHTML() {
@@ -1597,33 +1557,3 @@ function actionProductFrictionHTML() {
     </div>`;
 }
 
-function renderActionRoadmap() {
-  const el = document.getElementById('action-roadmap-section');
-  if (!el) return;
-  const roadmap = DATA.roadmap || {};
-  const items = roadmap.items || [];
-  const rows = items.length === 0
-    ? actionEmptyRow('No CIWP ticket-feed items available.')
-    : items.map(item => `
-      <div class="ticket-row no-expand">
-        <div class="ticket-line1">
-          <span class="ticket-title">${escapeHTML(item.title)}</span>
-          <span class="status-pill status-muted" style="margin-left:auto">${escapeHTML(item.status)}</span>
-        </div>
-        <div class="ticket-meta">
-          <span class="ticket-meta-item">${escapeHTML(item.id)}</span>
-          <span class="ticket-meta-item">${escapeHTML(item.type)}</span>
-          <span class="ticket-meta-item">Release: ${formatOptional(item.targetReleaseWindow, 'TBD')}</span>
-          ${externalLinkHTML(item.url, 'Jira')}
-        </div>
-      </div>`).join('');
-  el.innerHTML = `
-    <div class="ticket-category">
-      <div class="ticket-category-header">
-        <span class="ticket-category-label">Ticket Feed</span>
-        <span class="ticket-category-count">Jira unvalidated · ${items.length}</span>
-      </div>
-      ${sourceBlockedNote(roadmap)}
-      ${rows}
-    </div>`;
-}
